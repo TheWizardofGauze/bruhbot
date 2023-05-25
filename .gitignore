@@ -25,7 +25,7 @@ cogs/Mod/settings.json
 cogs/ModLog/settings.json
 cogs/Pupper/settings.json
 cogs/Race/settings.json
-cogs/RepoManager/settings.json
+cogs/RepoManager/
 cogs/Rift/settings.json
 cogs/RussianRoulette/settings.json
 cogs/Trivia/settings.json
