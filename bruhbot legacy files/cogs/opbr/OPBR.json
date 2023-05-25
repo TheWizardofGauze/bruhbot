@@ -1,0 +1,149 @@
+{
+    "names": [
+        "Tony Bennett",
+        "Betty White",
+        "Mel Brooks",
+        "Bob Barker",
+        "Queen Elizabeth II",
+        "Angela Lansbury",
+        "Harry Belafonte",
+        "Larry Storch",
+        "Dick Van Dyke",
+        "Cicely Tyson",
+        "Eva Marie Saint",
+        "Cloris Leachman",
+        "David Attenborough",
+        "Ruthie Tompson",
+        "Olivia de Havilland",
+        "Hugh Downs",
+        "Carl Reiner",
+        "James Earl Jones",
+        "Clint Eastwood",
+        "Prince Philip, Duke of Edinburgh",
+        "William Shatner",
+        "Mikhail Gorbachev",
+        "Warren Buffet",
+        "George Soros",
+        "Buzz Aldrin",
+        "Michael Collins (astronaut)",
+        "Estelle Harris",
+        "William Daniels",
+        "Gene Hackman"
+    ],
+    "Tony Bennett": {
+        "age": 94,
+        "dead": 0
+    },
+    "Betty White": {
+        "age": 99,
+        "dead": 0
+    },
+    "Mel Brooks": {
+        "age": 94,
+        "dead": 0
+    },
+    "Bob Barker": {
+        "age": 97,
+        "dead": 0
+    },
+    "Queen Elizabeth II": {
+        "age": 95,
+        "dead": 0
+    },
+    "Angela Lansbury": {
+        "age": 95,
+        "dead": 0
+    },
+    "Harry Belafonte": {
+        "age": 94,
+        "dead": 0
+    },
+    "Larry Storch": {
+        "age": 98,
+        "dead": 0
+    },
+    "Dick Van Dyke": {
+        "age": 95,
+        "dead": 0
+    },
+    "Cicely Tyson": {
+        "age": 96,
+        "dead": 1
+    },
+    "Eva Marie Saint": {
+        "age": 96,
+        "dead": 0
+    },
+    "Cloris Leachman": {
+        "age": 94,
+        "dead": 1
+    },
+    "David Attenborough": {
+        "age": 95,
+        "dead": 0
+    },
+    "Ruthie Tompson": {
+        "age": 110,
+        "dead": 0
+    },
+    "Olivia de Havilland": {
+        "age": 104,
+        "dead": 1
+    },
+    "Hugh Downs": {
+        "age": 99,
+        "dead": 1
+    },
+    "Carl Reiner": {
+        "age": 98,
+        "dead": 1
+    },
+    "James Earl Jones": {
+        "age": 90,
+        "dead": 0
+    },
+    "Clint Eastwood": {
+        "age": 91,
+        "dead": 0
+    },
+    "Prince Philip, Duke of Edinburgh": {
+        "age": 99,
+        "dead": 1
+    },
+    "William Shatner": {
+        "age": 90,
+        "dead": 0
+    },
+    "Mikhail Gorbachev": {
+        "age": 90,
+        "dead": 0
+    },
+    "Warren Buffet": {
+        "age": 90,
+        "dead": 0
+    },
+    "George Soros": {
+        "age": 90,
+        "dead": 0
+    },
+    "Buzz Aldrin": {
+        "age": 91,
+        "dead": 0
+    },
+    "Michael Collins (astronaut)": {
+        "age": 90,
+        "dead": 1
+    },
+    "Estelle Harris": {
+        "age": 93,
+        "dead": 0
+    },
+    "William Daniels": {
+        "age": 94,
+        "dead": 0
+    },
+    "Gene Hackman": {
+        "age": 91,
+        "dead": 0
+    }
+}

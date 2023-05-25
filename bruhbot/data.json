@@ -1,0 +1,26 @@
+{
+	"addr": {
+		"description": "```Syntax: $addr [phrase/image name]```\n**Add Responses.**\nAdds a new response to the list.\nImages support custom names."
+	},
+	"delr": {
+		"description": "```Syntax: $delr```\n**Delete responses.**\nDisplays a menu that allows a user to delete a specific response."
+	},
+	"rlist": {
+		"description": "```Syntax: $rlist```\n**Show response list.**\nDisplays the list of possible responses."
+	},
+	"age": {
+		"description": "```Syntax: $age```\n**Check bot age.**\nReturns number of years/months/days since creation."
+	},
+	"forza": {
+		"name": "Check Forza season",
+		"description": "```Syntax: $forza```\n**Check current Forza season**\nReturns the current season for both Horizon 4 and Horizon 5\n\n**__Subcommands__**\n**time** Displays the time until the next season"
+	},
+	"response": {
+		"name": "__**Response**__",
+		"description": "**addr** Add a new response to the list.\n**delr** Remove a response from the list.\n**rlist** View the list of current responses."
+	},
+	"extra": {
+		"name": "__**Extra Stuff**__",
+		"description": "**age** Returns the current age of the bot."
+	}
+}
