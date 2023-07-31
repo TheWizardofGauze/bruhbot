@@ -1,5 +1,5 @@
 {
-    "updated": "06/13/2023 07:58 PM",
+    "updated": "07/26/2023 08:27 PM",
     "names": [
         "Tony Bennett",
         "Betty White",
@@ -37,7 +37,7 @@
     "Tony Bennett": {
         "id": "Q296729",
         "age": 96,
-        "dead": 0
+        "dead": 1
     },
     "Betty White": {
         "id": "Q373895",
@@ -46,7 +46,7 @@
     },
     "Mel Brooks": {
         "id": "Q104266",
-        "age": 96,
+        "age": 97,
         "dead": 0
     },
     "Bob Barker": {
@@ -86,7 +86,7 @@
     },
     "Eva Marie Saint": {
         "id": "Q228928",
-        "age": 98,
+        "age": 99,
         "dead": 0
     },
     "Cloris Leachman": {
