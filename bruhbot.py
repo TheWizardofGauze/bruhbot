@@ -299,10 +299,20 @@ async def delr(ctx, *arg):
                 if interaction.user.id == ctx.author.id:
                     return True
                 else:
-                    await interaction.followup.send(
-                        "That's not your button.", ephemeral=True
-                    )
+                    if self.counter < 5:
+                        await interaction.followup.send(
+                            "That's not your button.", ephemeral=True
+                        )
+                        self.counter += 1
+                    elif self.counter >= 5 and self.counter < 8:
+                        await interaction.followup.send("Dude stop.", ephemeral=True)
+                        self.counter += 1
+                    else:
+                        await interaction.followup.send(
+                            "Seriously dude, enough.", ephemeral=True
+                        )
 
+            counter: int = 0
             choice: int = None
             cancel: bool = None
 
