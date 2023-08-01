@@ -631,6 +631,167 @@ async def delr(ctx, *arg):
 @bot.command()
 async def rlist(ctx):
     try:
+
+        def get_list(numbered, start, end, curPage):
+            content = "\n".join(numbered[start:end])
+            emb = discord.Embed(
+                title="Response list",
+                description=f"**Page {curPage}/{pages}:**\n{content}",
+                color=color,
+            )
+            return emb
+
+        class pageModal(discord.ui.Modal, title="Enter a page number"):
+            p = discord.ui.TextInput(
+                style=discord.TextStyle.short,
+                label="Page",
+                required=True,
+                placeholder="Enter a page number",
+            )
+
+            async def on_submit(self, interaction: discord.Interaction):
+                await interaction.response.defer()
+                if not int(self.p.value):
+                    raise Exception
+
+            async def on_error(self, interaction: discord.Interaction, error):
+                await interaction.followup.send(
+                    "Error: Page must be a number.", ephemeral=True
+                )
+
+        class menuView(discord.ui.View):
+            async def on_timeout(self) -> None:
+                await self.msg.delete()
+                self.timeout = True
+                self.stop()
+
+            async def update(self):
+                if self.curPage == 1:
+                    self.buttonBack10.disabled = True
+                    self.buttonBack.disabled = True
+                else:
+                    self.buttonBack10.disabled = False
+                    self.buttonBack.disabled = False
+                if self.curPage == self.pages:
+                    self.buttonNext.disabled = True
+                    self.buttonNext10.disabled = True
+                else:
+                    self.buttonNext.disabled = False
+                    self.buttonNext10.disabled = False
+
+            async def check(self, interaction):
+                if interaction.user.id == ctx.author.id:
+                    return True
+                else:
+                    if self.counter < 5:
+                        await interaction.followup.send(
+                            "That's not you button.", ephemeral=True
+                        )
+                        self.counter += 1
+                    elif self.counter >= 5 and self.counter < 8:
+                        await interaction.followup.send("Dude stop.", ephemeral=True)
+                        self.counter += 1
+                    else:
+                        await interaction.followup.send(
+                            "Seriously dude, enough.", ephemeral=True
+                        )
+
+            counter: int = 0
+
+            @discord.ui.button(
+                style=discord.ButtonStyle.blurple,
+                emoji=discord.PartialEmoji.from_str("⏪"),
+            )
+            async def buttonBack10(
+                self, interaction: discord.Interaction, button: discord.ui.Button
+            ):
+                await interaction.response.defer()
+                if await self.check(interaction) == True:
+                    self.curPage = max(1, self.curPage - 10)
+                    self.start = max(0, self.start - 250)
+                    self.end = max(25, self.end - 250)
+                    emb = get_list(numbered, self.start, self.end, self.curPage)
+                    await self.update()
+                    await self.msg.edit(embed=emb, view=self)
+
+            @discord.ui.button(
+                style=discord.ButtonStyle.blurple,
+                emoji=discord.PartialEmoji.from_str("◀️"),
+            )
+            async def buttonBack(
+                self, interaction: discord.Interaction, button: discord.ui.Button
+            ):
+                await interaction.response.defer()
+                if await self.check(interaction) == True:
+                    self.curPage -= 1
+                    self.start -= 25
+                    self.end -= 25
+                    emb = get_list(numbered, self.start, self.end, self.curPage)
+                    await self.update()
+                    await self.msg.edit(embed=emb, view=self)
+
+            @discord.ui.button(
+                style=discord.ButtonStyle.blurple,
+                emoji=discord.PartialEmoji.from_str("▶️"),
+            )
+            async def buttonNext(
+                self, interaction: discord.Interaction, button: discord.ui.Button
+            ):
+                await interaction.response.defer()
+                if await self.check(interaction) == True:
+                    self.curPage += 1
+                    self.start += 25
+                    self.end += 25
+                    emb = get_list(numbered, self.start, self.end, self.curPage)
+                    await self.update()
+                    await self.msg.edit(embed=emb, view=self)
+
+            @discord.ui.button(
+                style=discord.ButtonStyle.blurple,
+                emoji=discord.PartialEmoji.from_str("⏩"),
+            )
+            async def buttonNext10(
+                self, interaction: discord.Interaction, button: discord.ui.Button
+            ):
+                await interaction.response.defer()
+                if await self.check(interaction) == True:
+                    self.curPage = min(self.pages, self.curPage + 10)
+                    self.start = min(self.pages * 25 - 25, self.start + 250)
+                    self.end = min(self.pages * 25, self.end + 250)
+                    emb = get_list(numbered, self.start, self.end, self.curPage)
+                    await self.update()
+                    await self.msg.edit(embed=emb, view=self)
+
+            @discord.ui.button(
+                style=discord.ButtonStyle.secondary,
+                emoji=discord.PartialEmoji.from_str("📖"),
+            )
+            async def buttonPage(
+                self, interaction: discord.Interaction, button: discord.ui.Button
+            ):
+                if await self.check(interaction) == True:
+                    pageM = pageModal()
+                    await interaction.response.send_modal(pageM)
+                    await pageM.wait()
+                    page = int(pageM.p.value)
+                    if page > self.pages:
+                        self.curPage = min(self.pages, page)
+                        self.start = min(self.pages, page) * 25 - 25
+                        self.end = min(self.pages, page) * 25
+                    elif page < 1:
+                        self.curPage = 1
+                        self.start = 0
+                        self.end = 25
+                    else:
+                        self.curPage = page
+                        self.start = page * 25 - 25
+                        self.end = page * 25
+                    emb = get_list(numbered, self.start, self.end, self.curPage)
+                    await self.update()
+                    await self.msg.edit(embed=emb, view=self)
+                else:
+                    interaction.response.defer()
+
         start = 0
         end = 25
         pages = 0
@@ -650,18 +811,16 @@ async def rlist(ctx):
             numbered.append(j)
         while pages < len(responses) / 25:
             pages += 1
-        while not curPage > pages:
-            content = "\n".join(numbered[start:end])
-            msg = discord.Embed(
-                title="Response list",
-                description=f"**Page {curPage}/{pages}:**\n{content}",
-                color=color,
-            )
-            await ctx.send(embed=msg)
-            start += 25
-            end += 25
-            curPage += 1
-            await asyncio.sleep(0.21)
+        emb = get_list(numbered, start, end, curPage)
+        mview = menuView(timeout=30)
+        mview.start = start
+        mview.end = end
+        mview.pages = pages
+        mview.curPage = curPage
+        await mview.update()
+        msg = await ctx.send(embed=emb, view=mview)
+        mview.msg = msg
+        await mview.wait()
     except Exception:
         await ctx.send("Error logged.")
         e = traceback.format_exc()
