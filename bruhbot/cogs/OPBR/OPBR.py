@@ -162,9 +162,12 @@ class OPBR(commands.Cog):
                 with open(self.file) as f:
                     data = json.load(f)
                     for name in names:
-                        combo = f"{name}, {data[name]['age']}"
+                        combo = f"{name}, **{data[name]['age']}**"
                         combined.append(combo)
-                    combined.sort(key=lambda x: int(x.partition(",")[-1]), reverse=True)
+                    combined.sort(
+                        key=lambda x: int(x.partition("*")[-1].strip("*")),
+                        reverse=True,
+                    )
                     content = "\n".join(combined)
                     msg = discord.Embed(
                         title=self.title,
@@ -193,11 +196,13 @@ class OPBR(commands.Cog):
                 data = json.load(f)
                 for name in names:
                     if data[name]["dead"] == 1:
-                        combo = f"{name}, dead at {data[name]['age']}"
+                        combo = f"{name}, **dead at {data[name]['age']}**"
                     else:
-                        combo = f"{name}, {data[name]['age']}"
+                        combo = f"{name},** {data[name]['age']}**"
                     combined.append(combo)
-                combined.sort(key=lambda x: int(x.rpartition(" ")[-1]), reverse=True)
+                combined.sort(
+                    key=lambda x: int(x.rpartition(" ")[-1].strip("*")), reverse=True
+                )
                 content = "\n".join(combined)
                 msg = discord.Embed(
                     title=self.title,
