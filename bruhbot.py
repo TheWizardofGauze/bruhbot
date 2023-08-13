@@ -39,8 +39,9 @@ async def check_age():
         year = ["year", "years"]
         if rdelta.months == 0 and rdelta.days == 0:
             await bot.change_presence(
-                activity=discord.Game(
-                    name=f"god for {rdelta.years} {year[plural(rdelta.years)]}"
+                discord.CustomActivity(
+                    name=f"Been a stinky dingus for {rdelta.years} {year[plural(rdelta.years)]}",
+                    emoji=discord.PartialEmoji.from_str("🎂"),
                 )
             )
         else:
