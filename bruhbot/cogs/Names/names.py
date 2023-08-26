@@ -116,7 +116,7 @@ class Names(commands.Cog):
                                 )
 
                     @discord.ui.button(
-                        style=discord.ButtonStyle.secondary, label="Roll Again"
+                        style=discord.ButtonStyle.secondary, label="Roll again"
                     )
                     async def buttonRefresh(
                         self,
