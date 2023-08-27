@@ -1,5 +1,5 @@
 {
-    "updated": "08/19/2023 06:58 PM",
+    "updated": "08/26/2023 05:23 PM",
     "names": [
         "Tony Bennett",
         "Betty White",
@@ -52,7 +52,7 @@
     "Bob Barker": {
         "id": "Q381178",
         "age": 99,
-        "dead": 0
+        "dead": 1
     },
     "Queen Elizabeth II": {
         "id": "Q9682",
