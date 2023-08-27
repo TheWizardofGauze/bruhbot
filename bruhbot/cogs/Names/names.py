@@ -14,7 +14,6 @@ class Names(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.file = f"{os.path.dirname(__file__)}\\names.json"
-        self.title = "Your Character's Name Is:"
         bot.remove_command("help")
 
     async def get_color(self, ctx):
@@ -33,13 +32,11 @@ class Names(commands.Cog):
                 def roll():
                     with open(self.file, "r", encoding="utf-8") as f:
                         data = json.load(f)
-                        firstnames = data["firstnames"]
-                        lastnames = data["lastnames"]
-                        name1 = random.choice(firstnames)
-                        name2 = random.choice(lastnames)
+                        name1 = random.choice(data["firstnames"])
+                        name2 = random.choice(data["lastnames"])
                         name = f"{name1} {name2}"
                         emb = discord.Embed(
-                            title=self.title,
+                            title="Your Character's Name Is:",
                             description=f"**{name}**",
                             color=color,
                         )
@@ -50,13 +47,13 @@ class Names(commands.Cog):
                         style=discord.TextStyle.short,
                         label="First name",
                         required=False,
-                        placeholder="",
+                        placeholder="(Not required)",
                     )
                     name2 = discord.ui.TextInput(
                         style=discord.TextStyle.short,
                         label="Last name",
                         required=False,
-                        placeholder="",
+                        placeholder="(Not required)",
                     )
 
                     async def on_submit(self, interaction: discord.Interaction):
@@ -66,6 +63,12 @@ class Names(commands.Cog):
                             and len(str(self.name1)) != 0
                             or re.sub("[^a-zA-z]", "", str(self.name2)) == ""
                             and len(str(self.name2)) != 0
+                            or str(self.name1) == ""
+                            and str(self.name2) == ""
+                            or any(
+                                char in (str(self.name1)) + str(self.name2)
+                                for char in [":", "<", ">"]
+                            )
                         ):
                             raise Exception
                         with open(self.file, "r+", encoding="utf-8") as f:
