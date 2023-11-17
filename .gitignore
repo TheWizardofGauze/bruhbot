@@ -8,7 +8,7 @@ cogs/Audio/Audio.db-wal
 cogs/Audio/Lavalink.jar
 cogs/CogManager/cogs
 cogs/Downloader/lib
-core/logs/
+core
 bruhbot/.env
 bruhbot legacy files
 images
