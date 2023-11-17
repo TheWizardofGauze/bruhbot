@@ -76,56 +76,57 @@ class OPBR(commands.Cog):
             with open(self.file, "r+") as f:
                 data = json.load(f)
                 for name in names:
-                    try:
-                        contestant = client.get(data[name]["id"])
-                        birth_date = contestant[client.get("P569")]
+                    async with ctx.typing():
                         try:
-                            death_date = contestant[client.get("P570")]
-                            if death_date is not None:
+                            contestant = client.get(data[name]["id"])
+                            birth_date = contestant[client.get("P569")]
+                            try:
+                                death_date = contestant[client.get("P570")]
+                                if death_date is not None:
+                                    new = True
+                                    age = relativedelta(death_date, birth_date).years
+                                    remaining -= 1
+                                    if remaining != 1:
+                                        foot = f"{remaining} contestants remain."
+                                    else:
+                                        foot = f"{remaining} contestant remains."
+                                        winner = True
+                                    if remaining == 0:
+                                        deathDesc = f"**The champion has fallen!**\n{name} has died at age {age}."
+                                    else:
+                                        deathDesc = f"**A contestant has fallen!**\n{name} has died at age {age}."
+                                    msg = discord.Embed(
+                                        title=self.title,
+                                        description=deathDesc,
+                                        color=color,
+                                        url=self.url,
+                                    )
+                                    msg.set_footer(text=foot)
+                                    await ctx.send(embed=msg)
+                                    data[name]["age"] = age
+                                    data[name]["dead"] = 1
+                                    f.seek(0)
+                                    json.dump(data, f, indent=4)
+                                    f.truncate()
+                                    raise cont
+                            except KeyError:
+                                pass
+                            age = relativedelta(today, birth_date).years
+                            if not int(data[name]["age"]) == age:
                                 new = True
-                                age = relativedelta(death_date, birth_date).years
-                                remaining -= 1
-                                if remaining != 1:
-                                    foot = f"{remaining} contestants remain."
-                                else:
-                                    foot = f"{remaining} contestant remains."
-                                    winner = True
-                                if remaining == 0:
-                                    deathDesc = f"**The champion has fallen!**\n{name} has died at age {age}."
-                                else:
-                                    deathDesc = f"**A contestant has fallen!**\n{name} has died at age {age}."
                                 msg = discord.Embed(
                                     title=self.title,
-                                    description=deathDesc,
+                                    description=f"**A contestant has advanced!**\n{name} is now {age} years old.",
                                     color=color,
                                     url=self.url,
                                 )
-                                msg.set_footer(text=foot)
                                 await ctx.send(embed=msg)
                                 data[name]["age"] = age
-                                data[name]["dead"] = 1
                                 f.seek(0)
                                 json.dump(data, f, indent=4)
                                 f.truncate()
-                                raise cont
-                        except KeyError:
-                            pass
-                        age = relativedelta(today, birth_date).years
-                        if not int(data[name]["age"]) == age:
-                            new = True
-                            msg = discord.Embed(
-                                title=self.title,
-                                description=f"**A contestant has advanced!**\n{name} is now {age} years old.",
-                                color=color,
-                                url=self.url,
-                            )
-                            await ctx.send(embed=msg)
-                            data[name]["age"] = age
-                            f.seek(0)
-                            json.dump(data, f, indent=4)
-                            f.truncate()
-                    except Cont:
-                        continue
+                        except Cont:
+                            continue
                 data["updated"] = today.strftime("%m/%d/%Y %I:%M %p")
                 f.seek(0)
                 json.dump(data, f, indent=4)
