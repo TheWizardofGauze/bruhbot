@@ -14,7 +14,6 @@ class Names(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.file = f"{os.path.dirname(__file__)}\\names.json"
-        bot.remove_command("help")
 
     async def get_color(self, ctx):
         if ctx.guild:
