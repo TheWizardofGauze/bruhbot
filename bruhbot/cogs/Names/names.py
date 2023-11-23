@@ -5,12 +5,14 @@ import re
 import traceback
 
 import discord
-from redbot.core import commands
+from redbot.core import commands, app_commands
 
 from bruhbot import ErrorLogger
 
 
 class Names(commands.Cog):
+    bot = commands.Bot(command_prefix="$", intents=discord.Intents.default())
+
     def __init__(self, bot):
         self.bot = bot
         self.file = f"{os.path.dirname(__file__)}\\names.json"
@@ -23,7 +25,7 @@ class Names(commands.Cog):
             color = 0xE74C3C  # red
             return color
 
-    @commands.group(invoke_without_command=True)
+    @commands.command(invoke_without_command=True)
     async def name(self, ctx):
         if ctx.invoked_subcommand is None:
             try:
@@ -157,3 +159,68 @@ class Names(commands.Cog):
                 e = traceback.format_exc()
                 ErrorLogger.run(e)
                 await ctx.send("Error logged.")
+
+    @app_commands.command(name="addname", description="Add a name to the name generator.")
+    async def addname(self, interaction: discord.Interaction):
+        try:
+            class addModal(discord.ui.Modal, title="Add a new name"):
+                name1 = discord.ui.TextInput(
+                    style=discord.TextStyle.short,
+                    label="First name",
+                    required=False,
+                    placeholder="(Not required)",
+                )
+                name2 = discord.ui.TextInput(
+                    style=discord.TextStyle.short,
+                    label="Last name",
+                    required=False,
+                    placeholder="(Not required)",
+                )
+                file = f"{os.path.dirname(__file__)}\\names.json"
+
+                async def on_submit(self, interaction: discord.Interaction):
+                    await interaction.response.defer()
+                    if (
+                        re.sub("[^a-zA-Z]", "", str(self.name1)) == ""
+                        and len(str(self.name1)) != 0
+                        or re.sub("[^a-zA-z]", "", str(self.name2)) == ""
+                        and len(str(self.name2)) != 0
+                        or str(self.name1) == ""
+                        and str(self.name2) == ""
+                        or any(
+                            char in (str(self.name1)) + str(self.name2)
+                            for char in [":", "<", ">"]
+                        )
+                    ):
+                        raise Exception
+                    with open(self.file, "r+", encoding="utf-8") as f:
+                        data = json.load(f)
+                        if (
+                            not str(self.name1) == ""
+                            and str(self.name1) not in data["firstnames"]
+                        ):
+                            data["firstnames"].append(str(self.name1))
+                        if (
+                            not str(self.name2) == ""
+                            and str(self.name2) not in data["lastnames"]
+                        ):
+                            data["lastnames"].append(str(self.name2))
+                        f.seek(0)
+                        json.dump(data, f, indent=4)
+                        f.truncate()
+                    await interaction.followup.send(
+                        f'"{self.name1} {self.name2}" was added.',
+                        ephemeral=True,
+                    )
+
+                async def on_error(self, interaction: discord.Interaction, error):
+                    await interaction.followup.send("Invalid Name.", ephemeral=True)
+                    ErrorLogger.run(error)
+
+            addM = addModal()
+            await interaction.response.send_modal(addM)
+            await addM.wait()
+        except Exception:
+            e = traceback.format_exc()
+            ErrorLogger.run(e)
+            await interaction.followup.send("Error logged.")
