@@ -25,8 +25,13 @@ class Names(commands.Cog):
             color = 0xE74C3C  # red
             return color
 
-    @commands.command(invoke_without_command=True)
+    @commands.hybrid_command(invoke_without_command=True)
     async def name(self, ctx):
+        """
+        The Random Name Generator.
+
+        Generate a random name.
+        """
         if ctx.invoked_subcommand is None:
             try:
 
@@ -160,9 +165,12 @@ class Names(commands.Cog):
                 ErrorLogger.run(e)
                 await ctx.send("Error logged.")
 
-    @app_commands.command(name="addname", description="Add a name to the name generator.")
+    @app_commands.command(
+        name="addname", description="Add a name to the name generator."
+    )
     async def addname(self, interaction: discord.Interaction):
         try:
+
             class addModal(discord.ui.Modal, title="Add a new name"):
                 name1 = discord.ui.TextInput(
                     style=discord.TextStyle.short,
