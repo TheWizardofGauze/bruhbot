@@ -46,7 +46,7 @@ class OPBR(commands.Cog):
             color = 0xE74C3C  # red
             return color
 
-    @commands.group()
+    @commands.hybrid_group()
     async def opbr(self, ctx):
         """
         The Old Person Battle Royale.
@@ -64,19 +64,18 @@ class OPBR(commands.Cog):
         Check if any contestants got older or died via Wikidata.
         """
         try:
-            await ctx.send("Updating battle royale list...")
-            names = await self.get_names(0)
-            color = await self.get_color(ctx)
-            new = False
-            winner = False
-            remaining = len(names)
-            today = datetime.today()
-            cont = Cont()
-            client = Client()
-            with open(self.file, "r+") as f:
-                data = json.load(f)
-                for name in names:
-                    async with ctx.typing():
+            async with ctx.typing():
+                names = await self.get_names(0)
+                color = await self.get_color(ctx)
+                new = False
+                winner = False
+                remaining = len(names)
+                today = datetime.today()
+                cont = Cont()
+                client = Client()
+                with open(self.file, "r+") as f:
+                    data = json.load(f)
+                    for name in names:
                         try:
                             contestant = client.get(data[name]["id"])
                             birth_date = contestant[client.get("P569")]
@@ -127,10 +126,10 @@ class OPBR(commands.Cog):
                                 f.truncate()
                         except Cont:
                             continue
-                data["updated"] = today.strftime("%m/%d/%Y %I:%M %p")
-                f.seek(0)
-                json.dump(data, f, indent=4)
-                f.truncate()
+                    data["updated"] = today.strftime("%m/%d/%Y %I:%M %p")
+                    f.seek(0)
+                    json.dump(data, f, indent=4)
+                    f.truncate()
             if new == False:
                 await ctx.send("No new updates.")
             if winner == True:
@@ -148,7 +147,7 @@ class OPBR(commands.Cog):
             ErrorLogger.run(e)
             await ctx.send("Update failed! Error logged.")
 
-    @opbr.group(invoke_without_command=True)
+    @opbr.group(fallback="current", invoke_without_command=True)
     async def stats(self, ctx):
         """
         Show battle royale stats.
