@@ -109,7 +109,7 @@ async def on_message(msg):
     if (
         name in nospace
         or bot.user in msg.mentions
-        or (msg.reference != None and msg.reference.resolved.author == bot.user)
+        or (msg.reference is not None and msg.reference.resolved.author == bot.user)
     ):
         responses = []
         with open(f"{here}\\bruhbot\\responses.txt", "r", encoding="utf-8") as f:
@@ -132,10 +132,17 @@ async def addr(ctx, *, arg: str = None):
     try:
         if ctx.message.attachments:  # image support
             invalid_counter = 0
+            size_counter = 0
             dupe_counter = 0
             for attachment in ctx.message.attachments:
                 dupe = False
                 if "image" in attachment.content_type:
+                    if attachment.size > 26214400:
+                        if len(ctx.message.attachments) == 1:
+                            await ctx.send("Error: File too large. (Max 25MB)")
+                            return
+                        else:
+                            size_counter += 1
                     ext = os.path.splitext(attachment.filename)[-1]
                     with open(
                         f"{here}\\bruhbot\\responses.txt", "r", encoding="utf-8"
@@ -169,7 +176,7 @@ async def addr(ctx, *, arg: str = None):
                                     dupe_counter += 1
                                     dupe = True
                                     break
-                    if dupe == False:
+                    if dupe is False:
                         await attachment.save(f"{here}\\images\\{pre}")
                     else:
                         continue
@@ -186,11 +193,13 @@ async def addr(ctx, *, arg: str = None):
             if (
                 len(ctx.message.attachments) - invalid_counter == 1
                 or len(ctx.message.attachments) - dupe_counter == 1
+                or len(ctx.message.attachments) - size_counter == 1
             ):
                 added = "Image was added."
             elif (
                 len(ctx.message.attachments) - invalid_counter == 0
                 or len(ctx.message.attachments) - dupe_counter == 0
+                or len(ctx.message.attachments) - size_counter == 0
             ):
                 added = "No images were added."
             else:
@@ -202,6 +211,8 @@ async def addr(ctx, *, arg: str = None):
                 await ctx.send(f"Blocked {str(dupe_counter)} duplicate files.")
             if invalid_counter > 0:
                 await ctx.send(f"Blocked {str(invalid_counter)} invalid files.")
+            if size_counter > 0:
+                await ctx.send(f"Blocked {str(size_counter)} large files.")
             return
         if not arg:
             await help(ctx, "addr")
@@ -322,7 +333,7 @@ async def delr(ctx, *arg):
                 self, interaction: discord.Interaction, button: discord.ui.Button
             ):
                 await interaction.response.defer()
-                if await self.check(interaction) == True:
+                if await self.check(interaction) is True:
                     self.choice = 0
                     await self.msg.delete()
                     self.stop()
@@ -332,7 +343,7 @@ async def delr(ctx, *arg):
                 self, interaction: discord.Interaction, button: discord.ui.Button
             ):
                 await interaction.response.defer()
-                if await self.check(interaction) == True:
+                if await self.check(interaction) is True:
                     self.choice = 1
                     await self.msg.delete()
                     self.stop()
@@ -342,7 +353,7 @@ async def delr(ctx, *arg):
                 self, interaction: discord.Interaction, button: discord.ui.Button
             ):
                 await interaction.response.defer()
-                if await self.check(interaction) == True:
+                if await self.check(interaction) is True:
                     self.choice = 2
                     await self.msg.delete()
                     self.stop()
@@ -352,7 +363,7 @@ async def delr(ctx, *arg):
                 self, interaction: discord.Interaction, button: discord.ui.Button
             ):
                 await interaction.response.defer()
-                if await self.check(interaction) == True:
+                if await self.check(interaction) is True:
                     self.choice = 3
                     await self.msg.delete()
                     self.stop()
@@ -362,7 +373,7 @@ async def delr(ctx, *arg):
                 self, interaction: discord.Interaction, button: discord.ui.Button
             ):
                 await interaction.response.defer()
-                if await self.check(interaction) == True:
+                if await self.check(interaction) is True:
                     self.choice = 4
                     await self.msg.delete()
                     self.stop()
@@ -375,7 +386,7 @@ async def delr(ctx, *arg):
                 self, interaction: discord.Interaction, button: discord.ui.Button
             ):
                 await interaction.response.defer()
-                if await self.check(interaction) == True:
+                if await self.check(interaction) is True:
                     self.curPage = max(1, self.curPage - 10)
                     self.start = max(0, self.start - 50)
                     self.end = max(5, self.end - 50)
@@ -391,7 +402,7 @@ async def delr(ctx, *arg):
                 self, interaction: discord.Interaction, button: discord.ui.Button
             ):
                 await interaction.response.defer()
-                if await self.check(interaction) == True:
+                if await self.check(interaction) is True:
                     self.curPage -= 1
                     self.start -= 5
                     self.end -= 5
@@ -407,7 +418,7 @@ async def delr(ctx, *arg):
                 self, interaction: discord.Interaction, button: discord.ui.Button
             ):
                 await interaction.response.defer()
-                if await self.check(interaction) == True:
+                if await self.check(interaction) is True:
                     self.curPage += 1
                     self.start += 5
                     self.end += 5
@@ -423,7 +434,7 @@ async def delr(ctx, *arg):
                 self, interaction: discord.Interaction, button: discord.ui.Button
             ):
                 await interaction.response.defer()
-                if await self.check(interaction) == True:
+                if await self.check(interaction) is True:
                     self.curPage = min(self.pages, self.curPage + 10)
                     self.start = min(self.pages * 5 - 5, self.start + 50)
                     self.end = min(self.pages * 5, self.end + 50)
@@ -438,7 +449,7 @@ async def delr(ctx, *arg):
             async def buttonPage(
                 self, interaction: discord.Interaction, button: discord.ui.Button
             ):
-                if await self.check(interaction) == True:
+                if await self.check(interaction) is True:
                     pageM = pageModal()
                     await interaction.response.send_modal(pageM)
                     await pageM.wait()
@@ -469,7 +480,7 @@ async def delr(ctx, *arg):
                 self, interaction: discord.Interaction, button: discord.ui.Button
             ):
                 await interaction.response.defer()
-                if await self.check(interaction) == True:
+                if await self.check(interaction) is True:
                     self.cancel = True
                     emb = discord.Embed(title="Canceled", description="", color=color)
                     await self.msg.edit(embed=emb, view=None)
@@ -498,7 +509,7 @@ async def delr(ctx, *arg):
                 self, interaction: discord.Interaction, button: discord.ui.Button
             ):
                 await interaction.response.defer()
-                if await self.check(interaction) == True:
+                if await self.check(interaction) is True:
                     self.confirm = True
                     await self.msg.delete()
                     self.stop()
@@ -508,7 +519,7 @@ async def delr(ctx, *arg):
                 self, interaction: discord.Interaction, button: discord.ui.Button
             ):
                 await interaction.response.defer()
-                if await self.check(interaction) == True:
+                if await self.check(interaction) is True:
                     self.cancel = True
                     emb = discord.Embed(title="Canceled", description="", color=color)
                     await self.msg.edit(embed=emb, view=None)
@@ -545,7 +556,7 @@ async def delr(ctx, *arg):
             msg = await ctx.send(embed=emb, view=cview)
             cview.msg = msg
             await cview.wait()
-            if cview.confirm == True:
+            if cview.confirm is True:
                 with open(
                     f"{here}\\bruhbot\\responses.txt", "w", encoding="utf-8"
                 ) as f:
@@ -563,7 +574,7 @@ async def delr(ctx, *arg):
                 await ctx.send(":ok_hand:")
                 await ctx.send(f"**'{responses[choice]}'** was deleted.")
                 return
-            if cview.cancel == True or cview.timeout == True:
+            if cview.cancel is True or cview.timeout is True:
                 return
         if not arg:  # menu
             mview = menuView(timeout=30)
@@ -579,7 +590,7 @@ async def delr(ctx, *arg):
             msg = await ctx.send(embed=emb, view=mview)
             mview.msg = msg
             await mview.wait()
-            if mview.cancel == True or mview.timeout == True:
+            if mview.cancel is True or mview.timeout is True:
                 return
             if mview.choice is not None:
                 if mview.choice + 1 > len(responses[mview.start : mview.end]):
@@ -594,7 +605,7 @@ async def delr(ctx, *arg):
                 msg = await ctx.send(embed=emb, view=cview)
                 cview.msg = msg
                 await cview.wait()
-                if cview.confirm == True:
+                if cview.confirm is True:
                     with open(
                         f"{here}\\bruhbot\\responses.txt", "w", encoding="utf-8"
                     ) as f:
@@ -620,7 +631,7 @@ async def delr(ctx, *arg):
                     await ctx.send(
                         f"**'{responses[mview.start:mview.end][mview.choice]}'** was deleted."
                     )
-                if cview.cancel == True or cview.timeout == True:
+                if cview.cancel is True or cview.timeout is True:
                     return
 
     except Exception:
@@ -707,7 +718,7 @@ async def rlist(ctx):
                 self, interaction: discord.Interaction, button: discord.ui.Button
             ):
                 await interaction.response.defer()
-                if await self.check(interaction) == True:
+                if await self.check(interaction) is True:
                     self.curPage = max(1, self.curPage - 10)
                     self.start = max(0, self.start - 250)
                     self.end = max(25, self.end - 250)
@@ -723,7 +734,7 @@ async def rlist(ctx):
                 self, interaction: discord.Interaction, button: discord.ui.Button
             ):
                 await interaction.response.defer()
-                if await self.check(interaction) == True:
+                if await self.check(interaction) is True:
                     self.curPage -= 1
                     self.start -= 25
                     self.end -= 25
@@ -739,7 +750,7 @@ async def rlist(ctx):
                 self, interaction: discord.Interaction, button: discord.ui.Button
             ):
                 await interaction.response.defer()
-                if await self.check(interaction) == True:
+                if await self.check(interaction) is True:
                     self.curPage += 1
                     self.start += 25
                     self.end += 25
@@ -755,7 +766,7 @@ async def rlist(ctx):
                 self, interaction: discord.Interaction, button: discord.ui.Button
             ):
                 await interaction.response.defer()
-                if await self.check(interaction) == True:
+                if await self.check(interaction) is True:
                     self.curPage = min(self.pages, self.curPage + 10)
                     self.start = min(self.pages * 25 - 25, self.start + 250)
                     self.end = min(self.pages * 25, self.end + 250)
@@ -770,7 +781,7 @@ async def rlist(ctx):
             async def buttonPage(
                 self, interaction: discord.Interaction, button: discord.ui.Button
             ):
-                if await self.check(interaction) == True:
+                if await self.check(interaction) is True:
                     pageM = pageModal()
                     await interaction.response.send_modal(pageM)
                     await pageM.wait()
@@ -957,12 +968,12 @@ async def logs(ctx):
                         "You dare try to hide your crimes?", ephemeral=True
                     )
 
-        l = ErrorLogger.last()
-        if l == "No logs found.":
-            await ctx.send(l)
+        last = ErrorLogger.last()
+        if last == "No logs found.":
+            await ctx.send(last)
         else:
             view = clearView(timeout=10)
-            msg = await ctx.send(l, view=view)
+            msg = await ctx.send(last, view=view)
             view.msg = msg
 
 
