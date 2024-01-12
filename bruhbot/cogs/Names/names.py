@@ -133,7 +133,7 @@ class Names(commands.Cog):
                         button: discord.ui.Button,
                     ):
                         await interaction.response.defer()
-                        if await self.check(interaction) == True:
+                        if await self.check(interaction) is True:
                             emb = roll()
                             await self.msg.edit(embed=emb, view=self)
 
@@ -145,7 +145,7 @@ class Names(commands.Cog):
                         interaction: discord.Interaction,
                         button: discord.ui.Button,
                     ):
-                        if await self.check(interaction) == True:
+                        if await self.check(interaction) is True:
                             addM = addModal()
                             addM.file = self.file
                             await interaction.response.send_modal(addM)
