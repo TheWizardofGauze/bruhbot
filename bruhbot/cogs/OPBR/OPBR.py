@@ -130,9 +130,9 @@ class OPBR(commands.Cog):
                     f.seek(0)
                     json.dump(data, f, indent=4)
                     f.truncate()
-            if new == False:
+            if new is False:
                 await ctx.send("No new updates.")
-            if winner == True:
+            if winner is True:
                 names = await self.get_names(0)
                 winner = names[0]
                 msg = discord.Embed(
