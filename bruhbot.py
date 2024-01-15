@@ -169,7 +169,11 @@ async def addr(ctx, *, arg: str = None):
                             if pre.lower() == line.lower().replace(" - image\n", ""):
                                 if len(ctx.message.attachments) == 1:
                                     await ctx.send(
-                                        f"Error: **'{pre}'** already exists."
+                                        f"Error: **'{pre}'** already exists:"
+                                    )
+                                    await send_image(ctx, pre)
+                                    await ctx.send(
+                                        "If this image does not match, try uploading your image under a different name."
                                     )
                                     return
                                 else:
@@ -212,7 +216,7 @@ async def addr(ctx, *, arg: str = None):
             if invalid_counter > 0:
                 await ctx.send(f"Blocked {str(invalid_counter)} invalid files.")
             if size_counter > 0:
-                await ctx.send(f"Blocked {str(size_counter)} large files.")
+                await ctx.send(f"Blocked {str(size_counter)} large files. (Max 25MB)")
             return
         if not arg:
             await help(ctx, "addr")
