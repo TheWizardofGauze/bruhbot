@@ -26,7 +26,7 @@ here = os.path.dirname(__file__)
 
 
 async def check_age():
-    def plural(num):
+    def plural(num: int):
         if num == 1:
             return 0
         else:
@@ -49,7 +49,7 @@ async def check_age():
         await asyncio.sleep(3600)
 
 
-async def send_dm(user: discord.User, content):
+async def send_dm(user: discord.User, content: discord.Embed):
     dm = await user.create_dm()
     await dm.send(embed=content)
 
@@ -63,7 +63,7 @@ async def get_color(ctx):
         return color
 
 
-async def embed(ctx, name, description, color, pages):
+async def embed(ctx, name: str, description: str, color, pages: int):
     embed = discord.Embed(color=color)
     if pages > 1:
         embed.title = "*Bruhbot*"
@@ -80,7 +80,7 @@ async def embed(ctx, name, description, color, pages):
     return embed
 
 
-async def send_image(ctx, response):
+async def send_image(ctx, response: str):
     try:
         image = response.replace(" - image", "")
         await ctx.send(file=discord.File(f"{here}\\images\\{image}"))
@@ -240,10 +240,10 @@ async def addr(ctx, *, arg: str = None):
 
 
 @bot.command()
-async def delr(ctx, *arg):
+async def delr(ctx, arg: str):
     try:
 
-        def get_list(responses, start, end, curPage):
+        def get_list(responses: list, start: int, end: int, curPage: int):
             numbered = []
             for i, j in enumerate(responses[start:end], 1):
                 if len(j) > 400:
@@ -271,7 +271,7 @@ async def delr(ctx, *arg):
                 if not int(self.p.value):
                     raise Exception
 
-            async def on_error(self, interaction: discord.Interaction, error):
+            async def on_error(self, interaction: discord.Interaction):
                 await interaction.followup.send(
                     "Error: Page must be a number.", ephemeral=True
                 )
@@ -311,7 +311,7 @@ async def delr(ctx, *arg):
                     self.button4.disabled = False
                     self.button5.disabled = False
 
-            async def check(self, interaction):
+            async def check(self, interaction: discord.Interaction):
                 if interaction.user.id == ctx.author.id:
                     return True
                 else:
@@ -497,7 +497,7 @@ async def delr(ctx, *arg):
                 self.timeout = True
                 self.stop()
 
-            async def check(self, interaction):
+            async def check(self, interaction: discord.Interaction):
                 if interaction.user.id == ctx.author.id:
                     return True
                 else:
@@ -648,7 +648,7 @@ async def delr(ctx, *arg):
 async def rlist(ctx):
     try:
 
-        def get_list(numbered, start, end, curPage):
+        def get_list(numbered: list, start: int, end: int, curPage: int):
             content = "\n".join(numbered[start:end])
             emb = discord.Embed(
                 title="Response list",
@@ -670,7 +670,7 @@ async def rlist(ctx):
                 if not int(self.p.value):
                     raise Exception
 
-            async def on_error(self, interaction: discord.Interaction, error):
+            async def on_error(self, interaction: discord.Interaction):
                 await interaction.followup.send(
                     "Error: Page must be a number.", ephemeral=True
                 )
@@ -695,7 +695,7 @@ async def rlist(ctx):
                     self.buttonNext.disabled = False
                     self.buttonNext10.disabled = False
 
-            async def check(self, interaction):
+            async def check(self, interaction: discord.Interaction):
                 if interaction.user.id == ctx.author.id:
                     return True
                 else:
@@ -845,7 +845,7 @@ async def rlist(ctx):
 
 @bot.command()
 @commands.is_owner()
-async def rtest(ctx, arg):  # for testing responses
+async def rtest(ctx, arg: str):  # for testing responses
     try:
         choice = int(arg) - 1
     except ValueError:
@@ -866,7 +866,7 @@ async def rtest(ctx, arg):  # for testing responses
 
 
 @bot.command()
-async def help(ctx, *arg):
+async def help(ctx, *arg: str):
     try:
         pre = " ".join(arg[:]).lower()
         args = ["addr", "delr", "rlist", "age", "forza", "response", "extra"]
@@ -905,7 +905,7 @@ async def help(ctx, *arg):
 
 @bot.command()
 async def age(ctx):
-    def plural(num):
+    def plural(num: int):
         if num == 1:
             return 0
         else:
