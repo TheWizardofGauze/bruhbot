@@ -22,7 +22,7 @@ class OPBR(commands.Cog):
         self.title = "*Old Person Battle Royale*"
         self.url = "https://jamboard.google.com/d/1DikJQQONWUW7odKQoFLlrcri_li4DxVvcyZ_kkfJ77M/edit?usp=sharing"
 
-    async def get_names(self, mode):
+    async def get_names(self, mode: int):
         if mode == 0:
             with open(self.file) as f:
                 data = json.load(f)
