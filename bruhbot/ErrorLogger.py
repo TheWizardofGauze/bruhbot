@@ -5,8 +5,8 @@ import os
 logdir = os.path.dirname(__file__) + "\\logs\\"
 
 
-def run(exception):
-    exception = str(exception).replace("\n", r"\n")
+def run(exception: str):
+    exception = exception.replace("\n", r"\n")
     today = datetime.today()
     filename = f"ErrorLog {today.strftime('%Y-%m-%d')}.txt"  # YYYY-MM-DD
     if not os.path.isfile(logdir + filename):

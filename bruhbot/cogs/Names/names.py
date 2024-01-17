@@ -97,7 +97,7 @@ class Names(commands.Cog):
                             ephemeral=True,
                         )
 
-                    async def on_error(self, interaction: discord.Interaction, error):
+                    async def on_error(self, interaction: discord.Interaction):
                         await interaction.followup.send("Invalid Name.", ephemeral=True)
 
                 class refreshView(discord.ui.View):
@@ -105,7 +105,7 @@ class Names(commands.Cog):
                         await self.msg.edit(view=None)
                         self.stop()
 
-                    async def check(self, interaction):
+                    async def check(self, interaction: discord.Interaction):
                         if interaction.user.id == ctx.author.id:
                             return True
                         else:
@@ -221,9 +221,8 @@ class Names(commands.Cog):
                         ephemeral=True,
                     )
 
-                async def on_error(self, interaction: discord.Interaction, error):
+                async def on_error(self, interaction: discord.Interaction):
                     await interaction.followup.send("Invalid Name.", ephemeral=True)
-                    ErrorLogger.run(error)
 
             addM = addModal()
             await interaction.response.send_modal(addM)
