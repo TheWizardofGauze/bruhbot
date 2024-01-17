@@ -63,7 +63,7 @@ async def get_color(ctx):
         return color
 
 
-async def embed(ctx, name: str, description: str, color, pages: int):
+async def embed(ctx, name: str, description: str, color: int, pages: int):
     embed = discord.Embed(color=color)
     if pages > 1:
         embed.title = "*Bruhbot*"
@@ -933,6 +933,10 @@ async def forza(ctx):
 async def forza_error(ctx, error):
     if isinstance(error, commands.errors.TooManyArguments):
         await help(ctx, "forza")
+    else:
+        await ctx.send("Error logged.")
+        e = traceback.format_exc()
+        ErrorLogger.run(e)
 
 
 @forza.command()
@@ -985,6 +989,10 @@ async def logs(ctx):
 async def logs_error(ctx, error):
     if isinstance(error, commands.errors.TooManyArguments):
         await ctx.send("Invalid Subcommand")
+    else:
+        await ctx.send("Error logged.")
+        e = traceback.format_exc()
+        ErrorLogger.run(e)
 
 
 @logs.command()
@@ -998,6 +1006,10 @@ async def clear(ctx):
 async def clear_error(ctx, error):
     if isinstance(error, commands.errors.NotOwner):
         await ctx.send("You dare try to hide your crimes?")
+    else:
+        await ctx.send("Error logged.")
+        e = traceback.format_exc()
+        ErrorLogger.run(e)
 
 
 @bot.command()

@@ -1,7 +1,7 @@
 import js2py
 
 
-def calculateTimes(func):
+def calculateTimes(func: str):
     js = js2py.eval_js(
         """
     function calculateTimes(result) {
