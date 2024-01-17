@@ -111,7 +111,7 @@ class Names(commands.Cog):
                         else:
                             if self.counter < 5:
                                 await interaction.followup.send(
-                                    "That's not you button.", ephemeral=True
+                                    "That's not your button.", ephemeral=True
                                 )
                                 self.counter += 1
                             elif self.counter >= 5 and self.counter < 8:
