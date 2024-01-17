@@ -111,17 +111,18 @@ async def on_message(msg):
         or bot.user in msg.mentions
         or (msg.reference is not None and msg.reference.resolved.author == bot.user)
     ):
-        responses = []
-        with open(f"{here}\\bruhbot\\responses.txt", "r", encoding="utf-8") as f:
-            for line in f:
-                current = line[:-1]
-                responses.append(current)
-        response = random.choice(responses).replace(r"\n", "\n")
-        if response.endswith("- image"):
-            await send_image(ctx, response)
+        async with ctx.typing():
+            responses = []
+            with open(f"{here}\\bruhbot\\responses.txt", "r", encoding="utf-8") as f:
+                for line in f:
+                    current = line[:-1]
+                    responses.append(current)
+            response = random.choice(responses).replace(r"\n", "\n")
+            if response.endswith("- image"):
+                await send_image(ctx, response)
+                return
+            await ctx.send(response)
             return
-        await ctx.send(response)
-        return
     if "69" in nospace:
         await ctx.send("nice")  # nice
         return
@@ -181,7 +182,8 @@ async def addr(ctx, *, arg: str = None):
                                     dupe = True
                                     break
                     if dupe is False:
-                        await attachment.save(f"{here}\\images\\{pre}")
+                        async with ctx.typing():
+                            await attachment.save(f"{here}\\images\\{pre}")
                     else:
                         continue
                     with open(
