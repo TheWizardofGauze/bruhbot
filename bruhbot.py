@@ -50,19 +50,26 @@ async def check_age():
 
 
 async def auto_backup():
-    with open(f"{here}\\bruhbot\\data.json", "r+") as f:
-        data = json.load(f)
-        now = date.today()
-        print(now)
-        last = datetime.strptime(data["lastbackup"], "%Y-%m-%d")
-        rdelta = relativedelta(now, last)
-        if rdelta.months >= 1:
-            ResponseBackup.run()
-            data["lastbackup"] = now.strftime("%Y-%m-%d")
-            f.seek(0)
-            json.dump(data, f, indent=4)
-        else:
-            return
+    try:
+        with open(f"{here}\\bruhbot\\data.json", "r+") as f:
+            data = json.load(f)
+            now = date.today()
+            print(now)
+            last = datetime.strptime(data["lastbackup"], "%Y-%m-%d")
+            rdelta = relativedelta(now, last)
+            if rdelta.months >= 1:
+                ResponseBackup.run()
+                data["lastbackup"] = now.strftime("%Y-%m-%d")
+                f.seek(0)
+                json.dump(data, f, indent=4)
+            else:
+                return
+    except Exception:
+        owner = discord.User(bot.owner_id)
+        await owner.send("Error logged in auto backup.")
+        e = traceback.format_exc()
+        ErrorLogger.run(e)
+        return
 
 
 async def send_dm(user: discord.User, content: discord.Embed):
