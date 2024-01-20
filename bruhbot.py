@@ -1,5 +1,5 @@
 import asyncio
-from datetime import date
+from datetime import date, datetime
 import json
 import os
 import random
@@ -49,6 +49,22 @@ async def check_age():
         await asyncio.sleep(3600)
 
 
+async def auto_backup():
+    with open(f"{here}\\bruhbot\\data.json", "r+") as f:
+        data = json.load(f)
+        now = date.today()
+        print(now)
+        last = datetime.strptime(data["lastbackup"], "%Y-%m-%d")
+        rdelta = relativedelta(now, last)
+        if rdelta.months >= 1:
+            ResponseBackup.run()
+            data["lastbackup"] = now.strftime("%Y-%m-%d")
+            f.seek(0)
+            json.dump(data, f, indent=4)
+        else:
+            return
+
+
 async def send_dm(user: discord.User, content: discord.Embed):
     dm = await user.create_dm()
     await dm.send(embed=content)
@@ -95,6 +111,7 @@ async def send_image(ctx, response: str):
 async def on_ready():
     servers = list(bot.guilds)
     print(f"{bot.user.name}(ID:{bot.user.id}) connected to {str(len(servers))} servers")
+    await auto_backup()
     await check_age()
 
 
@@ -951,6 +968,12 @@ async def time(ctx):
 @commands.is_owner()
 async def backup(ctx):
     ResponseBackup.run()
+    with open(f"{here}\\bruhbot\\data.json", "r+") as f:
+        data = json.load(f)
+        now = date.today()
+        data["lastbackup"] = now.strftime("%Y-%m-%d")
+        f.seek(0)
+        json.dump(data, f, indent=4)
     await ctx.send("Response list saved to backup.")
 
 
