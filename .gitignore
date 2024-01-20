@@ -1,6 +1,6 @@
-bruhbot/backups/
-bruhbot/logs/
-cogs/Audio/logs/
+bruhbot/backups
+bruhbot/logs
+cogs/Audio/logs
 cogs/Audio/application.yml
 cogs/Audio/Audio.db
 cogs/Audio/Audio.db-shm
