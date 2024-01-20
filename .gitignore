@@ -1,5 +1,5 @@
-bruhbot/backups
-bruhbot/logs
+bruhbot/backups/*
+bruhbot/logs/*
 cogs/Audio/logs
 cogs/Audio/application.yml
 cogs/Audio/Audio.db
