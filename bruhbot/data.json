@@ -1,5 +1,5 @@
 {
-    "lastbackup": "2024-01-19",
+    "lastbackup": "2024-01-01",
     "addr": {
         "description": "```Syntax: $addr [phrase/image name]```\n**Add Responses.**\nAdds a new response to the list.\nImages support custom names."
     },

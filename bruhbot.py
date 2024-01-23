@@ -196,10 +196,6 @@ async def addr(ctx, *, arg: str = None):
                                     await ctx.send(
                                         f"Error: **'{pre}'** already exists:"
                                     )
-                                    await send_image(ctx, pre)
-                                    await ctx.send(
-                                        "If this image does not match, try uploading your image under a different name."
-                                    )
                                     return
                                 else:
                                     dupe_counter += 1
