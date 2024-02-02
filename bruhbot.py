@@ -22,6 +22,7 @@ bot = commands.Bot(command_prefix="$", intents=intents)
 bot.remove_command("help")
 load_dotenv(".\\bruhbot\\.env")
 token = os.getenv("TOKEN")
+owner_id = int(os.getenv("OWNER_ID"))
 here = os.path.dirname(__file__)
 
 
@@ -65,16 +66,11 @@ async def auto_backup():
             else:
                 return
     except Exception:
-        owner = discord.User(bot.owner_id)
-        await owner.send("Error logged in auto backup.")
+        owner = await bot.fetch_user(owner_id)
+        await owner.send("Error logged in auto backup function.")
         e = traceback.format_exc()
         ErrorLogger.run(e)
         return
-
-
-async def send_dm(user: discord.User, content: discord.Embed):
-    dm = await user.create_dm()
-    await dm.send(embed=content)
 
 
 async def get_color(ctx):
@@ -901,7 +897,6 @@ async def help(ctx, *arg: str):
             await ctx.send(embed=msg)
         elif not arg:
             categories = ["response", "extra"]
-            user = ctx.author
             helpName = []
             helpDes = []
             with open(f"{here}\\bruhbot\\data.json") as f:
@@ -916,7 +911,8 @@ async def help(ctx, *arg: str):
                     helpColor,
                     len(categories),
                 )
-                await send_dm(user, msg)
+                # await send_dm(user, msg)
+                await ctx.send(embed=msg)
         else:
             return
     except Exception:
