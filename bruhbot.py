@@ -911,7 +911,6 @@ async def help(ctx, *arg: str):
                     helpColor,
                     len(categories),
                 )
-                # await send_dm(user, msg)
                 await ctx.send(embed=msg)
         else:
             return
