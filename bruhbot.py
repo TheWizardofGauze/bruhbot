@@ -55,7 +55,6 @@ async def auto_backup():
         with open(f"{here}\\bruhbot\\data.json", "r+") as f:
             data = json.load(f)
             now = date.today()
-            print(now)
             last = datetime.strptime(data["lastbackup"], "%Y-%m-%d")
             rdelta = relativedelta(now, last)
             if rdelta.months >= 1:
@@ -126,8 +125,13 @@ async def on_message(msg):
         return
     nospace = re.sub("[^a-zA-Z0-9]", "", msg.content).lower()
     name = re.sub("[^a-zA-Z0-9]", "", ctx.me.display_name).lower()
+    if ctx.guild:
+        top_role = str(ctx.guild.get_member(bot.user.id).top_role.id)
+    else:
+        top_role = "N/A"
     if (
         name in nospace
+        or top_role in nospace
         or bot.user in msg.mentions
         or (msg.reference is not None and msg.reference.resolved.author == bot.user)
     ):
