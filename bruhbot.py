@@ -81,23 +81,6 @@ async def get_color(ctx):
         return color
 
 
-async def embed(ctx, name: str, description: str, color: int, pages: int):
-    embed = discord.Embed(color=color)
-    if pages > 1:
-        embed.title = "*Bruhbot*"
-        for page in range(pages):
-            embed.add_field(name=name[page], value=description[page], inline=False)
-    else:
-        embed.description = description
-    embed.set_author(
-        name=f"{ctx.me.display_name} Help Menu", icon_url=bot.user.display_avatar
-    )
-    embed.set_footer(
-        text="Type $help <command> for more info on a command. You can also type $help <category> for more info on a category."
-    )
-    return embed
-
-
 async def send_image(ctx, response: str):
     try:
         image = response.replace(" - image", "")
@@ -119,37 +102,44 @@ async def on_ready():
 
 @bot.event
 async def on_message(msg):
-    await bot.process_commands(msg)
-    ctx = await bot.get_context(msg)
-    if ctx.author.bot or ctx.channel.id == 1040461583027011645:
-        return
-    nospace = re.sub("[^a-zA-Z0-9]", "", msg.content).lower()
-    name = re.sub("[^a-zA-Z0-9]", "", ctx.me.display_name).lower()
-    if ctx.guild:
-        top_role = str(ctx.guild.get_member(bot.user.id).top_role.id)
-    else:
-        top_role = "N/A"
-    if (
-        name in nospace
-        or top_role in nospace
-        or bot.user in msg.mentions
-        or (msg.reference is not None and msg.reference.resolved.author == bot.user)
-    ):
-        async with ctx.typing():
-            responses = []
-            with open(f"{here}\\bruhbot\\responses.txt", "r", encoding="utf-8") as f:
-                for line in f:
-                    current = line[:-1]
-                    responses.append(current)
-            response = random.choice(responses).replace(r"\n", "\n")
-            if response.endswith("- image"):
-                await send_image(ctx, response)
-                return
-            await ctx.send(response)
+    try:
+        await bot.process_commands(msg)
+        ctx = await bot.get_context(msg)
+        if ctx.author.bot or ctx.channel.id == 1040461583027011645:
             return
-    if "69" in nospace:
-        await ctx.send("nice")  # nice
-        return
+        nospace = re.sub("[^a-zA-Z0-9]", "", msg.content).lower()
+        name = re.sub("[^a-zA-Z0-9]", "", ctx.me.display_name).lower()
+        if ctx.guild:
+            top_role = str(ctx.guild.get_member(bot.user.id).top_role.id)
+        else:
+            top_role = "N/A"
+        if (
+            name in nospace
+            or top_role in nospace
+            or bot.user in msg.mentions
+            or (msg.reference is not None and msg.reference.resolved.author == bot.user)
+        ):
+            async with ctx.typing():
+                responses = []
+                with open(
+                    f"{here}\\bruhbot\\responses.txt", "r", encoding="utf-8"
+                ) as f:
+                    for line in f:
+                        current = line[:-1]
+                        responses.append(current)
+                response = random.choice(responses).replace(r"\n", "\n")
+                if response.endswith("- image"):
+                    await send_image(ctx, response)
+                    return
+                await ctx.send(response)
+                return
+        if "69" in nospace:
+            await ctx.send("nice")  # nice
+            return
+    except Exception:
+        await ctx.send("Error logged.")
+        e = traceback.format_exc()
+        ErrorLogger.run(e)
 
 
 @bot.command()
@@ -890,6 +880,26 @@ async def rtest(ctx, arg: str):  # for testing responses
 @bot.command()
 async def help(ctx, *arg: str):
     try:
+
+        def embed(ctx, name: str, description: str, color: int, pages: int):
+            embed = discord.Embed(color=color)
+            if pages > 1:
+                embed.title = "*Bruhbot*"
+                for page in range(pages):
+                    embed.add_field(
+                        name=name[page], value=description[page], inline=False
+                    )
+            else:
+                embed.description = description
+            embed.set_author(
+                name=f"{ctx.me.display_name} Help Menu",
+                icon_url=bot.user.display_avatar,
+            )
+            embed.set_footer(
+                text="Type $help <command> for more info on a command. You can also type $help <category> for more info on a category."
+            )
+            return embed
+
         pre = " ".join(arg[:]).lower()
         args = ["addr", "delr", "rlist", "age", "forza", "response", "extra"]
         helpColor = await get_color(ctx)
@@ -897,7 +907,7 @@ async def help(ctx, *arg: str):
             with open(f"{here}\\bruhbot\\data.json") as f:
                 data = json.load(f)
                 helpDes = data[pre]["description"]
-            msg = await embed(ctx, None, helpDes, helpColor, 1)
+            msg = embed(ctx, None, helpDes, helpColor, 1)
             await ctx.send(embed=msg)
         elif not arg:
             categories = ["response", "extra"]
@@ -908,7 +918,7 @@ async def help(ctx, *arg: str):
                 for cat in categories:
                     helpDes.append(data[cat]["description"])
                     helpName.append(data[cat]["name"])
-                msg = await embed(
+                msg = embed(
                     ctx,
                     helpName,
                     helpDes,
