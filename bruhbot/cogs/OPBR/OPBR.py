@@ -1,3 +1,4 @@
+from contextlib import suppress
 from datetime import datetime
 import json
 import os
@@ -79,7 +80,7 @@ class OPBR(commands.Cog):
                         try:
                             contestant = client.get(data[name]["id"])
                             birth_date = contestant[client.get("P569")]
-                            try:
+                            with suppress(KeyError):
                                 death_date = contestant[client.get("P570")]
                                 if death_date is not None:
                                     new = True
@@ -108,8 +109,6 @@ class OPBR(commands.Cog):
                                     json.dump(data, f, indent=4)
                                     f.truncate()
                                     raise cont
-                            except KeyError:
-                                pass
                             age = relativedelta(today, birth_date).years
                             if not int(data[name]["age"]) == age:
                                 new = True
