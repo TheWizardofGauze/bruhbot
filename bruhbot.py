@@ -119,7 +119,8 @@ async def on_message(msg):
             or top_role in nospace
             or bot.user in msg.mentions
             or (
-                msg.reference.resolved is not None
+                msg.reference is not None
+                and msg.reference.resolved is not None
                 and msg.reference.resolved.author == bot.user
             )
         ):
