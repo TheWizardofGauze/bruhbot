@@ -18,12 +18,12 @@ class Names(commands.Cog):
         self.file = f"{os.path.dirname(__file__)}\\names.json"
 
     async def get_color(self, ctx):
-        if ctx.guild:
-            color = ctx.guild.get_member(self.bot.user.id).top_role.color
-            return color
-        else:
-            color = 0xE74C3C  # red
-            return color
+        color = (
+            ctx.guild.get_member(self.bot.user.id).top_role.color
+            if ctx.guild
+            else 0xE74C3C  # red
+        )
+        return color
 
     @commands.hybrid_command(invoke_without_command=True)
     async def name(self, ctx):

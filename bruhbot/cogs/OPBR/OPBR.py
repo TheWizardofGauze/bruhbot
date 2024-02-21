@@ -40,12 +40,12 @@ class OPBR(commands.Cog):
         return names
 
     async def get_color(self, ctx):
-        if ctx.guild:
-            color = ctx.guild.get_member(self.bot.user.id).top_role.color
-            return color
-        else:
-            color = 0xE74C3C  # red
-            return color
+        color = (
+            ctx.guild.get_member(self.bot.user.id).top_role.color
+            if ctx.guild
+            else 0xE74C3C  # red
+        )
+        return color
 
     @commands.hybrid_group()
     async def opbr(self, ctx):

@@ -28,10 +28,7 @@ here = os.path.dirname(__file__)
 
 async def check_age():
     def plural(num: int):
-        if num == 1:
-            return 0
-        else:
-            return 1
+        return 0 if num == 1 else 1
 
     while True:
         now = date.today()
@@ -73,12 +70,12 @@ async def auto_backup():
 
 
 async def get_color(ctx):
-    if ctx.guild:
-        color = ctx.guild.get_member(bot.user.id).top_role.color
-        return color
-    else:
-        color = 0xE74C3C  # red
-        return color
+    color = (
+        ctx.guild.get_member(bot.user.id).top_role.color
+        if ctx.guild
+        else 0xE74C3C  # red
+    )
+    return color
 
 
 async def send_image(ctx, response: str):
@@ -109,17 +106,18 @@ async def on_message(msg):
             return
         nospace = re.sub("[^a-zA-Z0-9]", "", msg.content).lower()
         name = re.sub("[^a-zA-Z0-9]", "", ctx.me.display_name).lower()
-        if ctx.guild:
-            top_role = str(ctx.guild.get_member(bot.user.id).top_role.id)
-        else:
-            top_role = "N/A"
+        top_role = (
+            str(ctx.guild.get_member(bot.user.id).top_role.id) if ctx.guild else None
+        )
 
         if (
             name in nospace
-            or top_role in nospace
+            or top_role is not None
+            and top_role in nospace
             or bot.user in msg.mentions
             or (
-                not [x for x in (msg.reference, msg.reference.resolved) if x is None]
+                msg.reference is not None
+                and msg.reference.resolved is not None
                 and msg.reference.resolved.author == bot.user
             )
         ):
@@ -941,10 +939,7 @@ async def help(ctx, *arg: str):
 @bot.command()
 async def age(ctx):
     def plural(num: int):
-        if num == 1:
-            return 0
-        else:
-            return 1
+        return 0 if num == 1 else 1
 
     now = date.today()
     bday = date(2020, 3, 8)
