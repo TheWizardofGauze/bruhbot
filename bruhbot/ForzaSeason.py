@@ -43,10 +43,7 @@ def season():
 
 def time():
     def plural(num):
-        if int(num) == 1:
-            return 0
-        else:
-            return 1
+        return 0 if int(num) == 1 else 1
 
     times = calculateTimes("time")
     days = times[0]
