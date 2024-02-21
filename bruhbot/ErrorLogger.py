@@ -28,7 +28,7 @@ def clear():
 def last():
     files = os.listdir(logdir)
     if files == []:
-        return "No logs found"
+        return "No logs found."
     newest = max(files, key=lambda f: os.path.getmtime("{}/{}".format(logdir, f)))
     log = newest.replace(".txt", "")
     with open(logdir + newest) as f:
