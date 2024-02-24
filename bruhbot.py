@@ -1,4 +1,5 @@
 import asyncio
+from contextlib import suppress
 from datetime import date, datetime
 import json
 import os
@@ -578,13 +579,9 @@ async def delr(ctx, *arg: str):
                         if line.strip("\n").lower() != responses[choice].lower():
                             f.write(line)
                 if " - image" in responses[choice]:
-                    try:
+                    with suppress(FileNotFoundError):
                         image = responses[choice].replace(" - image", "")
                         os.remove(f"{here}\\images\\{image}")
-                    except Exception as exc:
-                        print(f"{exc}. Passing...")
-                        ErrorLogger.run(traceback.format_exc())
-                        pass
                 await ctx.send(":ok_hand:")
                 await ctx.send(f"**'{responses[choice]}'** was deleted.")
                 return
@@ -632,15 +629,11 @@ async def delr(ctx, *arg: str):
                             ):
                                 f.write(line)
                     if " - image" in responses[mview.start : mview.end][mview.choice]:
-                        try:
+                        with suppress(FileNotFoundError):
                             image = responses[mview.start : mview.end][
                                 mview.choice
                             ].replace(" - image", "")
                             os.remove(f"{here}\\images\\{image}")
-                        except Exception as exc:
-                            print(f"{exc}. Passing...")
-                            ErrorLogger.run(traceback.format_exc())
-                            pass
                     await ctx.send(":ok_hand:")
                     await ctx.send(
                         f"**'{responses[mview.start:mview.end][mview.choice]}'** was deleted."
