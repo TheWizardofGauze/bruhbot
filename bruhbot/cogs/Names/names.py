@@ -161,8 +161,7 @@ class Names(commands.Cog):
                 rview.file = self.file
                 rview.wait()
             except Exception:
-                e = traceback.format_exc()
-                ErrorLogger.run(e)
+                ErrorLogger.run(traceback.format_exc())
                 await ctx.send("Error logged.")
 
     @app_commands.command(
@@ -228,6 +227,5 @@ class Names(commands.Cog):
             await interaction.response.send_modal(addM)
             await addM.wait()
         except Exception:
-            e = traceback.format_exc()
-            ErrorLogger.run(e)
+            ErrorLogger.run(traceback.format_exc())
             await interaction.followup.send("Error logged.")
