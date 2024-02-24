@@ -467,7 +467,7 @@ async def delr(ctx, *arg: str):
                     pageM = pageModal()
                     await interaction.response.send_modal(pageM)
                     await pageM.wait()
-                    page = int(pageM.p.value)
+                    page = int(pageM.page.value)
                     if page > self.pages:
                         self.curPage = min(self.pages, page)
                         self.start = min(self.pages, page) * 5 - 5
@@ -798,7 +798,7 @@ async def rlist(ctx):
                     pageM = pageModal()
                     await interaction.response.send_modal(pageM)
                     await pageM.wait()
-                    page = int(pageM.p.value)
+                    page = int(pageM.page.value)
                     if page > self.pages:
                         self.curPage = min(self.pages, page)
                         self.start = min(self.pages, page) * 25 - 25
