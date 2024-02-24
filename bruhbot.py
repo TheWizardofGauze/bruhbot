@@ -64,8 +64,7 @@ async def auto_backup():
     except Exception:
         owner = await bot.fetch_user(owner_id)
         await owner.send("Error logged in auto backup function.")
-        e = traceback.format_exc()
-        ErrorLogger.run(e)
+        ErrorLogger.run(traceback.format_exc())
         return
 
 
@@ -84,8 +83,7 @@ async def send_image(ctx, response: str):
         await ctx.send(file=discord.File(f"{here}\\images\\{image}"))
     except Exception:  # missing image
         await ctx.send("Error logged.")
-        e = traceback.format_exc()
-        ErrorLogger.run(e)
+        ErrorLogger.run(traceback.format_exc())
         return
 
 
@@ -140,8 +138,7 @@ async def on_message(msg):
             return
     except Exception:
         await ctx.send("Error logged.")
-        e = traceback.format_exc()
-        ErrorLogger.run(e)
+        ErrorLogger.run(traceback.format_exc())
 
 
 @bot.command()
@@ -249,12 +246,11 @@ async def addr(ctx, *, arg: str = None):
         await ctx.send(f"**'{pre1}'** was added")
     except Exception:
         await ctx.send("Error logged.")
-        e = traceback.format_exc()
-        ErrorLogger.run(e)
+        ErrorLogger.run(traceback.format_exc())
 
 
 @bot.command()
-async def delr(ctx, arg: str):
+async def delr(ctx, *arg: str):
     try:
 
         def get_list(responses: list, start: int, end: int, curPage: int):
@@ -273,7 +269,7 @@ async def delr(ctx, arg: str):
             return emb
 
         class pageModal(discord.ui.Modal, title="Enter a page number"):
-            p = discord.ui.TextInput(
+            page = discord.ui.TextInput(
                 style=discord.TextStyle.short,
                 label="Page",
                 required=True,
@@ -282,7 +278,7 @@ async def delr(ctx, arg: str):
 
             async def on_submit(self, interaction: discord.Interaction):
                 await interaction.response.defer()
-                if not int(self.p.value):
+                if not int(self.page.value):
                     raise Exception
 
             async def on_error(self, interaction: discord.Interaction):
@@ -585,9 +581,9 @@ async def delr(ctx, arg: str):
                     try:
                         image = responses[choice].replace(" - image", "")
                         os.remove(f"{here}\\images\\{image}")
-                    except Exception as e:
-                        print(f"{e}. Passing...")
-                        ErrorLogger.run(e)
+                    except Exception as exc:
+                        print(f"{exc}. Passing...")
+                        ErrorLogger.run(traceback.format_exc())
                         pass
                 await ctx.send(":ok_hand:")
                 await ctx.send(f"**'{responses[choice]}'** was deleted.")
@@ -641,9 +637,9 @@ async def delr(ctx, arg: str):
                                 mview.choice
                             ].replace(" - image", "")
                             os.remove(f"{here}\\images\\{image}")
-                        except Exception as e:
-                            print(f"{e}. Passing...")
-                            ErrorLogger.run(e)
+                        except Exception as exc:
+                            print(f"{exc}. Passing...")
+                            ErrorLogger.run(traceback.format_exc())
                             pass
                     await ctx.send(":ok_hand:")
                     await ctx.send(
@@ -654,8 +650,7 @@ async def delr(ctx, arg: str):
 
     except Exception:
         await ctx.send("Error logged.")
-        e = traceback.format_exc()
-        ErrorLogger.run(e)
+        ErrorLogger.run(traceback.format_exc())
 
 
 @bot.command()
@@ -672,7 +667,7 @@ async def rlist(ctx):
             return emb
 
         class pageModal(discord.ui.Modal, title="Enter a page number"):
-            p = discord.ui.TextInput(
+            page = discord.ui.TextInput(
                 style=discord.TextStyle.short,
                 label="Page",
                 required=True,
@@ -681,7 +676,7 @@ async def rlist(ctx):
 
             async def on_submit(self, interaction: discord.Interaction):
                 await interaction.response.defer()
-                if not int(self.p.value):
+                if not int(self.page.value):
                     raise Exception
 
             async def on_error(self, interaction: discord.Interaction):
@@ -853,8 +848,7 @@ async def rlist(ctx):
         await mview.wait()
     except Exception:
         await ctx.send("Error logged.")
-        e = traceback.format_exc()
-        ErrorLogger.run(e)
+        ErrorLogger.run(traceback.format_exc())
 
 
 @bot.command()
@@ -932,8 +926,7 @@ async def help(ctx, *arg: str):
             return
     except Exception:
         await ctx.send("Error logged.")
-        e = traceback.format_exc()
-        ErrorLogger.run(e)
+        ErrorLogger.run(traceback.format_exc())
 
 
 @bot.command()
@@ -965,8 +958,7 @@ async def forza_error(ctx, error):
         await help(ctx, "forza")
     else:
         await ctx.send("Error logged.")
-        e = traceback.format_exc()
-        ErrorLogger.run(e)
+        ErrorLogger.run(traceback.format_exc())
 
 
 @forza.command()
@@ -1027,8 +1019,7 @@ async def logs_error(ctx, error):
         await ctx.send("Invalid Subcommand")
     else:
         await ctx.send("Error logged.")
-        e = traceback.format_exc()
-        ErrorLogger.run(e)
+        ErrorLogger.run(traceback.format_exc())
 
 
 @logs.command()
@@ -1044,8 +1035,7 @@ async def clear_error(ctx, error):
         await ctx.send("You dare try to hide your crimes?")
     else:
         await ctx.send("Error logged.")
-        e = traceback.format_exc()
-        ErrorLogger.run(e)
+        ErrorLogger.run(traceback.format_exc())
 
 
 @bot.command()
