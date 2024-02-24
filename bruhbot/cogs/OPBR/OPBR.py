@@ -142,8 +142,7 @@ class OPBR(commands.Cog):
                 )
                 await ctx.send(embed=msg)
         except Exception:
-            e = traceback.format_exc()
-            ErrorLogger.run(e)
+            ErrorLogger.run(traceback.format_exc())
             await ctx.send("Update failed! Error logged.")
 
     @opbr.group(fallback="current", invoke_without_command=True)
@@ -176,8 +175,7 @@ class OPBR(commands.Cog):
                     ).set_footer(text=f"Last updated {data['updated']}")
                     await ctx.send(embed=msg)
             except Exception:
-                e = traceback.format_exc()
-                ErrorLogger.run(e)
+                ErrorLogger.run(traceback.format_exc())
                 await ctx.send("There was a problem. Error logged.")
 
     @stats.command()
@@ -211,6 +209,5 @@ class OPBR(commands.Cog):
                 ).set_footer(text=f"Last updated {data['updated']}")
                 await ctx.send(embed=msg)
         except Exception:
-            e = traceback.format_exc()
-            ErrorLogger.run(e)
+            ErrorLogger.run(traceback.format_exc())
             await ctx.send("There was a problem. Error logged.")
