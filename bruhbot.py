@@ -3,7 +3,7 @@ from contextlib import suppress
 from datetime import date, datetime
 import json
 import os
-import random
+from random import choice, random
 import re
 import string
 import traceback
@@ -121,6 +121,9 @@ async def on_message(msg):
             )
         ):
             async with ctx.typing():
+                if random() < 0.01:
+                    await ctx.send(ctx.author.display_avatar)
+                    return
                 responses = []
                 with open(
                     f"{here}\\bruhbot\\responses.txt", "r", encoding="utf-8"
@@ -128,7 +131,7 @@ async def on_message(msg):
                     for line in f:
                         current = line[:-1]
                         responses.append(current)
-                response = random.choice(responses).replace(r"\n", "\n")
+                response = choice(responses).replace(r"\n", "\n")
                 if response.endswith("- image"):
                     await send_image(ctx, response)
                     return
@@ -171,11 +174,11 @@ async def addr(ctx, *, arg: str = None):
                                 or attachment.filename == f"image{ext}"
                             ):
                                 new = "".join(
-                                    random.choice(string.ascii_letters + string.digits)
+                                    choice(string.ascii_letters + string.digits)
                                     for i in range(6)
                                 )
                                 while os.path.exists(f".\\images\\{new}"):
-                                    new = new + "".join(random.choice(string.digits))
+                                    new = new + "".join(choice(string.digits))
                                 pre = new + ext
                             else:
                                 pre = attachment.filename
