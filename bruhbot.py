@@ -121,7 +121,7 @@ async def on_message(msg):
             )
         ):
             async with ctx.typing():
-                if random() < 0.01:
+                if random() < 0.005:
                     await ctx.send(ctx.author.display_avatar)
                     return
                 responses = []
