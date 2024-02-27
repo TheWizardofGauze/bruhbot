@@ -81,9 +81,11 @@ async def get_color(ctx):
 async def send_image(ctx, response: str):
     try:
         image = response.replace(" - image", "")
-        await ctx.send(file=discord.File(f"{here}\\images\\{image}"))
+        await ctx.reply(
+            file=discord.File(f"{here}\\images\\{image}"), mention_author=False
+        )
     except Exception:  # missing image
-        await ctx.send("Error logged.")
+        await ctx.reply("Error logged.")
         ErrorLogger.run(traceback.format_exc())
         return
 
@@ -122,7 +124,7 @@ async def on_message(msg):
         ):
             async with ctx.typing():
                 if random() < 0.005:
-                    await ctx.send(ctx.author.display_avatar)
+                    await ctx.reply(ctx.author.display_avatar, mention_author=False)
                     return
                 responses = []
                 with open(
@@ -135,13 +137,13 @@ async def on_message(msg):
                 if response.endswith("- image"):
                     await send_image(ctx, response)
                     return
-                await ctx.send(response)
+                await ctx.reply(response, mention_author=False)
                 return
         if "69" in nospace:
-            await ctx.send("nice")  # nice
+            await ctx.reply("nice", mention_author=False)  # nice
             return
     except Exception:
-        await ctx.send("Error logged.")
+        await ctx.reply("Error logged.")
         ErrorLogger.run(traceback.format_exc())
 
 
@@ -157,7 +159,7 @@ async def addr(ctx, *, arg: str = None):
                 if "image" in attachment.content_type:
                     if attachment.size > 26214400:
                         if len(ctx.message.attachments) == 1:
-                            await ctx.send("Error: File too large. (Max 25MB)")
+                            await ctx.reply("Error: File too large. (Max 25MB)")
                             return
                         else:
                             size_counter += 1
@@ -186,7 +188,7 @@ async def addr(ctx, *, arg: str = None):
                         for line in file:
                             if pre.lower() == line.lower().replace(" - image\n", ""):
                                 if len(ctx.message.attachments) == 1:
-                                    await ctx.send(
+                                    await ctx.reply(
                                         f"Error: **'{pre}'** already exists:"
                                     )
                                     return
@@ -205,7 +207,7 @@ async def addr(ctx, *, arg: str = None):
                         f.write(f"{pre} - image\n")
                 else:
                     if len(ctx.message.attachments) == 1:
-                        await ctx.send("Error: Invalid file type.")
+                        await ctx.reply("Error: Invalid file type.")
                         return
                     else:
                         invalid_counter += 1
@@ -224,7 +226,7 @@ async def addr(ctx, *, arg: str = None):
             else:
                 added = "Images were added."
             if not invalid_counter == len(ctx.message.attachments):
-                await ctx.send(":ok_hand:")
+                await ctx.reply(":ok_hand:", mention_author=False)
                 await ctx.send(added)
             if dupe_counter > 0:
                 await ctx.send(f"Blocked {str(dupe_counter)} duplicate files.")
@@ -242,14 +244,14 @@ async def addr(ctx, *, arg: str = None):
             file = f.readlines()
             for line in file:
                 if pre.lower() == line.lower().strip("\n"):
-                    await ctx.send("Error: Response already exists.")
+                    await ctx.reply("Error: Response already exists.")
                     return
         with open(f"{here}\\bruhbot\\responses.txt", "a", encoding="utf-8") as f:
             f.write(pre + "\n")
-        await ctx.send(":ok_hand:")
+        await ctx.reply(":ok_hand:", mention_author=False)
         await ctx.send(f"**'{pre1}'** was added")
     except Exception:
-        await ctx.send("Error logged.")
+        await ctx.reply("Error logged.")
         ErrorLogger.run(traceback.format_exc())
 
 
@@ -560,10 +562,10 @@ async def delr(ctx, *arg: str):
                 if choice + 1 <= 0 or choice + 1 > len(responses):
                     raise IndexError
             except ValueError:
-                await ctx.send("Selection must be a number.")
+                await ctx.reply("Selection must be a number.")
                 return
             except IndexError:
-                await ctx.send("Error: Selection out of range.")
+                await ctx.reply("Error: Selection out of range.")
                 return
             emb = discord.Embed(
                 title="Delete response",
@@ -585,7 +587,7 @@ async def delr(ctx, *arg: str):
                     with suppress(FileNotFoundError):
                         image = responses[choice].replace(" - image", "")
                         os.remove(f"{here}\\images\\{image}")
-                await ctx.send(":ok_hand:")
+                await ctx.reply(":ok_hand:", mention_author=False)
                 await ctx.send(f"**'{responses[choice]}'** was deleted.")
                 return
             if cview.cancel is True or cview.timeout is True:
@@ -608,7 +610,7 @@ async def delr(ctx, *arg: str):
                 return
             if mview.choice is not None:
                 if mview.choice + 1 > len(responses[mview.start : mview.end]):
-                    await ctx.send("Invalid selection. That shouldn't happen...")
+                    await ctx.reply("Invalid selection. That shouldn't happen...")
                     raise Exception
                 emb = discord.Embed(
                     title="Delete response",
@@ -637,7 +639,7 @@ async def delr(ctx, *arg: str):
                                 mview.choice
                             ].replace(" - image", "")
                             os.remove(f"{here}\\images\\{image}")
-                    await ctx.send(":ok_hand:")
+                    await ctx.reply(":ok_hand:", mention_author=False)
                     await ctx.send(
                         f"**'{responses[mview.start:mview.end][mview.choice]}'** was deleted."
                     )
@@ -645,7 +647,7 @@ async def delr(ctx, *arg: str):
                     return
 
     except Exception:
-        await ctx.send("Error logged.")
+        await ctx.reply("Error logged.")
         ErrorLogger.run(traceback.format_exc())
 
 
@@ -839,11 +841,11 @@ async def rlist(ctx):
         mview.pages = pages
         mview.curPage = curPage
         await mview.update()
-        msg = await ctx.send(embed=emb, view=mview)
+        msg = await ctx.reply(embed=emb, view=mview, mention_author=False)
         mview.msg = msg
         await mview.wait()
     except Exception:
-        await ctx.send("Error logged.")
+        await ctx.reply("Error logged.")
         ErrorLogger.run(traceback.format_exc())
 
 
@@ -860,13 +862,13 @@ async def rtest(ctx, arg: str):  # for testing responses
             current = line[:-1]
             responses.append(current)
     if choice + 1 > len(responses) or choice < 0:
-        await ctx.send("Error: Selection out of range.")
+        await ctx.reply("Error: Selection out of range.")
         return
     response = responses[choice].replace(r"\n", "\n")
     if response.endswith("- image"):
         await send_image(ctx, response)
         return
-    await ctx.send(response)
+    await ctx.reply(response, mention_author=False)
 
 
 @bot.command()
@@ -921,7 +923,7 @@ async def help(ctx, *arg: str):
         else:
             return
     except Exception:
-        await ctx.send("Error logged.")
+        await ctx.reply("Error logged.")
         ErrorLogger.run(traceback.format_exc())
 
 
@@ -934,8 +936,9 @@ async def age(ctx):
     bday = date(2020, 3, 8)
     rdelta = relativedelta(now, bday)
     plurals = [["year", "years"], ["month", "months"], ["day", "days"]]
-    await ctx.send(
-        f"I am {rdelta.years} {plurals[0][plural(rdelta.years)]}, {rdelta.months} {plurals[1][plural(rdelta.months)]}, {rdelta.days} {plurals[2][plural(rdelta.days)]} old."
+    await ctx.reply(
+        f"I am {rdelta.years} {plurals[0][plural(rdelta.years)]}, {rdelta.months} {plurals[1][plural(rdelta.months)]}, {rdelta.days} {plurals[2][plural(rdelta.days)]} old.",
+        mention_author=False,
     )
 
 
@@ -943,8 +946,9 @@ async def age(ctx):
 async def forza(ctx):
     if ctx.invoked_subcommand is None:
         season = ForzaSeason.season()
-        await ctx.send(
-            f"Horizon 4: {season[0].capitalize()}\nHorizon 5: {season[1].capitalize()}"
+        await ctx.reply(
+            f"Horizon 4: {season[0].capitalize()}\nHorizon 5: {season[1].capitalize()}",
+            mention_author=False,
         )
 
 
@@ -953,14 +957,14 @@ async def forza_error(ctx, error):
     if isinstance(error, commands.errors.TooManyArguments):
         await help(ctx, "forza")
     else:
-        await ctx.send("Error logged.")
+        await ctx.reply("Error logged.")
         ErrorLogger.run(traceback.format_exc())
 
 
 @forza.command()
 async def time(ctx):
     time = ForzaSeason.time()
-    await ctx.send(f"Next seasons start in {time}.")
+    await ctx.reply(f"Next seasons start in {time}.", mention_author=False)
 
 
 @bot.command()
@@ -973,7 +977,7 @@ async def backup(ctx):
         data["lastbackup"] = now.strftime("%Y-%m-%d")
         f.seek(0)
         json.dump(data, f, indent=4)
-    await ctx.send("Response list saved to backup.")
+    await ctx.reply("Response list saved to backup.", mention_author=False)
 
 
 @bot.group(invoke_without_command=True, ignore_extra=False)
@@ -1002,7 +1006,7 @@ async def logs(ctx):
 
         last = ErrorLogger.last()
         if last == "No logs found.":
-            await ctx.send(last)
+            await ctx.reply(last, mention_author=False)
         else:
             view = clearView(timeout=10)
             msg = await ctx.send(last, view=view)
@@ -1012,9 +1016,9 @@ async def logs(ctx):
 @logs.error
 async def logs_error(ctx, error):
     if isinstance(error, commands.errors.TooManyArguments):
-        await ctx.send("Invalid Subcommand")
+        await ctx.reply("Invalid Subcommand")
     else:
-        await ctx.send("Error logged.")
+        await ctx.reply("Error logged.")
         ErrorLogger.run(traceback.format_exc())
 
 
