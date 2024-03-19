@@ -216,7 +216,7 @@ class Names(commands.Cog):
                         json.dump(data, f, indent=4)
                         f.truncate()
                     await interaction.followup.send(
-                        f'"{self.name1} {self.name2}" was added.',
+                        f'"{f"{self.name1} {self.name2}".strip()}" was added.',
                         ephemeral=True,
                     )
 
