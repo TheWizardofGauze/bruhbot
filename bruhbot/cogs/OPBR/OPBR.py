@@ -19,7 +19,7 @@ class Cont(Exception):
 class OPBR(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.file = f"{os.path.dirname(__file__)}\\OPBR.json"
+        self.file = f"{os.path.dirname(__file__)}\\opbr.json"
         self.title = "*Old Person Battle Royale*"
         self.url = "https://jamboard.google.com/d/1DikJQQONWUW7odKQoFLlrcri_li4DxVvcyZ_kkfJ77M/edit?usp=sharing"
 
