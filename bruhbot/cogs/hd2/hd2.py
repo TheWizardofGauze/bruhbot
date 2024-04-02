@@ -38,8 +38,6 @@ class HD2(commands.Cog):
                     if eresponse.status_code == 200:
                         if eresponse.json() == []:
                             return
-                        owner = await self.bot.fetch_user(self.owner_id)
-                        await owner.send(eresponse.json())
                         event = eresponse.json()[0]["message"]["en"]
                         if event == data["event"]:
                             return
@@ -51,7 +49,7 @@ class HD2(commands.Cog):
                         f.truncate()
                     else:
                         owner = await self.bot.fetch_user(self.owner_id)
-                        await owner.send(eresponse.status_code)
+                        await owner.send(f"{eresponse.status_code}\n{eresponse.json()}")
                     asyncio.sleep(3600)
         except Exception:
             owner = await self.bot.fetch_user(self.owner_id)
@@ -69,6 +67,7 @@ class HD2(commands.Cog):
         await self.update()
 
     @commands.command()
+    @commands.cooldown(1, 300, commands.BucketType.guild)
     async def status(self, ctx):
         try:
 
@@ -83,7 +82,10 @@ class HD2(commands.Cog):
                 embed.title = name
                 embed.description = f"{owner} control"
                 embed.set_thumbnail(url="attachment://logo.png")
-                embed.add_field(name="Liberation:", value=f"{liberation}%")
+                if owner == "Super Earth":
+                    embed.add_field(name="Defense Campaign", value="")
+                else:
+                    embed.add_field(name="Liberation:", value=f"{liberation}%")
                 embed.set_footer(
                     text=f"{players} Helldivers", icon_url="attachment://hdlogo.png"
                 )
@@ -108,15 +110,17 @@ class HD2(commands.Cog):
                                 {name: {"lib": lib, "owner": owner, "players": players}}
                             )
                         else:
-                            owner = await self.bot.fetch_user(self.owner_id)
-                            await owner.send(cresponse.status_code)
+                            # owner = await self.bot.fetch_user(self.owner_id)
+                            await ctx.send(
+                                f"{presponse.status_code}\n{presponse.json()}"
+                            )
                             return
 
                     for planet in planetdata:
                         if planetdata[planet]["owner"] == "Humans":
                             powner = "Super Earth"
                             img = f"{self.here}\\SuperEarth.png"
-                            color = discord.Color.blue()
+                            color = 0x05E7F3
                         elif planetdata[planet]["owner"] == "Automaton":
                             powner = "Automaton"
                             img = f"{self.here}\\Automaton.png"
@@ -125,6 +129,11 @@ class HD2(commands.Cog):
                             powner = "Terminid"
                             img = f"{self.here}\\Terminid.png"
                             color = 0xFEE75C
+                        plib = (
+                            "DEFENSE CAMPAIGN"
+                            if powner == "Super Earth"
+                            else planetdata[planet]["lib"]
+                        )
                         logo = discord.File(img, filename="logo.png")
                         hdlogo = discord.File(
                             f"{self.here}\\Helldivers.png",
@@ -133,17 +142,24 @@ class HD2(commands.Cog):
                         emb = await embed(
                             planet,
                             powner,
-                            planetdata[planet]["lib"],
+                            plib,
                             planetdata[planet]["players"],
                             color,
                         )
                         await ctx.send(files=[logo, hdlogo], embed=emb)
 
                 else:
-                    owner = await self.bot.fetch_user(self.owner_id)
-                    await owner.send(cresponse.status_code)
+                    # owner = await self.bot.fetch_user(self.owner_id)
+                    await ctx.send(f"{cresponse.status_code}\n{cresponse.json()}")
                     return
         except Exception:
             owner = await self.bot.fetch_user(self.owner_id)
             await owner.send("Error logged in HD2.")
             ErrorLogger.run(traceback.format_exc())
+
+    @status.error
+    async def status_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(
+                f"Command on cooldown, try again in {error.retry_after: .0f} seconds."
+            )
