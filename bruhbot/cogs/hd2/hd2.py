@@ -1,7 +1,7 @@
 import asyncio
 import json
 import os
-from requests import get
+from requests import get, exceptions
 import traceback
 
 import discord
@@ -16,7 +16,8 @@ class HD2(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.api = "https://helldivers-2.fly.dev/api"
+        # self.api = "https://helldivers-2.fly.dev/api"
+        self.api = "https://helldivers-2-dotnet.fly.dev/api/v1"
         self.here = os.path.dirname(__file__)
         self.file = f"{self.here}\\hd2.json"
         load_dotenv(os.path.abspath(".\\bruhbot\\.env"))
@@ -30,27 +31,84 @@ class HD2(commands.Cog):
 
     async def update(self):
         try:
+
+            async def dembed(
+                message: str,
+            ):
+                embed = discord.Embed(color=discord.Color.light_grey())
+                embed.title = "NEW DISPATCH FROM SUPER EARTH"
+                embed.description = message
+                return embed
+
+            async def aembed(
+                title: str, briefing: str, description: str, planets: list, reward: str
+            ):
+                planet = "\n".join(planets)
+                embed = discord.Embed(color=discord.Color.dark_grey())
+                embed.title = title
+                embed.description = briefing
+                embed.add_field(name=description, value=planet)
+                embed.set_footer(text=f"REWARD: {reward} MEDALS")
+                return embed
+
             while True:
                 with open(self.file, "r+", encoding="utf-8") as f:
-                    war_id = await self.get_war_id()
+                    dump = False
                     data = json.load(f)
-                    eresponse = get(f"{self.api}/{war_id}/events")
-                    if eresponse.status_code == 200:
-                        if eresponse.json() == []:
-                            return
-                        event = eresponse.json()[0]["message"]["en"]
-                        if event == data["event"]:
-                            return
-                        channel = self.bot.get_channel(data["servers"]["cid"])
-                        await channel.send(str(event))
-                        data["event"] = event
+                    channel = self.bot.get_channel(data["servers"][0]["cid"])
+                    try:
+                        dresponse = get(f"{self.api}/dispatches")
+                        if dresponse.status_code == 200:
+                            for d in dresponse.json():
+                                if d["id"] > data["dispatch_id"]:
+                                    emb = await dembed(message=d["message"])
+                                    await channel.send(embed=emb)
+                                    data["dispatch_id"] = d["id"]
+                                else:
+                                    continue
+                                if not d["id"] == data["dispatch_id"]:
+                                    dump = True
+                        else:
+                            owner = await self.bot.fetch_user(self.owner_id)
+                            await owner.send(
+                                f"{dresponse.status_code}\n{dresponse.json()}"
+                            )
+                    except exceptions.JSONDecodeError:
+                        pass
+                    try:
+                        aresponse = get(f"{self.api}/assignments")
+                        aj = aresponse.json()
+                        pindex = []
+                        planets = []
+                        if aresponse.status_code == 200:
+                            if aj[0]["id"] != data["assign_id"]:
+                                for t in aj[0]["tasks"]:
+                                    pindex.append(t["values"][2])
+                                for p in pindex:
+                                    presponse = get(f"{self.api}/planets/{p}")
+                                    planets.append(f"-{presponse.json()['name']}")
+                                title = aj[0]["title"]
+                                briefing = aj[0]["briefing"]
+                                desc = aj[0]["description"]
+                                reward = aj[0]["reward"]["amount"]
+                                emb = await aembed(
+                                    title, briefing, desc, planets, reward
+                                )
+                                await channel.send(embed=emb)
+                                data["assign_id"] = aj[0]["id"]
+                                dump = True
+                        else:
+                            owner = await self.bot.fetch_user(self.owner_id)
+                            await owner.send(
+                                f"{dresponse.status_code}\n{dresponse.json()}"
+                            )
+                    except exceptions.JSONDecodeError:
+                        pass
+                    if dump is True:
                         f.seek(0)
                         json.dump(data, f, indent=4)
                         f.truncate()
-                    else:
-                        owner = await self.bot.fetch_user(self.owner_id)
-                        await owner.send(f"{eresponse.status_code}\n{eresponse.json()}")
-                    asyncio.sleep(3600)
+                asyncio.sleep(3600)
         except Exception:
             owner = await self.bot.fetch_user(self.owner_id)
             await owner.send("Error logged in HD2.")
@@ -79,6 +137,7 @@ class HD2(commands.Cog):
                 owner: str,
                 liberation: str,
                 players: str,
+                major: bool,
                 color: discord.Color,
             ):
                 embed = discord.Embed(color=color)
@@ -96,33 +155,45 @@ class HD2(commands.Cog):
                 embed.set_footer(
                     text=f"{players} Helldivers", icon_url="attachment://hdlogo.png"
                 )
+                if major is True:
+                    embed.set_author(name="MAJOR ORDER")
                 return embed
 
             await interaction.response.defer()
-            war_id = await self.get_war_id()
-            cresponse = get(f"{self.api}/{war_id}/status")
+            cresponse = get(f"{self.api}/campaigns")
             if cresponse.status_code == 200:
                 planets = []
                 planetdata = {}
-                for c in cresponse.json()["campaigns"]:
-                    planets.append(c["planet"]["index"])
+                for c in cresponse.json():
+                    planets.append(c["planet"])
                 for planet in planets:
-                    presponse = get(f"{self.api}/{war_id}/planets/{planet}/status")
-                    if presponse.status_code == 200:
-                        name = presponse.json()["planet"]["name"]
-                        lib = presponse.json()["liberation"]
-                        owner = presponse.json()["owner"]
-                        players = presponse.json()["players"]
-                        planetdata.update(
-                            {name: {"lib": lib, "owner": owner, "players": players}}
+                    index = planet["index"]
+                    name = planet["name"]
+                    lib = str(
+                        (
+                            (int(planet["maxHealth"]) - int(planet["health"]))
+                            / int(planet["maxHealth"])
+                            * 100
                         )
-                    else:
-                        await interaction.followup.send(
-                            f"{presponse.status_code}\n{presponse.json()}",
-                            ephemeral=True,
-                        )
-                        return
+                    )
+                    owner = planet["currentOwner"]
+                    players = planet["statistics"]["playerCount"]
+                    planetdata.update(
+                        {
+                            name: {
+                                "index": index,
+                                "lib": lib,
+                                "owner": owner,
+                                "players": players,
+                            }
+                        }
+                    )
+                aresponse = get(f"{self.api}/assignments")
+                mo = []
+                for t in aresponse.json()[0]["tasks"]:
+                    mo.append(t["values"][2])
                 embl = []
+                files = set()
                 selogo = discord.File(
                     f"{self.here}\\SuperEarth.png", filename="selogo.png"
                 )
@@ -134,16 +205,21 @@ class HD2(commands.Cog):
                     f"{self.here}\\Helldivers.png",
                     filename="hdlogo.png",
                 )
+                files.add(hdlogo)
                 for planet in planetdata:
+                    major = True if planetdata[planet]["index"] in mo else False
                     if planetdata[planet]["owner"] == "Humans":
                         powner = "Super Earth"
                         color = 0x05E7F3
+                        files.add(selogo)
                     elif planetdata[planet]["owner"] == "Automaton":
                         powner = "Automaton"
                         color = 0xF11901
+                        files.add(alogo)
                     elif planetdata[planet]["owner"] == "Terminids":
                         powner = "Terminid"
                         color = 0xFEE75C
+                        files.add(tlogo)
                     plib = (
                         "DEFENSE CAMPAIGN"
                         if powner == "Super Earth"
@@ -154,12 +230,11 @@ class HD2(commands.Cog):
                         powner,
                         plib,
                         planetdata[planet]["players"],
+                        major,
                         color,
                     )
                     embl.append(emb)
-                await interaction.followup.send(
-                    files=[selogo, alogo, tlogo, hdlogo], embeds=embl
-                )
+                await interaction.followup.send(files=files, embeds=embl)
 
             else:
                 await interaction.send(f"{cresponse.status_code}\n{cresponse.json()}")
