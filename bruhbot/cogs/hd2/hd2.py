@@ -1,9 +1,11 @@
 import asyncio
+from datetime import datetime
 import json
 import os
-from requests import get, exceptions
+from requests import get
 import traceback
 
+from dateutil.relativedelta import relativedelta
 import discord
 from dotenv import load_dotenv
 from redbot.core import commands, app_commands
@@ -56,59 +58,56 @@ class HD2(commands.Cog):
                     dump = False
                     data = json.load(f)
                     channel = self.bot.get_channel(data["servers"][0]["cid"])
-                    try:
-                        dresponse = get(f"{self.api}/dispatches")
-                        if dresponse.status_code == 200:
-                            for d in dresponse.json():
-                                if d["id"] > data["dispatch_id"]:
-                                    emb = await dembed(message=d["message"])
+                    dresponse = get(f"{self.api}/dispatches")
+                    if dresponse.status_code == 200:
+                        for i, d in enumerate(reversed(dresponse.json())):
+                            if d["id"] > data["dispatch_id"]:
+                                try:
+                                    msg = d["message"].replace("<i=3>", "**")
+                                    msg = msg.replace("</i>", "**")
+                                    emb = await dembed(message=msg)
                                     await channel.send(embed=emb)
+                                    if not d["id"] == data["dispatch_id"]:
+                                        dump = True
                                     data["dispatch_id"] = d["id"]
-                                else:
-                                    continue
-                                if not d["id"] == data["dispatch_id"]:
-                                    dump = True
-                        else:
-                            owner = await self.bot.fetch_user(self.owner_id)
-                            await owner.send(
-                                f"{dresponse.status_code}\n{dresponse.json()}"
-                            )
-                    except exceptions.JSONDecodeError:
-                        pass
-                    try:
-                        aresponse = get(f"{self.api}/assignments")
-                        aj = aresponse.json()
-                        pindex = []
-                        planets = []
-                        if aresponse.status_code == 200:
-                            if aj[0]["id"] != data["assign_id"]:
-                                for t in aj[0]["tasks"]:
-                                    pindex.append(t["values"][2])
-                                for p in pindex:
-                                    presponse = get(f"{self.api}/planets/{p}")
-                                    planets.append(f"-{presponse.json()['name']}")
-                                title = aj[0]["title"]
-                                briefing = aj[0]["briefing"]
-                                desc = aj[0]["description"]
-                                reward = aj[0]["reward"]["amount"]
-                                emb = await aembed(
-                                    title, briefing, desc, planets, reward
-                                )
-                                await channel.send(embed=emb)
-                                data["assign_id"] = aj[0]["id"]
-                                dump = True
-                        else:
-                            owner = await self.bot.fetch_user(self.owner_id)
-                            await owner.send(
-                                f"{dresponse.status_code}\n{dresponse.json()}"
-                            )
-                    except exceptions.JSONDecodeError:
-                        pass
+                                except AttributeError:
+                                    pass
+                            else:
+                                continue
+                    else:
+                        owner = await self.bot.fetch_user(self.owner_id)
+                        await owner.send(
+                            f"dresponse status code {dresponse.status_code}"
+                        )
+                    aresponse = get(f"{self.api}/assignments")
+                    aj = aresponse.json()
+                    pindex = []
+                    planets = []
+                    if aresponse.status_code == 200:
+                        if aj[0]["id"] != data["assign_id"]:
+                            for t in aj[0]["tasks"]:
+                                pindex.append(t["values"][2])
+                            for p in pindex:
+                                presponse = get(f"{self.api}/planets/{p}")
+                                planets.append(f"-{presponse.json()['name']}")
+                            title = aj[0]["title"]
+                            briefing = aj[0]["briefing"]
+                            desc = aj[0]["description"]
+                            reward = aj[0]["reward"]["amount"]
+                            emb = await aembed(title, briefing, desc, planets, reward)
+                            await channel.send(embed=emb)
+                            data["assign_id"] = aj[0]["id"]
+                            dump = True
+                    else:
+                        owner = await self.bot.fetch_user(self.owner_id)
+                        await owner.send(
+                            f"aresponse status code {aresponse.status_code}"
+                        )
                     if dump is True:
                         f.seek(0)
                         json.dump(data, f, indent=4)
                         f.truncate()
-                asyncio.sleep(3600)
+                await asyncio.sleep(3600)
         except Exception:
             owner = await self.bot.fetch_user(self.owner_id)
             await owner.send("Error logged in HD2.")
@@ -138,13 +137,15 @@ class HD2(commands.Cog):
                 liberation: str,
                 players: str,
                 major: bool,
+                time: str,
                 color: discord.Color,
             ):
                 embed = discord.Embed(color=color)
                 embed.title = name
                 embed.description = f"{owner} control"
                 if owner == "Super Earth":
-                    embed.add_field(name="Defense Campaign", value="")
+                    embed.add_field(name="Time Remaining", value=time)
+                    embed.add_field(name="Capture", value=f"{liberation}%")
                     embed.set_thumbnail(url="attachment://selogo.png")
                 else:
                     embed.add_field(name="Liberation:", value=f"{liberation}%")
@@ -169,14 +170,30 @@ class HD2(commands.Cog):
                 for planet in planets:
                     index = planet["index"]
                     name = planet["name"]
-                    lib = str(
-                        (
-                            (int(planet["maxHealth"]) - int(planet["health"]))
-                            / int(planet["maxHealth"])
+
+                    owner = planet["currentOwner"]
+                    if owner == "Humans":
+                        end = datetime.strptime(
+                            planet["event"]["endTime"], "%Y-%m-%dT%H:%M:%SZ"
+                        )
+                        lib = str(
+                            (
+                                int(
+                                    planet["maxHealth"] - int(planet["event"]["health"])
+                                )
+                                / int(planet["maxHealth"])
+                            )
                             * 100
                         )
-                    )
-                    owner = planet["currentOwner"]
+                    else:
+                        end = None
+                        lib = str(
+                            (
+                                (int(planet["maxHealth"]) - int(planet["health"]))
+                                / int(planet["maxHealth"])
+                                * 100
+                            )
+                        )
                     players = planet["statistics"]["playerCount"]
                     planetdata.update(
                         {
@@ -184,14 +201,31 @@ class HD2(commands.Cog):
                                 "index": index,
                                 "lib": lib,
                                 "owner": owner,
+                                "end": end,
                                 "players": players,
                             }
                         }
                     )
                 aresponse = get(f"{self.api}/assignments")
-                mo = []
-                for t in aresponse.json()[0]["tasks"]:
-                    mo.append(t["values"][2])
+                if aresponse.status_code == 200:
+                    mo = []
+                    for t in aresponse.json()[0]["tasks"]:
+                        mo.append(t["values"][2])
+                else:
+                    await interaction.followup.send(
+                        f"aresponse status code {aresponse.status_code}",
+                        ephemeral=True,
+                    )
+                wresponse = get(f"{self.api}/war")
+                if wresponse.status_code == 200:
+                    now = datetime.strptime(
+                        wresponse.json()["now"], "%Y-%m-%dT%H:%M:%SZ"
+                    )
+                else:
+                    await interaction.followup.send(
+                        f"wresponse status code {wresponse.status_code}",
+                        ephemeral=True,
+                    )
                 embl = []
                 files = set()
                 selogo = discord.File(
@@ -212,32 +246,36 @@ class HD2(commands.Cog):
                         powner = "Super Earth"
                         color = 0x05E7F3
                         files.add(selogo)
+                        rdelta = relativedelta(planetdata[planet]["end"], now)
+                        time = f"{rdelta.days}D:{rdelta.hours}H:{rdelta.minutes}M:{rdelta.seconds}S"
                     elif planetdata[planet]["owner"] == "Automaton":
                         powner = "Automaton"
                         color = 0xF11901
                         files.add(alogo)
+                        time = None
                     elif planetdata[planet]["owner"] == "Terminids":
                         powner = "Terminid"
                         color = 0xFEE75C
                         files.add(tlogo)
-                    plib = (
-                        "DEFENSE CAMPAIGN"
-                        if powner == "Super Earth"
-                        else planetdata[planet]["lib"]
-                    )
+                        time = None
+
                     emb = await embed(
                         planet,
                         powner,
-                        plib,
+                        planetdata[planet]["lib"],
                         planetdata[planet]["players"],
                         major,
+                        time,
                         color,
                     )
                     embl.append(emb)
                 await interaction.followup.send(files=files, embeds=embl)
 
             else:
-                await interaction.send(f"{cresponse.status_code}\n{cresponse.json()}")
+                await interaction.followup.send(
+                    f"cresponse status code {cresponse.status_code}",
+                    ephemeral=True,
+                )
                 return
         except Exception:
             owner = await self.bot.fetch_user(self.owner_id)
