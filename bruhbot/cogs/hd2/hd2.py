@@ -143,7 +143,7 @@ class HD2(commands.Cog):
                 embed.description = f"{owner} control"
                 if owner == "Super Earth":
                     embed.add_field(name="Time Remaining", value=time)
-                    embed.add_field(name="Defense", value=f"{liberation}%")
+                    # embed.add_field(name="Defense", value=f"{liberation}%")
                     embed.set_thumbnail(url="attachment://selogo.png")
                 else:
                     embed.add_field(name="Liberation:", value=f"{liberation}%")
