@@ -18,18 +18,11 @@ class HD2(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        # self.api = "https://helldivers-2.fly.dev/api"
         self.api = "https://helldivers-2-dotnet.fly.dev/api/v1"
         self.here = os.path.dirname(__file__)
         self.file = f"{self.here}\\hd2.json"
         load_dotenv(os.path.abspath(".\\bruhbot\\.env"))
         self.owner_id = int(os.getenv("OWNER_ID"))
-
-    async def get_war_id(self):
-        response = get(self.api)
-        if response.status_code == 200:
-            war_id = response.json()["current"]
-            return war_id
 
     async def update(self):
         try:
@@ -37,7 +30,7 @@ class HD2(commands.Cog):
             async def dembed(
                 message: str,
             ):
-                embed = discord.Embed(color=discord.Color.light_grey())
+                embed = discord.Embed(color=0x2E3C4B)
                 embed.title = "NEW DISPATCH FROM SUPER EARTH"
                 embed.description = message
                 return embed
@@ -46,7 +39,7 @@ class HD2(commands.Cog):
                 title: str, briefing: str, description: str, planets: list, reward: str
             ):
                 planet = "\n".join(planets)
-                embed = discord.Embed(color=discord.Color.dark_grey())
+                embed = discord.Embed(color=0xB5D9E9)
                 embed.title = title
                 embed.description = briefing
                 embed.add_field(name=description, value=planet)
@@ -244,18 +237,18 @@ class HD2(commands.Cog):
                     major = True if planetdata[planet]["index"] in mo else False
                     if planetdata[planet]["owner"] == "Humans":
                         powner = "Super Earth"
-                        color = 0x05E7F3
+                        color = 0xB5D9E9
                         files.add(selogo)
                         rdelta = relativedelta(planetdata[planet]["end"], now)
                         time = f"{rdelta.days}D:{rdelta.hours}H:{rdelta.minutes}M:{rdelta.seconds}S"
                     elif planetdata[planet]["owner"] == "Automaton":
                         powner = "Automaton"
-                        color = 0xF11901
+                        color = 0xFF6161
                         files.add(alogo)
                         time = None
                     elif planetdata[planet]["owner"] == "Terminids":
                         powner = "Terminid"
-                        color = 0xFEE75C
+                        color = 0xFFB800
                         files.add(tlogo)
                         time = None
 
@@ -278,8 +271,7 @@ class HD2(commands.Cog):
                 )
                 return
         except Exception:
-            owner = await self.bot.fetch_user(self.owner_id)
-            await owner.send("Error logged in HD2.")
+            await interaction.followup.send("Error logged in HD2.")
             ErrorLogger.run(traceback.format_exc())
 
     @status.error
