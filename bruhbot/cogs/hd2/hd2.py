@@ -1,8 +1,9 @@
 import asyncio
+from contextlib import suppress
 from datetime import datetime
 import json
 import os
-from requests import get
+from requests import get, exceptions
 import traceback
 
 from dateutil.relativedelta import relativedelta
@@ -55,7 +56,7 @@ class HD2(commands.Cog):
                     if dresponse.status_code == 200:
                         for i, d in enumerate(reversed(dresponse.json())):
                             if d["id"] > data["dispatch_id"]:
-                                try:
+                                with suppress(AttributeError):
                                     msg = d["message"].replace("<i=3>", "**")
                                     msg = msg.replace("</i>", "**")
                                     emb = await dembed(message=msg)
@@ -63,8 +64,6 @@ class HD2(commands.Cog):
                                     if not d["id"] == data["dispatch_id"]:
                                         dump = True
                                     data["dispatch_id"] = d["id"]
-                                except AttributeError:
-                                    pass
                             else:
                                 continue
                     else:
@@ -78,19 +77,23 @@ class HD2(commands.Cog):
                     planets = []
                     if aresponse.status_code == 200:
                         if aj[0]["id"] != data["assign_id"]:
-                            for t in aj[0]["tasks"]:
-                                pindex.append(t["values"][2])
-                            for p in pindex:
-                                presponse = get(f"{self.api}/planets/{p}")
-                                planets.append(f"-{presponse.json()['name']}")
-                            title = aj[0]["title"]
-                            briefing = aj[0]["briefing"]
-                            desc = aj[0]["description"]
-                            reward = aj[0]["reward"]["amount"]
-                            emb = await aembed(title, briefing, desc, planets, reward)
-                            await channel.send(embed=emb)
-                            data["assign_id"] = aj[0]["id"]
-                            dump = True
+                            with suppress(exceptions.JSONDecodeError):
+                                for t in aj[0]["tasks"]:
+                                    pindex.append(t["values"][2])
+                                for p in pindex:
+                                    presponse = get(f"{self.api}/planets/{p}")
+                                    planets.append(f"-{presponse.json()['name']}")
+                                title = aj[0]["title"]
+                                briefing = aj[0]["briefing"]
+                                desc = aj[0]["description"]
+                                reward = aj[0]["reward"]["amount"]
+                                emb = await aembed(
+                                    title, briefing, desc, planets, reward
+                                )
+                                await channel.send(embed=emb)
+                                data["assign_id"] = aj[0]["id"]
+                                dump = True
+
                     else:
                         owner = await self.bot.fetch_user(self.owner_id)
                         await owner.send(
