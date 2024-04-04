@@ -155,7 +155,7 @@ class HD2(commands.Cog):
                     text=f"{players} Helldivers", icon_url="attachment://hdlogo.png"
                 )
                 if major is True:
-                    embed.set_author(name="MAJOR ORDER")
+                    embed.set_author(name="MAJOR ORDER", icon_url="attachment://mo.png")
                 embed.timestamp = datetime.now()
                 return embed
 
@@ -238,9 +238,14 @@ class HD2(commands.Cog):
                     f"{self.here}\\Helldivers.png",
                     filename="hdlogo.png",
                 )
+                moico = discord.File(f"{self.here}\\mo.png", filename="mo.png")
                 files.add(hdlogo)
                 for planet in planetdata:
-                    major = True if planetdata[planet]["index"] in mo else False
+                    if planetdata[planet]["index"] in mo:
+                        major = True
+                        files.add(moico)
+                    else:
+                        major = False
                     if planetdata[planet]["owner"] == "Humans":
                         powner = "Super Earth"
                         color = 0xB5D9E9
