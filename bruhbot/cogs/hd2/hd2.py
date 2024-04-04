@@ -34,6 +34,7 @@ class HD2(commands.Cog):
                 embed = discord.Embed(color=0x2E3C4B)
                 embed.title = "NEW DISPATCH FROM SUPER EARTH"
                 embed.description = message
+                embed.timestamp = datetime.now()
                 return embed
 
             async def aembed(
@@ -45,6 +46,7 @@ class HD2(commands.Cog):
                 embed.description = briefing
                 embed.add_field(name=description, value=planet)
                 embed.set_footer(text=f"REWARD: {reward} MEDALS")
+                embed.timestamp = datetime.now()
                 return embed
 
             while True:
@@ -154,6 +156,7 @@ class HD2(commands.Cog):
                 )
                 if major is True:
                     embed.set_author(name="MAJOR ORDER")
+                embed.timestamp = datetime.now()
                 return embed
 
             await interaction.response.defer()
