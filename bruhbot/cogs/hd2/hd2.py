@@ -26,35 +26,50 @@ class HD2(commands.Cog):
         self.owner_id = int(os.getenv("OWNER_ID"))
 
     async def update(self):
-        try:
-
-            async def dembed(
-                message: str,
-            ):
+        async def dembed(
+            message: str,
+        ):
+            try:
                 embed = discord.Embed(color=0x2E3C4B)
-                embed.title = "NEW DISPATCH FROM SUPER EARTH"
                 embed.description = message
                 embed.timestamp = datetime.now()
                 return embed
+            except Exception:
+                owner = await self.bot.fetch_user(self.owner_id)
+                await owner.send("Error logged in HD2.")
+                ErrorLogger.run(traceback.format_exc())
 
-            async def aembed(
-                title: str, briefing: str, description: str, planets: list, reward: str
-            ):
+        async def aembed(
+            title: str, briefing: str, description: str, planets: list, reward: str
+        ):
+            try:
                 planet = "\n".join(planets)
                 embed = discord.Embed(color=0xB5D9E9)
                 embed.title = title
                 embed.description = briefing
                 embed.add_field(name=description, value=planet)
-                embed.set_footer(text=f"REWARD: {reward} MEDALS")
+                embed.set_thumbnail(url="attachment://mologo.png")
+                embed.set_footer(
+                    text=f"REWARD: {reward} MEDALS",
+                    icon_url="attachment://medal.png",
+                )
                 embed.timestamp = datetime.now()
                 return embed
+            except Exception:
+                owner = await self.bot.fetch_user(self.owner_id)
+                await owner.send("Error logged in HD2.")
+                ErrorLogger.run(traceback.format_exc())
 
-            while True:
+        while True:
+            try:
                 with open(self.file, "r+", encoding="utf-8") as f:
                     dump = False
                     data = json.load(f)
                     channel = self.bot.get_channel(data["servers"][0]["cid"])
                     dresponse = get(f"{self.api}/dispatches")
+                    dbanner = discord.File(
+                        f"{self.here}\\DispatchBanner.png", filename="dbanner.png"
+                    )
                     if dresponse.status_code == 200:
                         for i, d in enumerate(reversed(dresponse.json())):
                             if d["id"] > data["dispatch_id"]:
@@ -62,12 +77,15 @@ class HD2(commands.Cog):
                                     msg = d["message"].replace("<i=3>", "**")
                                     msg = msg.replace("</i>", "**")
                                     emb = await dembed(message=msg)
-                                    await channel.send(embed=emb)
+                                    await channel.send(file=dbanner, embed=emb)
                                     if not d["id"] == data["dispatch_id"]:
                                         dump = True
                                     data["dispatch_id"] = d["id"]
                             else:
                                 continue
+                    elif dresponse.status_code == 429:
+                        await asyncio.sleep(10)
+                        continue
                     else:
                         owner = await self.bot.fetch_user(self.owner_id)
                         await owner.send(
@@ -79,7 +97,7 @@ class HD2(commands.Cog):
                     planets = []
                     if aresponse.status_code == 200:
                         if aj[0]["id"] != data["assign_id"]:
-                            with suppress(exceptions.JSONDecodeError):
+                            try:
                                 for t in aj[0]["tasks"]:
                                     pindex.append(t["values"][2])
                                 for p in pindex:
@@ -89,13 +107,25 @@ class HD2(commands.Cog):
                                 briefing = aj[0]["briefing"]
                                 desc = aj[0]["description"]
                                 reward = aj[0]["reward"]["amount"]
+                                morder = discord.File(
+                                    f"{self.here}\\MajorOrder.png",
+                                    filename="mologo.png",
+                                )
+                                micon = discord.File(
+                                    f"{self.here}\\Medal.png", filename="medal.png"
+                                )
                                 emb = await aembed(
                                     title, briefing, desc, planets, reward
                                 )
-                                await channel.send(embed=emb)
+                                await channel.send(files=[morder, micon], embed=emb)
                                 data["assign_id"] = aj[0]["id"]
                                 dump = True
-
+                            except exceptions.JSONDecodeError:
+                                await asyncio.sleep(10)
+                                continue
+                    elif aresponse.status_code == 429:
+                        await asyncio.sleep(10)
+                        continue
                     else:
                         owner = await self.bot.fetch_user(self.owner_id)
                         await owner.send(
@@ -106,10 +136,12 @@ class HD2(commands.Cog):
                         json.dump(data, f, indent=4)
                         f.truncate()
                 await asyncio.sleep(3600)
-        except Exception:
-            owner = await self.bot.fetch_user(self.owner_id)
-            await owner.send("Error logged in HD2.")
-            ErrorLogger.run(traceback.format_exc())
+            except Exception:
+                owner = await self.bot.fetch_user(self.owner_id)
+                await owner.send("Error logged in HD2.")
+                ErrorLogger.run(traceback.format_exc())
+                await asyncio.sleep(10)
+                continue
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -155,7 +187,9 @@ class HD2(commands.Cog):
                     text=f"{players} Helldivers", icon_url="attachment://hdlogo.png"
                 )
                 if major is True:
-                    embed.set_author(name="MAJOR ORDER", icon_url="attachment://mo.png")
+                    embed.set_author(
+                        name="MAJOR ORDER", icon_url="attachment://mologo.png"
+                    )
                 embed.timestamp = datetime.now()
                 return embed
 
@@ -238,12 +272,14 @@ class HD2(commands.Cog):
                     f"{self.here}\\Helldivers.png",
                     filename="hdlogo.png",
                 )
-                moico = discord.File(f"{self.here}\\mo.png", filename="mo.png")
+                morder = discord.File(
+                    f"{self.here}\\MajorOrder.png", filename="mologo.png"
+                )
                 files.add(hdlogo)
                 for planet in planetdata:
                     if planetdata[planet]["index"] in mo:
                         major = True
-                        files.add(moico)
+                        files.add(morder)
                     else:
                         major = False
                     if planetdata[planet]["owner"] == "Humans":
