@@ -183,6 +183,8 @@ class HD2(commands.Cog):
                         embed.set_thumbnail(url="attachment://alogo.png")
                     elif owner == "Terminid":
                         embed.set_thumbnail(url="attachment://tlogo.png")
+                    elif owner == "Illuminate":
+                        embed.set_thumbnail(url="attachment://ilogo.png")
                 embed.set_footer(
                     text=f"{players} Helldivers", icon_url="attachment://hdlogo.png"
                 )
@@ -268,6 +270,7 @@ class HD2(commands.Cog):
                     f"{self.here}\\Automaton.png", filename="alogo.png"
                 )
                 tlogo = discord.File(f"{self.here}\\Terminid.png", filename="tlogo.png")
+                # ilogo = discord.File(f"{self.here}\\Illuminate.png",filename="ilogo.png")
                 hdlogo = discord.File(
                     f"{self.here}\\Helldivers.png",
                     filename="hdlogo.png",
@@ -297,6 +300,11 @@ class HD2(commands.Cog):
                         powner = "Terminid"
                         color = 0xFFB800
                         files.add(tlogo)
+                        time = None
+                    elif planetdata[planet]["owner"] == "Illuminate":  # SOON
+                        powner = "Illuminate"
+                        color = 0x000000
+                        # files.add(ilogo)
                         time = None
 
                     emb = await embed(
