@@ -67,73 +67,67 @@ class HD2(commands.Cog):
                     data = json.load(f)
                     channel = self.bot.get_channel(data["servers"][0]["cid"])
                     dresponse = get(f"{self.api}/dispatches")
-                    while True:
-                        if dresponse.status_code == 200:
-                            for i, d in enumerate(reversed(dresponse.json())):
-                                if d["id"] > data["dispatch_id"]:
-                                    with suppress(AttributeError):
-                                        msg = d["message"].replace("<i=3>", "**")
-                                        msg = msg.replace("</i>", "**")
-                                        emb = await dembed(message=msg)
-                                        await channel.send(embed=emb)
-                                        if not d["id"] == data["dispatch_id"]:
-                                            dump = True
-                                        data["dispatch_id"] = d["id"]
-                                else:
-                                    break
-                                break
-                        elif dresponse.status_code == 429:
-                            await asyncio.sleep(10)
-                            continue
-                        else:
-                            owner = await self.bot.fetch_user(self.owner_id)
-                            await owner.send(
-                                f"dresponse status code {dresponse.status_code}"
-                            )
-                            break
-                    while True:
-                        aresponse = get(f"{self.api}/assignments")
-                        aj = aresponse.json()
-                        pindex = []
-                        planets = []
-                        if aresponse.status_code == 200:
-                            if aj[0]["id"] != data["assign_id"]:
-                                try:
-                                    for t in aj[0]["tasks"]:
-                                        pindex.append(t["values"][2])
-                                    for p in pindex:
-                                        presponse = get(f"{self.api}/planets/{p}")
-                                        planets.append(f"-{presponse.json()['name']}")
-                                    title = aj[0]["title"]
-                                    briefing = aj[0]["briefing"]
-                                    desc = aj[0]["description"]
-                                    reward = aj[0]["reward"]["amount"]
-                                    morder = discord.File(
-                                        f"{self.here}\\MajorOrder.png",
-                                        filename="mologo.png",
-                                    )
-                                    micon = discord.File(
-                                        f"{self.here}\\Medal.png", filename="medal.png"
-                                    )
-                                    emb = await aembed(
-                                        title, briefing, desc, planets, reward
-                                    )
-                                    await channel.send(files=[morder, micon], embed=emb)
-                                    data["assign_id"] = aj[0]["id"]
-                                    dump = True
-                                    break
-                                except exceptions.JSONDecodeError:
-                                    await asyncio.sleep(10)
-                                    continue
-                        elif aresponse.status_code == 429:
-                            await asyncio.sleep(10)
-                            continue
-                        else:
-                            owner = await self.bot.fetch_user(self.owner_id)
-                            await owner.send(
-                                f"aresponse status code {aresponse.status_code}"
-                            )
-                            break
+                    if dresponse.status_code == 200:
+                        for i, d in enumerate(reversed(dresponse.json())):
+                            if d["id"] > data["dispatch_id"]:
+                                with suppress(AttributeError):
+                                    msg = d["message"].replace("<i=3>", "**")
+                                    msg = msg.replace("</i>", "**")
+                                    emb = await dembed(message=msg)
+                                    await channel.send(embed=emb)
+                                    if not d["id"] == data["dispatch_id"]:
+                                        dump = True
+                                    data["dispatch_id"] = d["id"]
+                            else:
+                                continue
+                    elif dresponse.status_code == 429:
+                        await asyncio.sleep(10)
+                        continue
+                    else:
+                        owner = await self.bot.fetch_user(self.owner_id)
+                        await owner.send(
+                            f"dresponse status code {dresponse.status_code}"
+                        )
+                    aresponse = get(f"{self.api}/assignments")
+                    aj = aresponse.json()
+                    pindex = []
+                    planets = []
+                    if aresponse.status_code == 200:
+                        if aj[0]["id"] != data["assign_id"]:
+                            try:
+                                for t in aj[0]["tasks"]:
+                                    pindex.append(t["values"][2])
+                                for p in pindex:
+                                    presponse = get(f"{self.api}/planets/{p}")
+                                    planets.append(f"-{presponse.json()['name']}")
+                                title = aj[0]["title"]
+                                briefing = aj[0]["briefing"]
+                                desc = aj[0]["description"]
+                                reward = aj[0]["reward"]["amount"]
+                                morder = discord.File(
+                                    f"{self.here}\\MajorOrder.png",
+                                    filename="mologo.png",
+                                )
+                                micon = discord.File(
+                                    f"{self.here}\\Medal.png", filename="medal.png"
+                                )
+                                emb = await aembed(
+                                    title, briefing, desc, planets, reward
+                                )
+                                await channel.send(files=[morder, micon], embed=emb)
+                                data["assign_id"] = aj[0]["id"]
+                                dump = True
+                            except exceptions.JSONDecodeError:
+                                await asyncio.sleep(10)
+                                continue
+                    elif aresponse.status_code == 429:
+                        await asyncio.sleep(10)
+                        continue
+                    else:
+                        owner = await self.bot.fetch_user(self.owner_id)
+                        await owner.send(
+                            f"aresponse status code {aresponse.status_code}"
+                        )
                     if dump is True:
                         f.seek(0)
                         json.dump(data, f, indent=4)
