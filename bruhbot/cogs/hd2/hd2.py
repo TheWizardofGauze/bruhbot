@@ -252,6 +252,7 @@ class HD2(commands.Cog):
                         f"aresponse status code {aresponse.status_code}",
                         ephemeral=True,
                     )
+#return
 #for loop? 
                 wresponse = get(f"{self.api}/war")
                 if wresponse.status_code == 200:
@@ -263,6 +264,7 @@ class HD2(commands.Cog):
                         f"wresponse status code {wresponse.status_code}",
                         ephemeral=True,
                     )
+#return
                 embl = []
                 files = set()
                 selogo = discord.File(
