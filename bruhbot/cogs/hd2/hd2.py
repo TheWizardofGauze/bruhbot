@@ -193,6 +193,7 @@ class HD2(commands.Cog):
                 return embed
 
             await interaction.response.defer()
+#for loop to retry on error
             cresponse = get(f"{self.api}/campaigns")
             if cresponse.status_code == 200:
                 planets = []
@@ -238,6 +239,7 @@ class HD2(commands.Cog):
                             }
                         }
                     )
+#for loop? 
                 aresponse = get(f"{self.api}/assignments")
                 if aresponse.status_code == 200:
                     mo = []
@@ -248,6 +250,7 @@ class HD2(commands.Cog):
                         f"aresponse status code {aresponse.status_code}",
                         ephemeral=True,
                     )
+#for loop? 
                 wresponse = get(f"{self.api}/war")
                 if wresponse.status_code == 200:
                     now = datetime.strptime(
