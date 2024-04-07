@@ -66,6 +66,7 @@ class HD2(commands.Cog):
                     dump = False
                     data = json.load(f)
                     channel = self.bot.get_channel(data["servers"][0]["cid"])
+#for loop? 
                     dresponse = get(f"{self.api}/dispatches")
                     if dresponse.status_code == 200:
                         for i, d in enumerate(reversed(dresponse.json())):
@@ -88,6 +89,7 @@ class HD2(commands.Cog):
                         await owner.send(
                             f"dresponse status code {dresponse.status_code}"
                         )
+#for loop? 
                     aresponse = get(f"{self.api}/assignments")
                     aj = aresponse.json()
                     pindex = []
