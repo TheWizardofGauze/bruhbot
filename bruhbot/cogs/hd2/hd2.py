@@ -20,7 +20,7 @@ class HD2(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.api = "https://helldivers-2-dotnet.fly.dev/api/v1"
-        self.headers = {"Accept": "application/json"}
+        self.headers = {"Accept": "application/json", "User-Agent": "Bruhbot"}
         self.here = os.path.dirname(__file__)
         self.file = f"{self.here}\\hd2.json"
         load_dotenv(os.path.abspath(".\\bruhbot\\.env"))
