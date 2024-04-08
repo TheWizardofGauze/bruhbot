@@ -154,7 +154,7 @@ class HD2(commands.Cog):
         name="hd2status",
         description="Get current Galactic War status for Helldivers 2.",
     )
-    @app_commands.checks.cooldown(1, 300, key=lambda i: (i.guild_id))
+    @app_commands.checks.cooldown(1, 60, key=lambda i: (i.guild_id))
     async def status(self, interaction: discord.Interaction):
         try:
 
