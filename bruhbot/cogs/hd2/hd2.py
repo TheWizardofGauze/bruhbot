@@ -66,6 +66,7 @@ class HD2(commands.Cog):
                     dump = False
                     data = json.load(f)
                     channel = self.bot.get_channel(data["servers"][0]["cid"])
+#for loop? 
                     dresponse = get(f"{self.api}/dispatches")
                     if dresponse.status_code == 200:
                         for i, d in enumerate(reversed(dresponse.json())):
@@ -88,6 +89,7 @@ class HD2(commands.Cog):
                         await owner.send(
                             f"dresponse status code {dresponse.status_code}"
                         )
+#for loop? 
                     aresponse = get(f"{self.api}/assignments")
                     aj = aresponse.json()
                     pindex = []
@@ -193,6 +195,7 @@ class HD2(commands.Cog):
                 return embed
 
             await interaction.response.defer()
+#for loop to retry on error
             cresponse = get(f"{self.api}/campaigns")
             if cresponse.status_code == 200:
                 planets = []
@@ -238,6 +241,7 @@ class HD2(commands.Cog):
                             }
                         }
                     )
+#for loop? 
                 aresponse = get(f"{self.api}/assignments")
                 if aresponse.status_code == 200:
                     mo = []
@@ -248,6 +252,8 @@ class HD2(commands.Cog):
                         f"aresponse status code {aresponse.status_code}",
                         ephemeral=True,
                     )
+#return
+#for loop? 
                 wresponse = get(f"{self.api}/war")
                 if wresponse.status_code == 200:
                     now = datetime.strptime(
@@ -258,6 +264,7 @@ class HD2(commands.Cog):
                         f"wresponse status code {wresponse.status_code}",
                         ephemeral=True,
                     )
+#return
                 embl = []
                 files = set()
                 selogo = discord.File(
