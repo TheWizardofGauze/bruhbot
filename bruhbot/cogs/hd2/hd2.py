@@ -191,7 +191,7 @@ class HD2(commands.Cog):
         await self.bot.wait_until_ready()
         await self.update()
 
-    @commands.command()
+    @commands.command(hidden=True)
     @commands.is_owner()
     async def hd(self, ctx):
         await self.update()
