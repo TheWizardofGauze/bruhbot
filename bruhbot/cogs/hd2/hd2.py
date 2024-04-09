@@ -51,7 +51,7 @@ class HD2(commands.Cog):
                 embed.add_field(name=description, value=planet)
                 embed.set_thumbnail(url="attachment://mologo.png")
                 embed.set_footer(
-                    text=f"REWARD: {reward} MEDALS",
+                    text=f"REWARD: {reward} MEDALS",  # Reward type 1 is medals, maybe more rewards types in the future?
                     icon_url="attachment://medal.png",
                 )
                 embed.timestamp = datetime.now()
@@ -67,13 +67,13 @@ class HD2(commands.Cog):
                 with open(self.file, "r+", encoding="utf-8") as f:
                     data = json.load(f)
                     channel = self.bot.get_channel(data["servers"][0]["cid"])
-                    derror = False#move
                     for i in range(3):
                         try:
                             dresponse = get(
                                 f"{self.api}/dispatches", headers=self.headers
                             )
                             if dresponse.status_code == 200:
+                                derror = False
                                 for i, d in enumerate(reversed(dresponse.json())):
                                     if d["id"] > data["dispatch_id"]:
                                         with suppress(AttributeError):
@@ -87,7 +87,6 @@ class HD2(commands.Cog):
                                                 f.seek(0)
                                                 json.dump(data, f, indent=4)
                                                 f.truncate()
-                                                derror = False
 
                                     else:
                                         continue
@@ -106,7 +105,6 @@ class HD2(commands.Cog):
                         await owner.send(
                             f"dresponse status code {dresponse.status_code}"
                         )
-                    aerror = False#move
                     for i in range(3):
                         try:
                             aresponse = get(
@@ -117,6 +115,7 @@ class HD2(commands.Cog):
                                 pindex = []
                                 planets = []
                                 if aresponse.status_code == 200:
+                                    aerror = False
                                     if aj[0]["id"] != data["assign_id"]:
                                         for t in aj[0]["tasks"]:
                                             pindex.append(t["values"][2])
@@ -155,7 +154,6 @@ class HD2(commands.Cog):
                                         f.seek(0)
                                         json.dump(data, f, indent=4)
                                         f.truncate()
-                                        aerror = False
                                         break
                                 else:
                                     aerror = True
@@ -282,14 +280,13 @@ class HD2(commands.Cog):
                                 }
                             }
                         )
-                    aerror = False#move
                     for i in range(3):
                         aresponse = get(f"{self.api}/assignments", headers=self.headers)
                         if aresponse.status_code == 200:
+                            aerror = False
                             mo = []
                             for t in aresponse.json()[0]["tasks"]:
                                 mo.append(t["values"][2])
-                            aerror = False
                             break
                         else:
                             aerror = True
@@ -301,14 +298,13 @@ class HD2(commands.Cog):
                             ephemeral=True,
                         )
                         return
-                    werror = False#move
                     for i in range(3):
                         wresponse = get(f"{self.api}/war", headers=self.headers)
                         if wresponse.status_code == 200:
+                            werror = False
                             now = datetime.strptime(
                                 wresponse.json()["now"], "%Y-%m-%dT%H:%M:%SZ"
                             )
-                            werror = False
                             break
                         else:
                             werror = True
