@@ -103,7 +103,7 @@ class HD2(commands.Cog):
                             await owner.send("Error logged in HD2.")
                             ErrorLogger.run(traceback.format_exc())
                             break
-                    if derror is True:
+                    if derror is True and derror is not None:
                         owner = await self.bot.fetch_user(self.owner_id)
                         await owner.send(
                             f"dresponse status code {dresponse.status_code}"
@@ -173,7 +173,7 @@ class HD2(commands.Cog):
                             await owner.send("Error logged in HD2.")
                             ErrorLogger.run(traceback.format_exc())
                             break
-                    if aerror is True:
+                    if aerror is True and aerror is not None:
                         owner = await self.bot.fetch_user(self.owner_id)
                         await owner.send(
                             f"aresponse status code {aresponse.status_code}"
@@ -290,25 +290,27 @@ class HD2(commands.Cog):
                             }
                         )
                     for i in range(3):
-                        aresponse = get(f"{self.api}/assignments", headers=self.headers)
-                        if aresponse.status_code == 200:
-                            aerror = False
+                        a2response = get(
+                            f"{self.api}/assignments", headers=self.headers
+                        )
+                        if a2response.status_code == 200:
+                            a2error = False
                             mo = []
-                            if aresponse.json() == []:
+                            if a2response.json() == []:
                                 await interaction.followup.send(
                                     "aresponse returned empty. Unable to retrieve major orders."
                                 )
                             else:
-                                for t in aresponse.json()[0]["tasks"]:
+                                for t in a2response.json()[0]["tasks"]:
                                     mo.append(t["values"][2])
                             break
                         else:
-                            aerror = True
+                            a2error = True
                             await asyncio.sleep(10)
                             continue
-                    if aerror is True:
+                    if a2error is True and a2error is not None:
                         await interaction.followup.send(
-                            f"aresponse status code {aresponse.status_code}. Failed after 3 tries."
+                            f"aresponse status code {a2response.status_code}. Failed after 3 tries."
                         )
                         return
                     for i in range(3):
@@ -328,7 +330,7 @@ class HD2(commands.Cog):
                             werror = True
                             await asyncio.sleep(10)
                             continue
-                    if werror is True:
+                    if werror is True and werror is not None:
                         await interaction.followup.send(
                             f"wresponse status code {wresponse.status_code}. Failed after 3 tries."
                         )
