@@ -22,6 +22,6 @@
     },
     "extra": {
         "name": "__**Extra Stuff**__",
-        "description": "**age** Returns the current age of the bot."
+        "description": "**age** Returns the current age of the bot.\n**forza** Returns current seasons in Forza Horizon 4 and Horizon 5"
     }
 }
