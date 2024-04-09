@@ -74,6 +74,9 @@ class HD2(commands.Cog):
                             )
                             if dresponse.status_code == 200:
                                 derror = False
+                                if dresponse.json() == []:
+                                    ErrorLogger.run("dresponse returned empty.")
+                                    break
                                 for i, d in enumerate(reversed(dresponse.json())):
                                     if d["id"] > data["dispatch_id"]:
                                         with suppress(AttributeError):
@@ -116,6 +119,9 @@ class HD2(commands.Cog):
                                 planets = []
                                 if aresponse.status_code == 200:
                                     aerror = False
+                                    if aj == []:
+                                        ErrorLogger.run("aresponse returned empty.")
+                                        break
                                     if aj[0]["id"] != data["assign_id"]:
                                         for t in aj[0]["tasks"]:
                                             pindex.append(t["values"][2])
@@ -236,6 +242,9 @@ class HD2(commands.Cog):
             for i in range(3):
                 cresponse = get(f"{self.api}/campaigns", headers=self.headers)
                 if cresponse.status_code == 200:
+                    if cresponse.json() == []:
+                        await interaction.followup.send("cresponse returned empty.")
+                        return
                     planets = []
                     planetdata = {}
                     for c in cresponse.json():
@@ -285,8 +294,13 @@ class HD2(commands.Cog):
                         if aresponse.status_code == 200:
                             aerror = False
                             mo = []
-                            for t in aresponse.json()[0]["tasks"]:
-                                mo.append(t["values"][2])
+                            if aresponse.json() == []:
+                                await interaction.followup.send(
+                                    "aresponse returned empty. Unable to retrieve major orders."
+                                )
+                            else:
+                                for t in aresponse.json()[0]["tasks"]:
+                                    mo.append(t["values"][2])
                             break
                         else:
                             aerror = True
@@ -294,14 +308,18 @@ class HD2(commands.Cog):
                             continue
                     if aerror is True:
                         await interaction.followup.send(
-                            f"aresponse status code {aresponse.status_code}",
-                            ephemeral=True,
+                            f"aresponse status code {aresponse.status_code}"
                         )
                         return
                     for i in range(3):
                         wresponse = get(f"{self.api}/war", headers=self.headers)
                         if wresponse.status_code == 200:
                             werror = False
+                            if wresponse.json() == []:
+                                await interaction.followup.send(
+                                    "wresponse returned empty."
+                                )
+                                return
                             now = datetime.strptime(
                                 wresponse.json()["now"], "%Y-%m-%dT%H:%M:%SZ"
                             )
@@ -312,8 +330,7 @@ class HD2(commands.Cog):
                             continue
                     if werror is True:
                         await interaction.followup.send(
-                            f"wresponse status code {wresponse.status_code}",
-                            ephemeral=True,
+                            f"wresponse status code {wresponse.status_code}"
                         )
                         return
                     embl = []
@@ -382,8 +399,7 @@ class HD2(commands.Cog):
                     continue
 
             await interaction.followup.send(
-                f"cresponse status code {cresponse.status_code}",
-                ephemeral=True,
+                f"cresponse status code {cresponse.status_code}"
             )
             return
         except Exception:
