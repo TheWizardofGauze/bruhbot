@@ -67,7 +67,7 @@ class HD2(commands.Cog):
                 with open(self.file, "r+", encoding="utf-8") as f:
                     data = json.load(f)
                     channel = self.bot.get_channel(data["servers"][0]["cid"])
-                    derror = False
+                    derror = False#move
                     for i in range(3):
                         try:
                             dresponse = get(
@@ -106,7 +106,7 @@ class HD2(commands.Cog):
                         await owner.send(
                             f"dresponse status code {dresponse.status_code}"
                         )
-                    aerror = False
+                    aerror = False#move
                     for i in range(3):
                         try:
                             aresponse = get(
@@ -282,7 +282,7 @@ class HD2(commands.Cog):
                                 }
                             }
                         )
-                    aerror = False
+                    aerror = False#move
                     for i in range(3):
                         aresponse = get(f"{self.api}/assignments", headers=self.headers)
                         if aresponse.status_code == 200:
@@ -301,7 +301,7 @@ class HD2(commands.Cog):
                             ephemeral=True,
                         )
                         return
-                    werror = False
+                    werror = False#move
                     for i in range(3):
                         wresponse = get(f"{self.api}/war", headers=self.headers)
                         if wresponse.status_code == 200:
