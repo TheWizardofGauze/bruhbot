@@ -308,7 +308,7 @@ class HD2(commands.Cog):
                             continue
                     if aerror is True:
                         await interaction.followup.send(
-                            f"aresponse status code {aresponse.status_code}"
+                            f"aresponse status code {aresponse.status_code}. Failed after 3 tries."
                         )
                         return
                     for i in range(3):
@@ -330,7 +330,7 @@ class HD2(commands.Cog):
                             continue
                     if werror is True:
                         await interaction.followup.send(
-                            f"wresponse status code {wresponse.status_code}"
+                            f"wresponse status code {wresponse.status_code}. Failed after 3 tries."
                         )
                         return
                     embl = []
@@ -399,7 +399,7 @@ class HD2(commands.Cog):
                     continue
 
             await interaction.followup.send(
-                f"cresponse status code {cresponse.status_code}"
+                f"cresponse status code {cresponse.status_code}. Failed after 3 tries."
             )
             return
         except Exception:
