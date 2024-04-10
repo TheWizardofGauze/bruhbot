@@ -96,7 +96,7 @@ class HD2(commands.Cog):
                                 break
                             else:
                                 derror = True
-                                await asyncio.sleep(10)
+                                await asyncio.sleep(15)
                                 continue
                         except Exception:
                             owner = await self.bot.fetch_user(self.owner_id)
@@ -163,10 +163,10 @@ class HD2(commands.Cog):
                                         break
                                 else:
                                     aerror = True
-                                    await asyncio.sleep(10)
+                                    await asyncio.sleep(15)
                                     continue
                             except exceptions.JSONDecodeError:
-                                await asyncio.sleep(10)
+                                await asyncio.sleep(15)
                                 continue
                         except Exception:
                             owner = await self.bot.fetch_user(self.owner_id)
@@ -183,7 +183,7 @@ class HD2(commands.Cog):
                 owner = await self.bot.fetch_user(self.owner_id)
                 await owner.send("Error logged in HD2.")
                 ErrorLogger.run(traceback.format_exc())
-                await asyncio.sleep(10)
+                await asyncio.sleep(15)
                 continue
 
     @commands.Cog.listener()
@@ -306,7 +306,7 @@ class HD2(commands.Cog):
                             break
                         else:
                             a2error = True
-                            await asyncio.sleep(10)
+                            await asyncio.sleep(15)
                             continue
                     if a2error is True and a2error is not None:
                         await interaction.followup.send(
@@ -328,7 +328,7 @@ class HD2(commands.Cog):
                             break
                         else:
                             werror = True
-                            await asyncio.sleep(10)
+                            await asyncio.sleep(15)
                             continue
                     if werror is True and werror is not None:
                         await interaction.followup.send(
@@ -397,7 +397,7 @@ class HD2(commands.Cog):
                     return
 
                 elif cresponse.status_code == 429:
-                    await asyncio.sleep(10)
+                    await asyncio.sleep(15)
                     continue
 
             await interaction.followup.send(
