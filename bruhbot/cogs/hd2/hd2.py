@@ -262,7 +262,7 @@ class HD2(commands.Cog):
                                 (
                                     int(
                                         planet["event"]["maxHealth"]
-                                        - int(planet["event"]["health"])
+                                        - int(planet["event"]["health"])#convert to float and round
                                     )
                                     / int(planet["event"]["maxHealth"])
                                 )
@@ -272,7 +272,7 @@ class HD2(commands.Cog):
                             end = None
                             lib = str(
                                 (
-                                    (int(planet["maxHealth"]) - int(planet["health"]))
+                                    (int(planet["maxHealth"]) - int(planet["health"]))#convert to float and round
                                     / int(planet["maxHealth"])
                                     * 100
                                 )
