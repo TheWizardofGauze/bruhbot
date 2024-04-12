@@ -259,22 +259,33 @@ class HD2(commands.Cog):
                                 planet["event"]["endTime"], "%Y-%m-%dT%H:%M:%SZ"
                             )
                             lib = str(
-                                (
-                                    int(
-                                        planet["event"]["maxHealth"]
-                                        - int(planet["event"]["health"])
-                                    )
-                                    / int(planet["event"]["maxHealth"])
+                                round(
+                                    float(
+                                        (
+                                            int(
+                                                planet["event"]["maxHealth"]
+                                                - int(planet["event"]["health"])
+                                            )
+                                            / int(planet["event"]["maxHealth"])
+                                        )
+                                        * 100
+                                    ),
+                                    5,
                                 )
-                                * 100
                             )
                         else:
                             end = None
                             lib = str(
-                                (
-                                    (int(planet["maxHealth"]) - int(planet["health"]))
-                                    / int(planet["maxHealth"])
-                                    * 100
+                                round(
+                                    float(
+                                        (
+                                            int(planet["maxHealth"])
+                                            - int(planet["health"])
+                                        )
+                                        / int(planet["maxHealth"])
+                                        * 100
+                                    ),
+                                    5,
                                 )
                             )
                         players = planet["statistics"]["playerCount"]
