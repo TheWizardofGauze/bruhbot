@@ -133,12 +133,12 @@ class HD2(commands.Cog):
                                             planets.append(
                                                 f"-{presponse.json()['name']}"
                                             )
-                                        # title = aj[0]["title"]
-                                        title = "MAJOR ORDER"
+                                        title = aj[0]["title"]
+                                        # title = "MAJOR ORDER"
                                         briefing = aj[0]["briefing"]
                                         desc = aj[0]["description"]
                                         for tag in tags:
-                                            # title = title.replace(tag, "**")
+                                            title = title.replace(tag, "**")
                                             briefing = briefing.replace(tag, "**")
                                             desc = desc.replace(tag, "**")
                                         reward = aj[0]["reward"]["amount"]
@@ -153,10 +153,12 @@ class HD2(commands.Cog):
                                         emb = await aembed(
                                             title, briefing, desc, planets, reward
                                         )
-                                        await channel.send(
+                                        msg = await channel.send(
                                             files=[morder, micon], embed=emb
                                         )
-#pin major order
+                                        for pin in await channel.pins():
+                                            await pin.unpin()
+                                        await msg.pin()
                                         data["assign_id"] = aj[0]["id"]
                                         f.seek(0)
                                         json.dump(data, f, indent=4)
