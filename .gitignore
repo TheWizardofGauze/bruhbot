@@ -17,4 +17,3 @@ images
 \.vscode
 __pycache__/
 *.py[cod]
-hd2-TEST.py
