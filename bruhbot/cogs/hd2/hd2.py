@@ -156,6 +156,7 @@ class HD2(commands.Cog):
                                         await channel.send(
                                             files=[morder, micon], embed=emb
                                         )
+#pin major order
                                         data["assign_id"] = aj[0]["id"]
                                         f.seek(0)
                                         json.dump(data, f, indent=4)
