@@ -1,6 +1,7 @@
 import asyncio
 from contextlib import suppress
 from datetime import date, datetime
+from io import BytesIO
 import json
 import os
 from random import choice, random
@@ -1005,6 +1006,15 @@ async def logs(ctx):
                     )
 
         last = ErrorLogger.last()
+        if len(last) >= 2000:
+            ab = map(str.encode, last)
+            content = b"".join(ab)
+            view = clearView(timeout=10)
+            msg = await ctx.send(
+                file=discord.File(BytesIO(content), "traceback.py"), view=view
+            )
+            view.msg = msg
+            return
         if last == "No logs found.":
             await ctx.reply(last, mention_author=False)
         else:
