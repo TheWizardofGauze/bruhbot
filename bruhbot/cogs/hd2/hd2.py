@@ -41,7 +41,12 @@ class HD2(commands.Cog):
                 ErrorLogger.run(traceback.format_exc())
 
         async def aembed(
-            title: str, briefing: str, description: str, planets: list, reward: str
+            title: str,
+            briefing: str,
+            description: str,
+            planets: list,
+            reward: str,
+            expire: int,
         ):
             try:
                 planet = "\n".join(planets)
@@ -49,6 +54,7 @@ class HD2(commands.Cog):
                 embed.title = title
                 embed.description = briefing
                 embed.add_field(name=description, value=planet)
+                embed.add_field(name="Expires:", value=f"<t:{expire}:R>", inline=False)
                 embed.set_thumbnail(url="attachment://mologo.png")
                 embed.set_footer(
                     text=f"REWARD: {reward} MEDALS",  # Reward type 1 is medals, maybe more rewards types in the future?
@@ -137,6 +143,12 @@ class HD2(commands.Cog):
                                         # title = "MAJOR ORDER"
                                         briefing = aj[0]["briefing"]
                                         desc = aj[0]["description"]
+                                        exp = round(
+                                            datetime.strptime(
+                                                aj[0]["expiration"][:19].strip(),
+                                                "%Y-%m-%dT%H:%M:%S",
+                                            ).timestamp()
+                                        )
                                         for tag in tags:
                                             title = title.replace(tag, "**")
                                             briefing = briefing.replace(tag, "**")
@@ -151,7 +163,7 @@ class HD2(commands.Cog):
                                             filename="medal.png",
                                         )
                                         emb = await aembed(
-                                            title, briefing, desc, planets, reward
+                                            title, briefing, desc, planets, reward, exp
                                         )
                                         msg = await channel.send(
                                             files=[morder, micon], embed=emb
