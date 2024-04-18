@@ -227,6 +227,8 @@ class HD2(commands.Cog):
                 major: bool,
                 time: str,
                 color: discord.Color,
+                biome: dict,
+                hazards: dict,
             ):
                 embed = discord.Embed(color=color)
                 embed.title = name
@@ -243,6 +245,17 @@ class HD2(commands.Cog):
                         embed.set_thumbnail(url="attachment://tlogo.png")
                     elif owner == "Illuminate":
                         embed.set_thumbnail(url="attachment://ilogo.png")
+                embed.add_field(
+                    name="Biome:",
+                    value=f"__{biome['name']}__\n{biome['description']}",
+                    inline=False,
+                )
+                h1 = []
+                for hazard in hazards:
+                    hz = f"__{hazard['name']}__\n{hazard['description']}"
+                    h1.append(hz)
+                h2 = "\n".join(h1)
+                embed.add_field(name="Hazards:", value=h2, inline=False)
                 embed.set_footer(
                     text=f"{players} Helldivers", icon_url="attachment://hdlogo.png"
                 )
@@ -304,6 +317,8 @@ class HD2(commands.Cog):
                                 )
                             )
                         players = planet["statistics"]["playerCount"]
+                        biome = planet["biome"]
+                        hazards = planet["hazards"]
                         planetdata.update(
                             {
                                 name: {
@@ -312,6 +327,8 @@ class HD2(commands.Cog):
                                     "owner": owner,
                                     "end": end,
                                     "players": players,
+                                    "biome": biome,
+                                    "hazards": hazards,
                                 }
                             }
                         )
@@ -417,6 +434,8 @@ class HD2(commands.Cog):
                             major,
                             time,
                             color,
+                            planetdata[planet]["biome"],
+                            planetdata[planet]["hazards"],
                         )
                         embl.append(emb)
                     await interaction.followup.send(files=files, embeds=embl)
