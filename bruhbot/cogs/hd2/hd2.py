@@ -145,7 +145,6 @@ class HD2(commands.Cog):
                                                     f"-{presponse.json()['name']}"
                                                 )
                                         title = aj[0]["title"]
-                                        # title = "MAJOR ORDER"
                                         briefing = aj[0]["briefing"]
                                         desc = aj[0]["description"]
                                         exp = round(
@@ -158,7 +157,16 @@ class HD2(commands.Cog):
                                             title = title.replace(tag, "**")
                                             briefing = briefing.replace(tag, "**")
                                             desc = desc.replace(tag, "**")
-                                        reward = aj[0]["reward"]["amount"]
+                                        if aj[0]["reward"]["type"] == 1:
+                                            reward = aj[0]["reward"]["amount"]
+                                        else:
+                                            owner = await self.bot.fetch_user(
+                                                self.owner_id
+                                            )
+                                            await owner.send(
+                                                f"Unknown reward type {str(aj[0]["reawrd"]["type"])}"
+                                            )
+                                            return
                                         morder = discord.File(
                                             f"{self.here}\\MajorOrder.png",
                                             filename="mologo.png",
