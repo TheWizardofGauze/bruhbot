@@ -129,16 +129,21 @@ class HD2(commands.Cog):
                                         ErrorLogger.run("aresponse returned empty.")
                                         break
                                     if aj[0]["id"] != data["assign_id"]:
-                                        for t in aj[0]["tasks"]:
-                                            pindex.append(t["values"][2])
-                                        for p in pindex:
-                                            presponse = get(
-                                                f"{self.api}/planets/{p}",
-                                                headers=self.headers,
-                                            )
-                                            planets.append(
-                                                f"-{presponse.json()['name']}"
-                                            )
+                                        if (
+                                            aj[0]["tasks"][0]["type"] == 3
+                                        ):  # write more permanent fix, type 3 seems to be "Kill X of Y", need to find what type liberation orders are. probably don't need to display anything other than the order description for type 3.
+                                            planets = []
+                                        else:
+                                            for t in aj[0]["tasks"]:
+                                                pindex.append(t["values"][2])
+                                            for p in pindex:
+                                                presponse = get(
+                                                    f"{self.api}/planets/{p}",
+                                                    headers=self.headers,
+                                                )
+                                                planets.append(
+                                                    f"-{presponse.json()['name']}"
+                                                )
                                         title = aj[0]["title"]
                                         # title = "MAJOR ORDER"
                                         briefing = aj[0]["briefing"]
