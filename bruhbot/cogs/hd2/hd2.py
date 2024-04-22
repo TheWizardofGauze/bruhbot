@@ -239,6 +239,7 @@ class HD2(commands.Cog):
                 players: str,
                 major: bool,
                 time: str,
+                attacker: str,
                 color: discord.Color,
                 biome: dict,
                 hazards: dict,
@@ -247,6 +248,7 @@ class HD2(commands.Cog):
                 embed.title = name
                 embed.description = f"{owner} control"
                 if owner == "Super Earth":
+                    embed.add_field(name="Attacker:", value=attacker)
                     embed.add_field(name="Time Remaining:", value=time)
                     embed.add_field(name="Defense:", value=f"{liberation}%")
                     embed.set_thumbnail(url="attachment://selogo.png")
@@ -306,6 +308,9 @@ class HD2(commands.Cog):
                             end = datetime.strptime(
                                 planet["event"]["endTime"], "%Y-%m-%dT%H:%M:%SZ"
                             )
+                            attacker = planet["event"]["faction"].replace(
+                                "Automaton", "Automatons"
+                            )
                             lib = str(
                                 round(
                                     float(
@@ -328,6 +333,7 @@ class HD2(commands.Cog):
                                         "lib": lib,
                                         "owner": owner,
                                         "end": end,
+                                        "attacker": attacker,
                                         "players": players,
                                         "biome": biome,
                                         "hazards": hazards,
@@ -335,7 +341,6 @@ class HD2(commands.Cog):
                                 }
                             )
                         else:
-                            end = None
                             lib = str(
                                 round(
                                     float(
@@ -356,7 +361,6 @@ class HD2(commands.Cog):
                                             "index": index,
                                             "lib": lib,
                                             "owner": owner,
-                                            "end": end,
                                             "players": players,
                                             "biome": biome,
                                             "hazards": hazards,
@@ -370,7 +374,6 @@ class HD2(commands.Cog):
                                             "index": index,
                                             "lib": lib,
                                             "owner": owner,
-                                            "end": end,
                                             "players": players,
                                             "biome": biome,
                                             "hazards": hazards,
@@ -384,7 +387,6 @@ class HD2(commands.Cog):
                                             "index": index,
                                             "lib": lib,
                                             "owner": owner,
-                                            "end": end,
                                             "players": players,
                                             "biome": biome,
                                             "hazards": hazards,
@@ -467,6 +469,7 @@ class HD2(commands.Cog):
                                 aplanetdata[planet]["players"],
                                 major,
                                 None,
+                                None,
                                 0xFF6161,
                                 aplanetdata[planet]["biome"],
                                 aplanetdata[planet]["hazards"],
@@ -502,6 +505,7 @@ class HD2(commands.Cog):
                                 tplanetdata[planet]["players"],
                                 major,
                                 None,
+                                None,
                                 0xFFB800,
                                 tplanetdata[planet]["biome"],
                                 tplanetdata[planet]["hazards"],
@@ -536,6 +540,7 @@ class HD2(commands.Cog):
                                 iplanetdata[planet]["lib"],
                                 iplanetdata[planet]["players"],
                                 major,
+                                None,
                                 None,
                                 0x000000,
                                 iplanetdata[planet]["biome"],
@@ -574,6 +579,7 @@ class HD2(commands.Cog):
                                 seplanetdata[planet]["players"],
                                 major,
                                 time,
+                                seplanetdata[planet]["attacker"],
                                 0xB5D9E9,
                                 seplanetdata[planet]["biome"],
                                 seplanetdata[planet]["hazards"],
