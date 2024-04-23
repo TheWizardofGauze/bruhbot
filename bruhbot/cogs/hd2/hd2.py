@@ -306,7 +306,8 @@ class HD2(commands.Cog):
                         hazards = planet["hazards"]
                         if owner == "Humans":
                             end = datetime.strptime(
-                                planet["event"]["endTime"], "%Y-%m-%dT%H:%M:%SZ"
+                                planet["event"]["endTime"][:19].strip(),
+                                "%Y-%m-%dT%H:%M:%S",
                             )
                             attacker = planet["event"]["faction"].replace(
                                 "Automaton", "Automatons"
@@ -417,28 +418,28 @@ class HD2(commands.Cog):
                             f"aresponse status code {a2response.status_code}. Failed after 3 tries."
                         )
                         return
-                    for i in range(3):  # wresponse
-                        wresponse = get(f"{self.api}/war", headers=self.headers)
-                        if wresponse.status_code == 200:
-                            werror = False
-                            if wresponse.json() == []:
-                                await interaction.followup.send(
-                                    "wresponse returned empty."
-                                )
-                                return
-                            now = datetime.strptime(
-                                wresponse.json()["now"], "%Y-%m-%dT%H:%M:%SZ"
-                            )
-                            break
-                        else:
-                            werror = True
-                            await asyncio.sleep(15)
-                            continue
-                    if werror is True and werror is not None:
-                        await interaction.followup.send(
-                            f"wresponse status code {wresponse.status_code}. Failed after 3 tries."
-                        )
-                        return
+                    # for i in range(3):  # wresponse
+                    #     wresponse = get(f"{self.api}/war", headers=self.headers)
+                    #     if wresponse.status_code == 200:
+                    #         werror = False
+                    #         if wresponse.json() == []:
+                    #             await interaction.followup.send(
+                    #                 "wresponse returned empty."
+                    #             )
+                    #             return
+                    #         now = datetime.strptime(
+                    #             wresponse.json()["now"], "%Y-%m-%dT%H:%M:%SZ"
+                    #         )
+                    #         break
+                    #     else:
+                    #         werror = True
+                    #         await asyncio.sleep(15)
+                    #         continue
+                    # if werror is True and werror is not None:
+                    #     await interaction.followup.send(
+                    #         f"wresponse status code {wresponse.status_code}. Failed after 3 tries."
+                    #     )
+                    #     return
 
                     if not aplanetdata == {}:
                         aembl = []
@@ -570,6 +571,7 @@ class HD2(commands.Cog):
                                 sefiles.add(morder)
                             else:
                                 major = False
+                            now = datetime.now()
                             rdelta = relativedelta(seplanetdata[planet]["end"], now)
                             time = f"{rdelta.days}D:{rdelta.hours}H:{rdelta.minutes}M:{rdelta.seconds}S"
                             emb = await embed(
