@@ -73,7 +73,7 @@ class HD2(commands.Cog):
                 with open(self.file, "r+", encoding="utf-8") as f:
                     data = json.load(f)
                     channel = self.bot.get_channel(data["servers"][0]["cid"])
-                    for i in range(3):
+                    for i in range(3):  # dresponse
                         try:
                             dresponse = get(
                                 f"{self.api}/dispatches", headers=self.headers
@@ -114,7 +114,7 @@ class HD2(commands.Cog):
                         await owner.send(
                             f"dresponse status code {dresponse.status_code}"
                         )
-                    for i in range(3):
+                    for i in range(3):  # aresponse
                         try:
                             aresponse = get(
                                 f"{self.api}/assignments", headers=self.headers
@@ -131,7 +131,9 @@ class HD2(commands.Cog):
                                     if aj[0]["id"] != data["assign_id"]:
                                         if (
                                             aj[0]["tasks"][0]["type"] == 3
-                                        ):  # write more permanent fix, type 3 seems to be "Kill X of Y", need to find what type liberation orders are. probably don't need to display anything other than the order description for type 3.
+                                            or aj[0]["tasks"][0]["type"] == 12
+                                        ):  # write more permanent fix, type 3 seems to be "Kill X of Y", need to find what type liberation orders are. probably don't need to display anything other than the order description for type 3. ["values"] may be [faction, <unknown>, goal]
+                                            # Type 12 may be defense. ["values"][0] Seems to be the goal. Probably won't use since it's in the assignment description usually.
                                             planets = []
                                         else:
                                             for t in aj[0]["tasks"]:
