@@ -693,6 +693,11 @@ class HD2(commands.Cog):
                                     elif prog[i] == 1:
                                         name = f"~~-{presponse.json()['name']}~~"
                                     planets.append(name)
+                            else:
+                                await interaction.followup.send(
+                                    f"Unknown task type{aj[0]["tasks"][0]["type"]}. Aborting..."
+                                )
+                                return
                             title = aj[0]["title"]
                             briefing = aj[0]["briefing"]
                             desc = aj[0]["description"]
