@@ -695,7 +695,7 @@ class HD2(commands.Cog):
                                     planets.append(name)
                             else:
                                 await interaction.followup.send(
-                                    f"Unknown task type{aj[0]["tasks"][0]["type"]}. Aborting..."
+                                    f"Unknown task type{aj[0]['tasks'][0]['type']}. Aborting..."
                                 )
                                 return
                             title = aj[0]["title"]
