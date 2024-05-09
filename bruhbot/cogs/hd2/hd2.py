@@ -20,11 +20,18 @@ class HD2(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.api = "https://api.helldivers2.dev/api/v1"
-        self.headers = {"Accept": "application/json", "User-Agent": "Bruhbot", "X-Super-Client": "Bruhbot", "X-Super-Contact": "gh/TheWizardofGauze"}
+        self.headers = {
+            "Accept": "application/json",
+            "User-Agent": "Bruhbot",
+            "X-Super-Client": "Bruhbot",
+            "X-Super-Contact": "gh/TheWizardofGauze",
+        }
         self.here = os.path.dirname(__file__)
         self.file = f"{self.here}\\hd2.json"
         load_dotenv(os.path.abspath(".\\bruhbot\\.env"))
         self.owner_id = int(os.getenv("OWNER_ID"))
+
+    hd2 = app_commands.Group(name="hd2", description="...")
 
     async def update(self):
         async def dembed(
@@ -227,12 +234,12 @@ class HD2(commands.Cog):
     async def hd(self, ctx):
         await self.update()
 
-    @app_commands.command(
-        name="hd2status",
+    @hd2.command(
+        name="warstatus",
         description="Get current Galactic War status for Helldivers 2.",
     )
     @app_commands.checks.cooldown(1, 60, key=lambda i: (i.guild_id))
-    async def status(self, interaction: discord.Interaction):
+    async def warstatus(self, interaction: discord.Interaction):
         try:
 
             async def embed(
@@ -606,8 +613,143 @@ class HD2(commands.Cog):
             await interaction.followup.send("Error logged in HD2.")
             ErrorLogger.run(traceback.format_exc())
 
-    @status.error
-    async def status_error(self, interaction: discord.Interaction, error):
+    @warstatus.error
+    async def warstatus_error(self, interaction: discord.Interaction, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            await interaction.response.send(
+                f"Command on cooldown, try again in {error.retry_after: .0f} seconds.",
+                ephemeral=True,
+            )
+
+    @hd2.command(
+        name="mostatus", description="Get current Major Order status for Helldivers 2."
+    )
+    @app_commands.checks.cooldown(1, 60, key=lambda i: (i.guild_id))
+    async def mostatus(self, interaction: discord.Interaction):
+        try:
+
+            async def embed(
+                title: str,
+                briefing: str,
+                description: str,
+                planets: list,
+                reward: str,
+                expire: int,
+            ):
+                try:
+                    planet = "\n".join(planets)
+                    embed = discord.Embed(color=0xB5D9E9)
+                    embed.title = title
+                    embed.description = briefing
+                    embed.add_field(name=description, value=planet)
+                    embed.add_field(
+                        name="Expires:", value=f"<t:{expire}:R>", inline=False
+                    )
+                    embed.set_thumbnail(url="attachment://mologo.png")
+                    embed.set_footer(
+                        text=f"REWARD: {reward} MEDALS",  # Reward type 1 is medals, maybe more rewards types in the future?
+                        icon_url="attachment://medal.png",
+                    )
+                    embed.timestamp = datetime.now()
+                    return embed
+                except Exception:
+                    owner = await self.bot.fetch_user(self.owner_id)
+                    await owner.send("Error logged in HD2.")
+                    ErrorLogger.run(traceback.format_exc())
+
+            await interaction.response.defer()
+            tags = ["<i=1>", "<i=3>", "</i>"]
+            for i in range(3):
+                try:
+                    aresponse = get(f"{self.api}/assignments", headers=self.headers)
+                    try:
+                        aj = aresponse.json()
+                        pindex = []
+                        planets = []
+                        if aresponse.status_code == 200:
+                            aerror = False
+                            if aj == []:
+                                ErrorLogger.run("aresponse returned empty.")
+                                break
+                            if aj[0]["tasks"][0]["type"] == 3:
+                                prog = aj[0]["progress"][0]
+                                goal = aj[0]["tasks"][0]["values"][2]
+                                planets.append(f"{prog}/{goal}")
+                            elif aj[0]["tasks"][0]["type"] == 12:
+                                prog = aj[0]["progress"][0]
+                                goal = aj[0]["tasks"][0]["values"][0]
+                                planets.append(f"{prog}/{goal}")
+                            elif aj[0]["tasks"][0]["type"] == 11:
+                                prog = aj[0]["progress"]
+                                for t in aj[0]["tasks"]:
+                                    pindex.append(t["values"][2])
+                                for i, p in enumerate(pindex):
+                                    presponse = get(
+                                        f"{self.api}/planets/{p}",
+                                        headers=self.headers,
+                                    )
+                                    if prog[i] == 0:
+                                        name = f"-{presponse.json()['name']}"
+                                    elif prog[i] == 1:
+                                        name = f"~~-{presponse.json()['name']}~~"
+                                    planets.append(name)
+                            title = aj[0]["title"]
+                            briefing = aj[0]["briefing"]
+                            desc = aj[0]["description"]
+                            exp = round(
+                                datetime.strptime(
+                                    aj[0]["expiration"][:19].strip(),
+                                    "%Y-%m-%dT%H:%M:%S",
+                                ).timestamp()
+                            )
+                            for tag in tags:
+                                title = title.replace(tag, "**")
+                                briefing = briefing.replace(tag, "**")
+                                desc = desc.replace(tag, "**")
+                            if aj[0]["reward"]["type"] == 1:
+                                reward = aj[0]["reward"]["amount"]
+                            else:
+                                owner = await self.bot.fetch_user(self.owner_id)
+                                await owner.send(
+                                    f"Unknown reward type {str(aj[0]['reward']['type'])}"
+                                )
+                                return
+                            morder = discord.File(
+                                f"{self.here}\\MajorOrder.png",
+                                filename="mologo.png",
+                            )
+                            micon = discord.File(
+                                f"{self.here}\\Medal.png",
+                                filename="medal.png",
+                            )
+                            emb = await embed(
+                                title, briefing, desc, planets, reward, exp
+                            )
+                            await interaction.followup.send(
+                                files=[morder, micon], embed=emb
+                            )
+                            break
+                        else:
+                            aerror = True
+                            await asyncio.sleep(15)
+                            continue
+                    except exceptions.JSONDecodeError:
+                        await asyncio.sleep(15)
+                        continue
+                except Exception:
+                    owner = await self.bot.fetch_user(self.owner_id)
+                    await owner.send("Error logged in HD2.")
+                    ErrorLogger.run(traceback.format_exc())
+                    break
+            if aerror is True and aerror is not None:
+                owner = await self.bot.fetch_user(self.owner_id)
+                await owner.send(f"aresponse status code {aresponse.status_code}")
+        except Exception:
+            await interaction.followup.send("Error logged in HD2.")
+            ErrorLogger.run(traceback.format_exc())
+
+    @mostatus.error
+    async def mostatus_error(self, interaction: discord.Interaction, error):
         if isinstance(error, commands.CommandOnCooldown):
             await interaction.response.send(
                 f"Command on cooldown, try again in {error.retry_after: .0f} seconds.",
