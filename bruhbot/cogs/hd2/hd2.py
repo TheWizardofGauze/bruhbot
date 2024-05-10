@@ -127,24 +127,24 @@ class HD2(commands.Cog):
                                 f"{self.api}/assignments", headers=self.headers
                             )
                             try:
-                                aj = aresponse.json()
                                 pindex = []
                                 planets = []
                                 if aresponse.status_code == 200:
                                     aerror = False
-                                    if aj == []:
+                                    if aresponse.json() == []:
                                         ErrorLogger.run("aresponse returned empty.")
                                         break
-                                    if aj[0]["id"] != data["assign_id"]:
+                                    aj = aresponse.json()[0]
+                                    if aj["id"] != data["assign_id"]:
                                         if (
-                                            aj[0]["tasks"][0]["type"] == 3
-                                            or aj[0]["tasks"][0]["type"] == 12
+                                            aj["tasks"][0]["type"] == 3
+                                            or aj["tasks"][0]["type"] == 12
                                         ):  # write more permanent fix, type 3 seems to be "Kill X of Y", need to find what type liberation orders are. probably don't need to display anything other than the order description for type 3. ["values"] may be [faction, <unknown>, goal]
                                             # Type 12 may be defense. ["values"][0] Seems to be the goal. Probably won't use since it's in the assignment description usually.
                                             # Type 11 should be liberation. ["values"][2] is planet index.
                                             planets = []
                                         else:
-                                            for t in aj[0]["tasks"]:
+                                            for t in aj["tasks"]:
                                                 pindex.append(t["values"][2])
                                             for p in pindex:
                                                 presponse = get(
@@ -154,12 +154,12 @@ class HD2(commands.Cog):
                                                 planets.append(
                                                     f"-{presponse.json()['name']}"
                                                 )
-                                        title = aj[0]["title"]
-                                        briefing = aj[0]["briefing"]
-                                        desc = aj[0]["description"]
+                                        title = aj["title"]
+                                        briefing = aj["briefing"]
+                                        desc = aj["description"]
                                         exp = round(
                                             datetime.strptime(
-                                                aj[0]["expiration"][:19].strip(),
+                                                aj["expiration"][:19].strip(),
                                                 "%Y-%m-%dT%H:%M:%S",
                                             ).timestamp()
                                         )
@@ -167,14 +167,14 @@ class HD2(commands.Cog):
                                             title = title.replace(tag, "**")
                                             briefing = briefing.replace(tag, "**")
                                             desc = desc.replace(tag, "**")
-                                        if aj[0]["reward"]["type"] == 1:
-                                            reward = aj[0]["reward"]["amount"]
+                                        if aj["reward"]["type"] == 1:
+                                            reward = aj["reward"]["amount"]
                                         else:
                                             owner = await self.bot.fetch_user(
                                                 self.owner_id
                                             )
                                             await owner.send(
-                                                f"Unknown reward type {str(aj[0]['reward']['type'])}"
+                                                f"Unknown reward type {str(aj['reward']['type'])}"
                                             )
                                             return
                                         morder = discord.File(
@@ -194,7 +194,7 @@ class HD2(commands.Cog):
                                         for pin in await channel.pins():
                                             await pin.unpin()
                                         await msg.pin()
-                                        data["assign_id"] = aj[0]["id"]
+                                        data["assign_id"] = aj["id"]
                                         f.seek(0)
                                         json.dump(data, f, indent=4)
                                         f.truncate()
@@ -663,7 +663,7 @@ class HD2(commands.Cog):
                 try:
                     aresponse = get(f"{self.api}/assignments", headers=self.headers)
                     try:
-                        aj = aresponse.json()
+                        aj = aresponse.json()[0]
                         pindex = []
                         planets = []
                         if aresponse.status_code == 200:
@@ -671,17 +671,17 @@ class HD2(commands.Cog):
                             if aj == []:
                                 ErrorLogger.run("aresponse returned empty.")
                                 break
-                            if aj[0]["tasks"][0]["type"] == 3:
-                                prog = aj[0]["progress"][0]
-                                goal = aj[0]["tasks"][0]["values"][2]
+                            if aj["tasks"][0]["type"] == 3:
+                                prog = aj["progress"][0]
+                                goal = aj["tasks"][0]["values"][2]
                                 planets.append(f"{prog}/{goal}")
-                            elif aj[0]["tasks"][0]["type"] == 12:
-                                prog = aj[0]["progress"][0]
-                                goal = aj[0]["tasks"][0]["values"][0]
+                            elif aj["tasks"][0]["type"] == 12:
+                                prog = aj["progress"][0]
+                                goal = aj["tasks"][0]["values"][0]
                                 planets.append(f"{prog}/{goal}")
-                            elif aj[0]["tasks"][0]["type"] == 11:
-                                prog = aj[0]["progress"]
-                                for t in aj[0]["tasks"]:
+                            elif aj["tasks"][0]["type"] == 11:
+                                prog = aj["progress"]
+                                for t in aj["tasks"]:
                                     pindex.append(t["values"][2])
                                 for i, p in enumerate(pindex):
                                     presponse = get(
@@ -695,15 +695,15 @@ class HD2(commands.Cog):
                                     planets.append(name)
                             else:
                                 await interaction.followup.send(
-                                    f"Unknown task type{aj[0]['tasks'][0]['type']}. Aborting..."
+                                    f"Unknown task type{aj['tasks'][0]['type']}. Aborting..."
                                 )
                                 return
-                            title = aj[0]["title"]
-                            briefing = aj[0]["briefing"]
-                            desc = aj[0]["description"]
+                            title = aj["title"]
+                            briefing = aj["briefing"]
+                            desc = aj["description"]
                             exp = round(
                                 datetime.strptime(
-                                    aj[0]["expiration"][:19].strip(),
+                                    aj["expiration"][:19].strip(),
                                     "%Y-%m-%dT%H:%M:%S",
                                 ).timestamp()
                             )
@@ -711,12 +711,12 @@ class HD2(commands.Cog):
                                 title = title.replace(tag, "**")
                                 briefing = briefing.replace(tag, "**")
                                 desc = desc.replace(tag, "**")
-                            if aj[0]["reward"]["type"] == 1:
-                                reward = aj[0]["reward"]["amount"]
+                            if aj["reward"]["type"] == 1:
+                                reward = aj["reward"]["amount"]
                             else:
                                 owner = await self.bot.fetch_user(self.owner_id)
                                 await owner.send(
-                                    f"Unknown reward type {str(aj[0]['reward']['type'])}"
+                                    f"Unknown reward type {str(aj['reward']['type'])}"
                                 )
                                 return
                             morder = discord.File(
