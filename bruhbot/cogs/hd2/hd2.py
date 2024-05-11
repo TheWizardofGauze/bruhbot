@@ -135,14 +135,15 @@ class HD2(commands.Cog):
                                         ErrorLogger.run("aresponse returned empty.")
                                         break
                                     aj = aresponse.json()[0]
+                                    task = aj["tasks"][0]
                                     if aj["id"] != data["assign_id"]:
-                                        if (
-                                            aj["tasks"][0]["type"] == 3
-                                            or aj["tasks"][0]["type"] == 12
-                                        ):  # write more permanent fix, type 3 seems to be "Kill X of Y", need to find what type liberation orders are. probably don't need to display anything other than the order description for type 3. ["values"] may be [faction, <unknown>, goal]
+                                        if task["type"] == 3:
+                                            planets.append(f"{task['values'][2]:,}")
+                                        elif task["type"] == 12:
+                                            # write more permanent fix, type 3 seems to be "Kill X of Y", need to find what type liberation orders are. probably don't need to display anything other than the order description for type 3. ["values"] may be [faction, <unknown>, goal]
                                             # Type 12 may be defense. ["values"][0] Seems to be the goal. Probably won't use since it's in the assignment description usually.
                                             # Type 11 should be liberation. ["values"][2] is planet index.
-                                            planets = []
+                                            planets.append(str(task["values"][0]))
                                         else:
                                             for t in aj["tasks"]:
                                                 pindex.append(t["values"][2])
@@ -326,12 +327,10 @@ class HD2(commands.Cog):
                                 round(
                                     float(
                                         (
-                                            int(
-                                                planet["event"]["maxHealth"]
-                                                - int(planet["event"]["health"])
-                                            )
-                                            / int(planet["event"]["maxHealth"])
+                                            planet["event"]["maxHealth"]
+                                            - planet["event"]["health"]
                                         )
+                                        / (planet["event"]["maxHealth"])
                                         * 100
                                     ),
                                     5,
@@ -355,11 +354,8 @@ class HD2(commands.Cog):
                             lib = str(
                                 round(
                                     float(
-                                        (
-                                            int(planet["maxHealth"])
-                                            - int(planet["health"])
-                                        )
-                                        / int(planet["maxHealth"])
+                                        (planet["maxHealth"] - planet["health"])
+                                        / (planet["maxHealth"])
                                         * 100
                                     ),
                                     5,
@@ -664,6 +660,7 @@ class HD2(commands.Cog):
                     aresponse = get(f"{self.api}/assignments", headers=self.headers)
                     try:
                         aj = aresponse.json()[0]
+                        task = aj["tasks"][0]
                         pindex = []
                         planets = []
                         if aresponse.status_code == 200:
@@ -671,15 +668,19 @@ class HD2(commands.Cog):
                             if aj == []:
                                 ErrorLogger.run("aresponse returned empty.")
                                 break
-                            if aj["tasks"][0]["type"] == 3:
+                            if task["type"] == 3:
                                 prog = aj["progress"][0]
-                                goal = aj["tasks"][0]["values"][2]
-                                planets.append(f"{prog}/{goal}")
-                            elif aj["tasks"][0]["type"] == 12:
+                                goal = task["values"][2]
+                                planets.append(
+                                    f"{prog:,}/{goal:,} - {str(round(float((prog/goal)*100),1))}%"
+                                )
+                            elif task["type"] == 12:
                                 prog = aj["progress"][0]
-                                goal = aj["tasks"][0]["values"][0]
-                                planets.append(f"{prog}/{goal}")
-                            elif aj["tasks"][0]["type"] == 11:
+                                goal = task["values"][0]
+                                planets.append(
+                                    f"{prog}/{goal} - {str(round(float((prog/goal)*100),1))}%"
+                                )
+                            elif task["type"] == 11:
                                 prog = aj["progress"]
                                 for t in aj["tasks"]:
                                     pindex.append(t["values"][2])
@@ -695,7 +696,7 @@ class HD2(commands.Cog):
                                     planets.append(name)
                             else:
                                 await interaction.followup.send(
-                                    f"Unknown task type{aj['tasks'][0]['type']}. Aborting..."
+                                    f"Unknown task type{task['type']}. Aborting..."
                                 )
                                 return
                             title = aj["title"]
