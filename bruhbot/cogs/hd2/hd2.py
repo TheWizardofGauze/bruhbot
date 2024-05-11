@@ -424,28 +424,6 @@ class HD2(commands.Cog):
                             f"aresponse status code {a2response.status_code}. Failed after 3 tries."
                         )
                         return
-                    # for i in range(3):  # wresponse
-                    #     wresponse = get(f"{self.api}/war", headers=self.headers)
-                    #     if wresponse.status_code == 200:
-                    #         werror = False
-                    #         if wresponse.json() == []:
-                    #             await interaction.followup.send(
-                    #                 "wresponse returned empty."
-                    #             )
-                    #             return
-                    #         now = datetime.strptime(
-                    #             wresponse.json()["now"], "%Y-%m-%dT%H:%M:%SZ"
-                    #         )
-                    #         break
-                    #     else:
-                    #         werror = True
-                    #         await asyncio.sleep(15)
-                    #         continue
-                    # if werror is True and werror is not None:
-                    #     await interaction.followup.send(
-                    #         f"wresponse status code {wresponse.status_code}. Failed after 3 tries."
-                    #     )
-                    #     return
 
                     if not aplanetdata == {}:
                         aembl = []
