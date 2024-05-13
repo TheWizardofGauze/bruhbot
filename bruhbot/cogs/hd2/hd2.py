@@ -51,16 +51,16 @@ class HD2(commands.Cog):
             title: str,
             briefing: str,
             description: str,
-            planets: list,
+            objectives: list,
             reward: str,
             expire: int,
         ):
             try:
-                planet = "\n".join(planets)
+                objective = "\n".join(objectives)
                 embed = discord.Embed(color=0xB5D9E9)
                 embed.title = title
                 embed.description = briefing
-                embed.add_field(name=description, value=planet)
+                embed.add_field(name=description, value=objective)
                 embed.add_field(name="Expires:", value=f"<t:{expire}:R>", inline=False)
                 embed.set_thumbnail(url="attachment://mologo.png")
                 embed.set_footer(
@@ -127,8 +127,7 @@ class HD2(commands.Cog):
                                 f"{self.api}/assignments", headers=self.headers
                             )
                             try:
-                                pindex = []
-                                planets = []
+                                objectives = []
                                 if aresponse.status_code == 200:
                                     aerror = False
                                     if aresponse.json() == []:
@@ -138,13 +137,14 @@ class HD2(commands.Cog):
                                     task = aj["tasks"][0]
                                     if aj["id"] != data["assign_id"]:
                                         if task["type"] == 3:
-                                            planets.append(f"{task['values'][2]:,}")
+                                            objectives.append(f"{task['values'][2]:,}")
                                         elif task["type"] == 12:
                                             # write more permanent fix, type 3 seems to be "Kill X of Y", need to find what type liberation orders are. probably don't need to display anything other than the order description for type 3. ["values"] may be [faction, <unknown>, goal]
                                             # Type 12 may be defense. ["values"][0] Seems to be the goal. Probably won't use since it's in the assignment description usually.
                                             # Type 11 should be liberation. ["values"][2] is planet index.
-                                            planets.append(str(task["values"][0]))
+                                            objectives.append(str(task["values"][0]))
                                         else:
+                                            pindex = []
                                             for t in aj["tasks"]:
                                                 pindex.append(t["values"][2])
                                             for p in pindex:
@@ -152,7 +152,7 @@ class HD2(commands.Cog):
                                                     f"{self.api}/planets/{p}",
                                                     headers=self.headers,
                                                 )
-                                                planets.append(
+                                                objectives.append(
                                                     f"-{presponse.json()['name']}"
                                                 )
                                         title = aj["title"]
@@ -187,7 +187,12 @@ class HD2(commands.Cog):
                                             filename="medal.png",
                                         )
                                         emb = await aembed(
-                                            title, briefing, desc, planets, reward, exp
+                                            title,
+                                            briefing,
+                                            desc,
+                                            objectives,
+                                            reward,
+                                            exp,
                                         )
                                         msg = await channel.send(
                                             files=[morder, micon], embed=emb
@@ -606,16 +611,16 @@ class HD2(commands.Cog):
                 title: str,
                 briefing: str,
                 description: str,
-                planets: list,
+                objectives: list,
                 reward: str,
                 expire: int,
             ):
                 try:
-                    planet = "\n".join(planets)
+                    objective = "\n".join(objectives)
                     embed = discord.Embed(color=0xB5D9E9)
                     embed.title = title
                     embed.description = briefing
-                    embed.add_field(name=description, value=planet)
+                    embed.add_field(name=description, value=objective)
                     embed.add_field(
                         name="Expires:", value=f"<t:{expire}:R>", inline=False
                     )
@@ -639,26 +644,28 @@ class HD2(commands.Cog):
                     try:
                         aj = aresponse.json()[0]
                         task = aj["tasks"][0]
-                        pindex = []
-                        planets = []
+                        objectives = []
                         if aresponse.status_code == 200:
                             aerror = False
                             if aj == []:
-                                ErrorLogger.run("aresponse returned empty.")
-                                break
+                                await interaction.followup.send(
+                                    "Major Order not found."
+                                )
+                                return
                             if task["type"] == 3:
                                 prog = aj["progress"][0]
                                 goal = task["values"][2]
-                                planets.append(
+                                objectives.append(
                                     f"{prog:,}/{goal:,} - {str(round(float((prog/goal)*100),1))}%"
                                 )
                             elif task["type"] == 12:
                                 prog = aj["progress"][0]
                                 goal = task["values"][0]
-                                planets.append(
+                                objectives.append(
                                     f"{prog}/{goal} - {str(round(float((prog/goal)*100),1))}%"
                                 )
                             elif task["type"] == 11:
+                                pindex = []
                                 prog = aj["progress"]
                                 for t in aj["tasks"]:
                                     pindex.append(t["values"][2])
@@ -671,10 +678,10 @@ class HD2(commands.Cog):
                                         name = f"-{presponse.json()['name']}"
                                     elif prog[i] == 1:
                                         name = f"~~-{presponse.json()['name']}~~"
-                                    planets.append(name)
+                                    objectives.append(name)
                             else:
                                 await interaction.followup.send(
-                                    f"Unknown task type{task['type']}. Aborting..."
+                                    f"Unknown task type {str(task['type'])}. Aborting..."
                                 )
                                 return
                             title = aj["title"]
@@ -707,7 +714,7 @@ class HD2(commands.Cog):
                                 filename="medal.png",
                             )
                             emb = await embed(
-                                title, briefing, desc, planets, reward, exp
+                                title, briefing, desc, objectives, reward, exp
                             )
                             await interaction.followup.send(
                                 files=[morder, micon], embed=emb
