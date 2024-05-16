@@ -632,8 +632,7 @@ class HD2(commands.Cog):
                     embed.timestamp = datetime.now()
                     return embed
                 except Exception:
-                    owner = await self.bot.fetch_user(self.owner_id)
-                    await owner.send("Error logged in HD2.")
+                    await interaction.followup.send("Error logged in HD2.")
                     ErrorLogger.run(traceback.format_exc())
 
             await interaction.response.defer()
@@ -700,8 +699,7 @@ class HD2(commands.Cog):
                             if aj["reward"]["type"] == 1:
                                 reward = aj["reward"]["amount"]
                             else:
-                                owner = await self.bot.fetch_user(self.owner_id)
-                                await owner.send(
+                                await interaction.followup.send(
                                     f"Unknown reward type {str(aj['reward']['type'])}"
                                 )
                                 return
@@ -728,13 +726,13 @@ class HD2(commands.Cog):
                         await asyncio.sleep(15)
                         continue
                 except Exception:
-                    owner = await self.bot.fetch_user(self.owner_id)
-                    await owner.send("Error logged in HD2.")
+                    await interaction.followup.send("Error logged in HD2.")
                     ErrorLogger.run(traceback.format_exc())
                     break
             if aerror is True and aerror is not None:
-                owner = await self.bot.fetch_user(self.owner_id)
-                await owner.send(f"aresponse status code {aresponse.status_code}")
+                await interaction.followup.send(
+                    f"aresponse status code {aresponse.status_code}"
+                )
         except Exception:
             await interaction.followup.send("Error logged in HD2.")
             ErrorLogger.run(traceback.format_exc())
