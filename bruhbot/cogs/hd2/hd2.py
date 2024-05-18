@@ -678,7 +678,7 @@ class HD2(commands.Cog):
                                     elif prog[i] == 1:
                                         name = f"~~-{presponse.json()['name']}~~"
                                     objectives.append(name)
-                            else:
+                            else:#add task type 13
                                 await interaction.followup.send(
                                     f"Unknown task type {str(task['type'])}. Aborting..."
                                 )
