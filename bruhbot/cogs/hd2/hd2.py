@@ -651,19 +651,19 @@ class HD2(commands.Cog):
                                     "Major Order not found."
                                 )
                                 return
-                            if task["type"] == 3:
+                            if task["type"] == 3:  # elimination
                                 prog = aj["progress"][0]
                                 goal = task["values"][2]
                                 objectives.append(
                                     f"{prog:,}/{goal:,} - {str(round(float((prog/goal)*100),1))}%"
                                 )
-                            elif task["type"] == 12:
+                            elif task["type"] == 12:  # defend X planets
                                 prog = aj["progress"][0]
                                 goal = task["values"][0]
                                 objectives.append(
                                     f"{prog}/{goal} - {str(round(float((prog/goal)*100),1))}%"
                                 )
-                            elif task["type"] == 11:
+                            elif task["type"] == 11:  # liberation
                                 pindex = []
                                 prog = aj["progress"]
                                 for t in aj["tasks"]:
@@ -673,12 +673,38 @@ class HD2(commands.Cog):
                                         f"{self.api}/planets/{p}",
                                         headers=self.headers,
                                     )
-                                    if prog[i] == 0:
-                                        name = f"-{presponse.json()['name']}"
-                                    elif prog[i] == 1:
-                                        name = f"~~-{presponse.json()['name']}~~"
-                                    objectives.append(name)
-                            else:#add task type 13
+                                    if presponse.status_code == 200:
+                                        perror = False
+                                        if prog[i] == 0:
+                                            name = f"-{presponse.json()['name']}"
+                                        elif prog[i] == 1:
+                                            name = f"~~-{presponse.json()['name']}~~"
+                                        objectives.append(name)
+                                    else:
+                                        perror = True
+                                        await asyncio.sleep(15)
+                                        continue
+                            elif task["type"] == 13:  # hold planets
+                                pindex = []
+                                prog = aj["progress"]
+                                for t in aj["tasks"]:
+                                    pindex.append(t["values"][2])
+                                for i, p in enumerate(pindex):
+                                    presponse = get(
+                                        f"{self.api}/planets/{p}", headers=self.headers
+                                    )
+                                    if presponse.status_code == 200:
+                                        perror = False
+                                        if prog[i] == 0:
+                                            name = f"-{presponse.json()['name']}"
+                                        elif prog[i] == 1:
+                                            name = f"-{presponse.json()['name']} ✓"
+                                        objectives.append(name)
+                                    else:
+                                        perror = True
+                                        await asyncio.sleep(15)
+                                        continue
+                            else:
                                 await interaction.followup.send(
                                     f"Unknown task type {str(task['type'])}. Aborting..."
                                 )
@@ -732,6 +758,10 @@ class HD2(commands.Cog):
             if aerror is True and aerror is not None:
                 await interaction.followup.send(
                     f"aresponse status code {aresponse.status_code}"
+                )
+            if perror is True and perror is not None:
+                await interaction.followup.send(
+                    f"presponse status code {presponse.status_code}"
                 )
         except Exception:
             await interaction.followup.send("Error logged in HD2.")
