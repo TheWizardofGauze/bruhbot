@@ -684,6 +684,10 @@ class HD2(commands.Cog):
                                         perror = True
                                         await asyncio.sleep(15)
                                         continue
+                                if perror is True and perror is not None:
+                                    await interaction.followup.send(
+                                        f"presponse status code {presponse.status_code}"
+                                    )
                             elif task["type"] == 13:  # hold planets
                                 pindex = []
                                 prog = aj["progress"]
@@ -704,6 +708,10 @@ class HD2(commands.Cog):
                                         perror = True
                                         await asyncio.sleep(15)
                                         continue
+                                if perror is True and perror is not None:
+                                    await interaction.followup.send(
+                                        f"presponse status code {presponse.status_code}"
+                                    )
                             else:
                                 await interaction.followup.send(
                                     f"Unknown task type {str(task['type'])}. Aborting..."
@@ -758,10 +766,6 @@ class HD2(commands.Cog):
             if aerror is True and aerror is not None:
                 await interaction.followup.send(
                     f"aresponse status code {aresponse.status_code}"
-                )
-            if perror is True and perror is not None:
-                await interaction.followup.send(
-                    f"presponse status code {presponse.status_code}"
                 )
         except Exception:
             await interaction.followup.send("Error logged in HD2.")
