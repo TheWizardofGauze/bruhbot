@@ -162,7 +162,7 @@ class Names(commands.Cog):
                 rview.wait()
             except Exception:
                 ErrorLogger.run(traceback.format_exc())
-                await ctx.send("Error logged.")
+                await ctx.send("Error logged in Names.")
 
     @app_commands.command(
         name="addname", description="Add a name to the name generator."
@@ -228,4 +228,4 @@ class Names(commands.Cog):
             await addM.wait()
         except Exception:
             ErrorLogger.run(traceback.format_exc())
-            await interaction.followup.send("Error logged.")
+            await interaction.followup.send("Error logged in Names.")
