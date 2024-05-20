@@ -176,7 +176,7 @@ class OPBR(commands.Cog):
                     await ctx.send(embed=msg)
             except Exception:
                 ErrorLogger.run(traceback.format_exc())
-                await ctx.send("There was a problem. Error logged.")
+                await ctx.send("Error logged in OPBR.")
 
     @stats.command()
     async def all(self, ctx):
@@ -210,4 +210,4 @@ class OPBR(commands.Cog):
                 await ctx.send(embed=msg)
         except Exception:
             ErrorLogger.run(traceback.format_exc())
-            await ctx.send("There was a problem. Error logged.")
+            await ctx.send("Error logged in OPBR.")

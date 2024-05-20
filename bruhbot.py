@@ -65,7 +65,7 @@ async def auto_backup():
                 return
     except Exception:
         owner = await bot.fetch_user(owner_id)
-        await owner.send("Error logged in auto backup function.")
+        await owner.send("Error logged in auto backup.")
         ErrorLogger.run(traceback.format_exc())
         return
 
@@ -86,7 +86,7 @@ async def send_image(ctx, response: str):
             file=discord.File(f"{here}\\images\\{image}"), mention_author=False
         )
     except Exception:  # missing image
-        await ctx.reply("Error logged.")
+        await ctx.reply("Error logged in send_image.")
         ErrorLogger.run(traceback.format_exc())
         return
 
@@ -144,7 +144,7 @@ async def on_message(msg):
             await ctx.reply("nice", mention_author=False)  # nice
             return
     except Exception:
-        await ctx.reply("Error logged.")
+        await ctx.reply("Error logged in on_message.")
         ErrorLogger.run(traceback.format_exc())
 
 
@@ -252,7 +252,7 @@ async def addr(ctx, *, arg: str = None):
         await ctx.reply(":ok_hand:", mention_author=False)
         await ctx.send(f"**'{pre1}'** was added")
     except Exception:
-        await ctx.reply("Error logged.")
+        await ctx.reply("Error logged in addr.")
         ErrorLogger.run(traceback.format_exc())
 
 
@@ -648,7 +648,7 @@ async def delr(ctx, *arg: str):
                     return
 
     except Exception:
-        await ctx.reply("Error logged.")
+        await ctx.reply("Error logged in delr.")
         ErrorLogger.run(traceback.format_exc())
 
 
@@ -846,7 +846,7 @@ async def rlist(ctx):
         mview.msg = msg
         await mview.wait()
     except Exception:
-        await ctx.reply("Error logged.")
+        await ctx.reply("Error logged rlist.")
         ErrorLogger.run(traceback.format_exc())
 
 
@@ -924,7 +924,7 @@ async def help(ctx, *arg: str):
         else:
             return
     except Exception:
-        await ctx.reply("Error logged.")
+        await ctx.reply("Error logged in help.")
         ErrorLogger.run(traceback.format_exc())
 
 
@@ -958,7 +958,7 @@ async def forza_error(ctx, error):
     if isinstance(error, commands.errors.TooManyArguments):
         await help(ctx, "forza")
     else:
-        await ctx.reply("Error logged.")
+        await ctx.reply("Error logged in forza.")
         ErrorLogger.run(traceback.format_exc())
 
 
@@ -1028,7 +1028,7 @@ async def logs_error(ctx, error):
     if isinstance(error, commands.errors.TooManyArguments):
         await ctx.reply("Invalid Subcommand")
     else:
-        await ctx.reply("Error logged.")
+        await ctx.reply("Error logged in logs. Uh oh.")
         ErrorLogger.run(traceback.format_exc())
 
 
@@ -1044,7 +1044,7 @@ async def clear_error(ctx, error):
     if isinstance(error, commands.errors.NotOwner):
         await ctx.send("You dare try to hide your crimes?")
     else:
-        await ctx.send("Error logged.")
+        await ctx.send("Error logged in logs clear.")
         ErrorLogger.run(traceback.format_exc())
 
 
