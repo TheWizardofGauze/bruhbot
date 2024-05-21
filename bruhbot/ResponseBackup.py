@@ -8,13 +8,13 @@ def run():
     bd = cwd + "backups\\"
     today = datetime.today()
     files = ["responses.txt", "data.json"]
-    cogfiles = ["names.json", "OPBR.json"]
+    cogfiles = ["names.json", "OPBR.json", "hd2.json"]
     for file in files:
         src = cwd + file
         dst = f"{bd}{file}.backup[{today.strftime('%Y-%m-%d_%I-%M-%p')}]"  # YYYY-MM-DD + HH/MM (12 hour time)
         shutil.copyfile(src, dst)
         filelist = os.listdir(bd)
-        if len(filelist) > 20:  # max 5 of each
+        if len(filelist) > 25:  # max 5 of each
             oldest = min(
                 filelist, key=lambda f: os.path.getmtime("{}/{}".format(bd, f))
             )
@@ -24,7 +24,7 @@ def run():
         dst = f"{bd}{file}.backup[{today.strftime('%Y-%m-%d_%I-%M-%p')}]"  # YYYY-MM-DD + HH/MM (12 hour time)
         shutil.copyfile(src, dst)
         filelist = os.listdir(bd)
-        if len(filelist) > 20:  # max 5 of each
+        if len(filelist) > 25:  # max 5 of each
             oldest = min(
                 filelist, key=lambda f: os.path.getmtime("{}/{}".format(bd, f))
             )
