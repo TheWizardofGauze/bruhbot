@@ -1,6 +1,6 @@
 import asyncio
 from contextlib import suppress
-from datetime import datetime
+from datetime import datetime, UTC
 import json
 import os
 from requests import get, exceptions
@@ -560,7 +560,7 @@ class HD2(commands.Cog):
                                 sefiles.add(morder)
                             else:
                                 major = False
-                            now = datetime.now()
+                            now = datetime.now(UTC)
                             rdelta = relativedelta(seplanetdata[planet]["end"], now)
                             time = f"{rdelta.days}D:{rdelta.hours}H:{rdelta.minutes}M:{rdelta.seconds}S"
                             emb = await embed(
