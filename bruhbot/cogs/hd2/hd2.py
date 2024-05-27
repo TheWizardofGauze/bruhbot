@@ -1,6 +1,6 @@
 import asyncio
 from contextlib import suppress
-from datetime import datetime, UTC
+from datetime import datetime, UTC, timezone
 import json
 import os
 from requests import get, exceptions
@@ -162,7 +162,10 @@ class HD2(commands.Cog):
                                             datetime.strptime(
                                                 aj["expiration"][:19].strip(),
                                                 "%Y-%m-%dT%H:%M:%S",
-                                            ).timestamp()
+                                            )
+                                            .replace(tzinfo=timezone.utc)
+                                            .astimezone(tz=None)
+                                            .timestamp()
                                         )
                                         for tag in tags:
                                             title = title.replace(tag, "**")
@@ -722,7 +725,10 @@ class HD2(commands.Cog):
                                 datetime.strptime(
                                     aj["expiration"][:19].strip(),
                                     "%Y-%m-%dT%H:%M:%S",
-                                ).timestamp()
+                                )
+                                .replace(tzinfo=timezone.utc)
+                                .astimezone(tz=None)
+                                .timestamp()
                             )
                             for tag in tags:
                                 title = title.replace(tag, "**")
