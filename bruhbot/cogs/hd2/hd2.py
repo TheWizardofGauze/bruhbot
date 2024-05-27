@@ -413,9 +413,7 @@ class HD2(commands.Cog):
                             a2error = False
                             mo = []
                             if a2response.json() == []:
-                                await interaction.followup.send(
-                                    "aresponse returned empty. Unable to retrieve major orders."
-                                )
+                                break
                             else:
                                 for t in a2response.json()[0]["tasks"]:
                                     mo.append(t["values"][2])
