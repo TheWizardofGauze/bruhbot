@@ -324,9 +324,13 @@ class HD2(commands.Cog):
                         biome = planet["biome"]
                         hazards = planet["hazards"]
                         if owner == "Humans":
-                            end = datetime.strptime(
-                                planet["event"]["endTime"][:19].strip(),
-                                "%Y-%m-%dT%H:%M:%S",
+                            end = (
+                                datetime.strptime(
+                                    planet["event"]["endTime"][:19].strip(),
+                                    "%Y-%m-%dT%H:%M:%S",
+                                )
+                                .replace(tzinfo=timezone.utc)
+                                .astimezone(tz=None)
                             )
                             attacker = planet["event"]["faction"].replace(
                                 "Automaton", "Automatons"
