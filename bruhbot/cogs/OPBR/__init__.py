@@ -1,4 +1,4 @@
-from .opbr import OPBR
+from .OPBR import OPBR
 
 
 async def setup(bot):
