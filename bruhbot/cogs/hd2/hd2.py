@@ -271,7 +271,7 @@ class HD2(commands.Cog):
         description="Get current Galactic War status for Helldivers 2.",
     )
     @app_commands.checks.cooldown(1, 60, key=lambda i: (i.guild_id))
-    async def warstatus(self, interaction: discord.Interaction):
+    async def warstatus(self, interaction: discord.Interaction, planet: str | None):
         try:
 
             async def embed(
@@ -285,14 +285,16 @@ class HD2(commands.Cog):
                 color: discord.Color,
                 biome: dict,
                 hazards: dict,
+                event: bool,
             ):
                 embed = discord.Embed(color=color)
                 embed.title = name
                 embed.description = f"{owner} control"
                 if owner == "Super Earth":
-                    embed.add_field(name="Attacker:", value=attacker)
-                    embed.add_field(name="Time Remaining:", value=time)
-                    embed.add_field(name="Defense:", value=f"{liberation}%")
+                    if event is not None:
+                        embed.add_field(name="Attacker:", value=attacker)
+                        embed.add_field(name="Time Remaining:", value=time)
+                        embed.add_field(name="Defense:", value=f"{liberation}%")
                     embed.set_thumbnail(url="attachment://selogo.png")
                 else:
                     embed.add_field(name="Liberation:", value=f"{liberation}%")
@@ -324,6 +326,143 @@ class HD2(commands.Cog):
                 return embed
 
             await interaction.response.defer()
+            if planet is not None:
+                async with ClientSession(headers=self.headers) as session:
+                    for i in range(3):  # single planet
+                        async with session.get(f"{self.api}/planets") as p1response:
+                            if p1response.status == 200:
+                                p1error = False
+                                p1j = await p1response.json()
+                                if p1j == []:
+                                    await interaction.followup.send(
+                                        "p1response returned empty"
+                                    )
+                                    return
+                                for p in p1j:
+                                    if planet.lower() == p["name"].lower():
+                                        files = set()
+                                        if p["currentOwner"] == "Humans":
+                                            owner = "Super Earth"
+                                            selogo = discord.File(
+                                                f"{self.here}\\SuperEarth.png",
+                                                filename="selogo.png",
+                                            )
+                                            files.add(selogo)
+                                            color = 0xB5D9E9
+                                            if p["event"] is not None:
+                                                event = True
+                                                end = (
+                                                    datetime.strptime(
+                                                        p["event"]["endTime"][
+                                                            :19
+                                                        ].strip(),
+                                                        "%Y-%m-%dT%H:%M:%S",
+                                                    )
+                                                    .replace(tzinfo=timezone.utc)
+                                                    .astimezone(tz=None)
+                                                )
+                                                now = datetime.now(UTC)
+                                                rdelta = relativedelta(end, now)
+                                                time = f"{rdelta.days}D:{rdelta.hours}H:{rdelta.minutes}M:{rdelta.seconds}S"
+                                                attacker = p["event"][
+                                                    "faction"
+                                                ].replace("Automaton", "Automatons")
+                                                lib = str(
+                                                    round(
+                                                        float(
+                                                            (
+                                                                p["event"]["maxHealth"]
+                                                                - p["event"]["health"]
+                                                            )
+                                                            / (p["event"]["maxHealth"])
+                                                            * 100
+                                                        ),
+                                                        5,
+                                                    )
+                                                )
+                                            else:
+                                                event = None
+                                                end = None
+                                                lib = None
+                                                attacker = None
+                                                time = None
+                                        else:
+                                            if p["currentOwner"] == "Terminids":
+                                                owner = "Terminid"
+                                                tlogo = discord.File(
+                                                    f"{self.here}\\Terminid.png",
+                                                    filename="tlogo.png",
+                                                )
+                                                files.add(tlogo)
+                                                color = 0xFFB800
+                                            elif p["currentOwner"] == "Automaton":
+                                                owner = p["currentOwner"]
+                                                alogo = discord.File(
+                                                    f"{self.here}\\Automaton.png",
+                                                    filename="alogo.png",
+                                                )
+                                                files.add(alogo)
+                                                color = 0xFF6161
+                                            elif p["currentOwner"] == "Illuminate":
+                                                owner = p["currentOwner"]
+                                                ilogo = discord.File(
+                                                    f"{self.here}\\Illuminate.png",
+                                                    filename="ilogo.png",
+                                                )
+                                                files.add(ilogo)
+                                                color = 0x000000
+                                            lib = str(
+                                                round(
+                                                    float(
+                                                        (p["maxHealth"] - p["health"])
+                                                        / (p["maxHealth"])
+                                                        * 100
+                                                    ),
+                                                    5,
+                                                )
+                                            )
+                                            time = None
+                                            attacker = None
+                                            event = None
+                                        hdlogo = discord.File(
+                                            f"{self.here}\\Helldivers.png",
+                                            filename="hdlogo.png",
+                                        )
+                                        files.add(hdlogo)
+                                        emb = await embed(
+                                            p["name"],
+                                            owner,
+                                            lib,
+                                            p["statistics"]["playerCount"],
+                                            None,
+                                            time,
+                                            attacker,
+                                            color,
+                                            p["biome"],
+                                            p["hazards"],
+                                            event,
+                                        )
+                                        await interaction.followup.send(
+                                            files=files, embed=emb
+                                        )
+                                        await asyncio.sleep(0)
+                                        return
+                                    else:
+                                        continue
+                                await interaction.followup.send(
+                                    "Planet not found. Double check spelling."
+                                )
+                                await asyncio.sleep(0)
+                                return
+                            else:
+                                p1error = True
+                                await asyncio.sleep(15)
+                                continue
+                    if p1error is True and p1error is not None:
+                        await interaction.followup.send(
+                            f"aresponse status code {p1response.status}. Failed after 3 tries."
+                        )
+                        return
             async with ClientSession(headers=self.headers) as session:
                 for i in range(3):  # cresponse
                     async with session.get(f"{self.api}/campaigns") as cresponse:
@@ -496,6 +635,7 @@ class HD2(commands.Cog):
                                         0xFF6161,
                                         aplanetdata[planet]["biome"],
                                         aplanetdata[planet]["hazards"],
+                                        None,
                                     )
                                     aembl.append(emb)
                                 await interaction.followup.send(
@@ -534,6 +674,7 @@ class HD2(commands.Cog):
                                         0xFFB800,
                                         tplanetdata[planet]["biome"],
                                         tplanetdata[planet]["hazards"],
+                                        None,
                                     )
                                     tembl.append(emb)
                                 await interaction.followup.send(
@@ -572,6 +713,7 @@ class HD2(commands.Cog):
                                         0x000000,
                                         iplanetdata[planet]["biome"],
                                         iplanetdata[planet]["hazards"],
+                                        None,
                                     )
                                     iembl.append(emb)
                                 await interaction.followup.send(
@@ -616,6 +758,7 @@ class HD2(commands.Cog):
                                         0xB5D9E9,
                                         seplanetdata[planet]["biome"],
                                         seplanetdata[planet]["hazards"],
+                                        True,
                                     )
                                     seembl.append(emb)
                                 await interaction.followup.send(
