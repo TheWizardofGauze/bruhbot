@@ -150,9 +150,6 @@ class HD2(commands.Cog):
                                                         f"{task['values'][2]:,}"
                                                     )
                                                 elif task["type"] == 12:
-                                                    # write more permanent fix, type 3 seems to be "Kill X of Y", need to find what type liberation orders are. probably don't need to display anything other than the order description for type 3. ["values"] may be [faction, <unknown>, goal]
-                                                    # Type 12 may be defense. ["values"][0] Seems to be the goal. Probably won't use since it's in the assignment description usually.
-                                                    # Type 11 should be liberation. ["values"][2] is planet index.
                                                     objectives.append(
                                                         str(task["values"][0])
                                                     )
