@@ -157,21 +157,38 @@ class HD2(commands.Cog):
                                                     pindex = []
                                                     for t in aj["tasks"]:
                                                         pindex.append(t["values"][2])
-                                                    async with session.get(
-                                                        f"{self.api}/planets"
-                                                    ) as presponse:
-                                                        if presponse.status == 200:
-                                                            perror = False
-                                                            pj = await presponse.json()
-                                                            for p in pj:
-                                                                if p["index"] in pindex:
-                                                                    objectives.append(
-                                                                        f"-{p['name']}"
-                                                                    )
-                                                        else:
-                                                            perror = True
-                                                            await asyncio.sleep(15)
-                                                            continue
+                                                    for i in range(3):
+                                                        async with session.get(
+                                                            f"{self.api}/planets"
+                                                        ) as presponse:
+                                                            if presponse.status == 200:
+                                                                perror = False
+                                                                pj = await presponse.json()
+                                                                for p in pj:
+                                                                    if (
+                                                                        p["index"]
+                                                                        in pindex
+                                                                    ):
+                                                                        objectives.append(
+                                                                            f"-{p['name']}"
+                                                                        )
+                                                            else:
+                                                                perror = True
+                                                                await asyncio.sleep(15)
+                                                                continue
+                                                    if (
+                                                        perror is True
+                                                        and perror is not None
+                                                    ):
+                                                        owner = (
+                                                            await self.bot.fetch_user(
+                                                                self.owner_id
+                                                            )
+                                                        )
+                                                        await owner.send(
+                                                            f"presponse status code {presponse.status}"
+                                                        )
+                                                        return
                                                 title = aj["title"]
                                                 briefing = aj["briefing"]
                                                 desc = aj["description"]
@@ -250,11 +267,6 @@ class HD2(commands.Cog):
                             owner = await self.bot.fetch_user(self.owner_id)
                             await owner.send(
                                 f"aresponse status code {aresponse.status}"
-                            )
-                        if perror is True and perror is not None:
-                            owner = await self.bot.fetch_user(self.owner_id)
-                            await owner.send(
-                                f"presponse status code {presponse.status}"
                             )
                     await asyncio.sleep(0)
                 await asyncio.sleep(3600)
@@ -779,7 +791,7 @@ class HD2(commands.Cog):
                             await asyncio.sleep(15)
                             continue
                         break
-                if cerror is True:
+                if cerror is True and cerror is not None:
                     await interaction.followup.send(
                         f"cresponse status code {cresponse.status}. Failed after 3 tries."
                     )
