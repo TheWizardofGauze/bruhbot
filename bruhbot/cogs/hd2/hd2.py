@@ -172,6 +172,7 @@ class HD2(commands.Cog):
                                                                         objectives.append(
                                                                             f"-{p['name']}"
                                                                         )
+                                                                break
                                                             else:
                                                                 perror = True
                                                                 await asyncio.sleep(15)
