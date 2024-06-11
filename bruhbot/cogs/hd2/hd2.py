@@ -4,6 +4,7 @@ from datetime import datetime, UTC, timezone
 import json
 import os
 import traceback
+import typing
 
 from aiohttp import ClientSession
 from dateutil.relativedelta import relativedelta
@@ -813,6 +814,19 @@ class HD2(commands.Cog):
             await interaction.followup.send("Error logged in HD2.")
             ErrorLogger.run(traceback.format_exc())
             await asyncio.sleep(0)
+
+    @warstatus.autocomplete("planet")
+    async def warstatus_autocomplete(
+        self, interaction: discord.Interaction, current: str
+    ) -> typing.List[app_commands.Choice[str]]:
+        choices = []
+        with open(f"{self.here}\\planets.json", "r", encoding="utf-8") as p:
+            data = json.load(p)
+            planets = data[current[0].upper()]
+            for planet in planets:
+                if current.lower() in planet.lower():
+                    choices.append(app_commands.Choice(name=planet, value=planet))
+        return choices
 
     @warstatus.error
     async def warstatus_error(self, interaction: discord.Interaction, error):
