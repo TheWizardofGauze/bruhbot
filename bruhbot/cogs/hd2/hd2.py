@@ -861,8 +861,6 @@ class HD2(commands.Cog):
                         async with session.get(f"{self.api}/assignments") as aresponse:
                             try:
                                 aj = await aresponse.json()
-                                aj = aj[0]
-                                task = aj["tasks"][0]
                                 objectives = []
                                 if aresponse.status == 200:
                                     aerror = False
@@ -871,6 +869,8 @@ class HD2(commands.Cog):
                                             "Major Order not found."
                                         )
                                         return
+                                    aj = aj[0]
+                                    task = aj["tasks"][0]
                                     if task["type"] == 3:  # elimination
                                         prog = aj["progress"][0]
                                         goal = task["values"][2]
