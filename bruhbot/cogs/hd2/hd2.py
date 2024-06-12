@@ -914,7 +914,20 @@ class HD2(commands.Cog):
                                                     perror = False
                                                     pj = await presponse.json()
                                                     if prog[i] == 0:
-                                                        name = f"-{pj['name']}"
+                                                        lib = str(
+                                                            round(
+                                                                float(
+                                                                    (
+                                                                        pj["maxHealth"]
+                                                                        - pj["health"]
+                                                                    )
+                                                                    / (pj["maxHealth"])
+                                                                    * 100
+                                                                ),
+                                                                5,
+                                                            )
+                                                        )
+                                                        name = f"-{pj['name']} | {lib}%"
                                                     elif prog[i] == 1:
                                                         name = f"~~-{pj['name']}~~"
                                                     objectives.append(name)
