@@ -822,9 +822,9 @@ class HD2(commands.Cog):
         choices = []
         with open(f"{self.here}\\planets.json", "r", encoding="utf-8") as p:
             data = json.load(p)
-            planets = data[current[0].upper()]
+            planets = data[current.strip()[0].upper()]
             for planet in planets:
-                if current.lower() in planet.lower():
+                if current.strip().lower() in planet.lower():
                     choices.append(app_commands.Choice(name=planet, value=planet))
         return choices
 
