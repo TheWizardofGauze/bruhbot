@@ -293,7 +293,7 @@ class HD2(commands.Cog):
         name="warstatus",
         description="Get current Galactic War status for Helldivers 2.",
     )
-    @app_commands.checks.cooldown(1, 60, key=lambda i: (i.guild_id))
+    @app_commands.checks.cooldown(1, 30, key=lambda i: (i.guild_id))
     async def warstatus(self, interaction: discord.Interaction, planet: str | None):
         try:
 
@@ -839,7 +839,7 @@ class HD2(commands.Cog):
     @hd2.command(
         name="mostatus", description="Get current Major Order status for Helldivers 2."
     )
-    @app_commands.checks.cooldown(1, 60, key=lambda i: (i.guild_id))
+    @app_commands.checks.cooldown(1, 30, key=lambda i: (i.guild_id))
     async def mostatus(self, interaction: discord.Interaction):
         try:
 
