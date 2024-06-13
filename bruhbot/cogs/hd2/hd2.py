@@ -227,11 +227,11 @@ class HD2(commands.Cog):
                                                     )
                                                     return
                                                 morder = discord.File(
-                                                    f"{self.here}\\icons\\MajorOrder.png",
+                                                    f"{self.here}\\images\\MajorOrder.png",
                                                     filename="mologo.png",
                                                 )
                                                 micon = discord.File(
-                                                    f"{self.here}\\icons\\Medal.png",
+                                                    f"{self.here}\\images\\Medal.png",
                                                     filename="medal.png",
                                                 )
                                                 emb = await aembed(
@@ -367,7 +367,7 @@ class HD2(commands.Cog):
                                         if p["currentOwner"] == "Humans":
                                             owner = "Super Earth"
                                             selogo = discord.File(
-                                                f"{self.here}\\icons\\SuperEarth.png",
+                                                f"{self.here}\\images\\SuperEarth.png",
                                                 filename="selogo.png",
                                             )
                                             files.add(selogo)
@@ -413,7 +413,7 @@ class HD2(commands.Cog):
                                             if p["currentOwner"] == "Terminids":
                                                 owner = "Terminid"
                                                 tlogo = discord.File(
-                                                    f"{self.here}\\icons\\Terminid.png",
+                                                    f"{self.here}\\images\\Terminid.png",
                                                     filename="tlogo.png",
                                                 )
                                                 files.add(tlogo)
@@ -421,7 +421,7 @@ class HD2(commands.Cog):
                                             elif p["currentOwner"] == "Automaton":
                                                 owner = p["currentOwner"]
                                                 alogo = discord.File(
-                                                    f"{self.here}\\icons\\Automaton.png",
+                                                    f"{self.here}\\images\\Automaton.png",
                                                     filename="alogo.png",
                                                 )
                                                 files.add(alogo)
@@ -429,7 +429,7 @@ class HD2(commands.Cog):
                                             elif p["currentOwner"] == "Illuminate":
                                                 owner = p["currentOwner"]
                                                 ilogo = discord.File(
-                                                    f"{self.here}\\icons\\Illuminate.png",
+                                                    f"{self.here}\\images\\Illuminate.png",
                                                     filename="ilogo.png",
                                                 )
                                                 files.add(ilogo)
@@ -448,7 +448,7 @@ class HD2(commands.Cog):
                                             attacker = None
                                             event = None
                                         hdlogo = discord.File(
-                                            f"{self.here}\\icons\\Helldivers.png",
+                                            f"{self.here}\\images\\Helldivers.png",
                                             filename="hdlogo.png",
                                         )
                                         files.add(hdlogo)
@@ -630,12 +630,12 @@ class HD2(commands.Cog):
                                 afiles = set()
                                 morder = None
                                 hdlogo = discord.File(
-                                    f"{self.here}\\icons\\Helldivers.png",
+                                    f"{self.here}\\images\\Helldivers.png",
                                     filename="hdlogo.png",
                                 )
                                 afiles.add(hdlogo)
                                 alogo = discord.File(
-                                    f"{self.here}\\icons\\Automaton.png",
+                                    f"{self.here}\\images\\Automaton.png",
                                     filename="alogo.png",
                                 )
                                 afiles.add(alogo)
@@ -644,7 +644,7 @@ class HD2(commands.Cog):
                                         major = True
                                         if morder is None:
                                             morder = discord.File(
-                                                f"{self.here}\\icons\\MajorOrder.png",
+                                                f"{self.here}\\images\\MajorOrder.png",
                                                 filename="mologo.png",
                                             )
                                             afiles.add(morder)
@@ -672,12 +672,12 @@ class HD2(commands.Cog):
                                 tfiles = set()
                                 morder = None
                                 hdlogo = discord.File(
-                                    f"{self.here}\\icons\\Helldivers.png",
+                                    f"{self.here}\\images\\Helldivers.png",
                                     filename="hdlogo.png",
                                 )
                                 tfiles.add(hdlogo)
                                 tlogo = discord.File(
-                                    f"{self.here}\\icons\\Terminid.png",
+                                    f"{self.here}\\images\\Terminid.png",
                                     filename="tlogo.png",
                                 )
                                 tfiles.add(tlogo)
@@ -686,7 +686,7 @@ class HD2(commands.Cog):
                                         major = True
                                         if morder is None:
                                             morder = discord.File(
-                                                f"{self.here}\\icons\\MajorOrder.png",
+                                                f"{self.here}\\images\\MajorOrder.png",
                                                 filename="mologo.png",
                                             )
                                             tfiles.add(morder)
@@ -714,12 +714,12 @@ class HD2(commands.Cog):
                                 ifiles = set()
                                 morder = None
                                 hdlogo = discord.File(
-                                    f"{self.here}\\icons\\Helldivers.png",
+                                    f"{self.here}\\images\\Helldivers.png",
                                     filename="hdlogo.png",
                                 )
                                 ifiles.add(hdlogo)
                                 ilogo = discord.File(
-                                    f"{self.here}\\icons\\Illuminate.png",
+                                    f"{self.here}\\images\\Illuminate.png",
                                     filename="ilogo.png",
                                 )
                                 ifiles.add(ilogo)
@@ -728,7 +728,7 @@ class HD2(commands.Cog):
                                         major = True
                                         if morder is None:
                                             morder = discord.File(
-                                                f"{self.here}\\icons\\MajorOrder.png",
+                                                f"{self.here}\\images\\MajorOrder.png",
                                                 filename="mologo.png",
                                             )
                                             ifiles.add(morder)
@@ -756,12 +756,12 @@ class HD2(commands.Cog):
                                 sefiles = set()
                                 morder = None
                                 hdlogo = discord.File(
-                                    f"{self.here}\\icons\\Helldivers.png",
+                                    f"{self.here}\\images\\Helldivers.png",
                                     filename="hdlogo.png",
                                 )
                                 sefiles.add(hdlogo)
                                 selogo = discord.File(
-                                    f"{self.here}\\icons\\SuperEarth.png",
+                                    f"{self.here}\\images\\SuperEarth.png",
                                     filename="selogo.png",
                                 )
                                 sefiles.add(selogo)
@@ -770,7 +770,7 @@ class HD2(commands.Cog):
                                         major = True
                                         if morder is None:
                                             morder = discord.File(
-                                                f"{self.here}\\icons\\MajorOrder.png",
+                                                f"{self.here}\\images\\MajorOrder.png",
                                                 filename="mologo.png",
                                             )
                                             sefiles.add(morder)
@@ -993,11 +993,11 @@ class HD2(commands.Cog):
                                         )
                                         return
                                     morder = discord.File(
-                                        f"{self.here}\\icons\\MajorOrder.png",
+                                        f"{self.here}\\images\\MajorOrder.png",
                                         filename="mologo.png",
                                     )
                                     micon = discord.File(
-                                        f"{self.here}\\icons\\Medal.png",
+                                        f"{self.here}\\images\\Medal.png",
                                         filename="medal.png",
                                     )
                                     emb = await embed(
