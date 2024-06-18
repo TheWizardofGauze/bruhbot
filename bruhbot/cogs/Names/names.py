@@ -18,11 +18,7 @@ class Names(commands.Cog):
         self.file = f"{os.path.dirname(__file__)}\\names.json"
 
     async def get_color(self, ctx):
-        color = (
-            ctx.guild.get_member(self.bot.user.id).top_role.color
-            if ctx.guild
-            else 0xE74C3C  # red
-        )
+        color = ctx.guild.get_member(self.bot.user.id).top_role.color if ctx.guild else 0xE74C3C  # red
         return color
 
     @commands.hybrid_command(invoke_without_command=True)
@@ -71,23 +67,14 @@ class Names(commands.Cog):
                             and len(str(self.name2)) != 0
                             or str(self.name1) == ""
                             and str(self.name2) == ""
-                            or any(
-                                char in (str(self.name1)) + str(self.name2)
-                                for char in [":", "<", ">"]
-                            )
+                            or any(char in (str(self.name1)) + str(self.name2) for char in [":", "<", ">"])
                         ):
                             raise Exception
                         with open(self.file, "r+", encoding="utf-8") as f:
                             data = json.load(f)
-                            if (
-                                not str(self.name1) == ""
-                                and str(self.name1) not in data["firstnames"]
-                            ):
+                            if not str(self.name1) == "" and str(self.name1) not in data["firstnames"]:
                                 data["firstnames"].append(str(self.name1))
-                            if (
-                                not str(self.name2) == ""
-                                and str(self.name2) not in data["lastnames"]
-                            ):
+                            if not str(self.name2) == "" and str(self.name2) not in data["lastnames"]:
                                 data["lastnames"].append(str(self.name2))
                             f.seek(0)
                             json.dump(data, f, indent=4)
@@ -110,23 +97,15 @@ class Names(commands.Cog):
                             return True
                         else:
                             if self.counter < 5:
-                                await interaction.followup.send(
-                                    "That's not your button.", ephemeral=True
-                                )
+                                await interaction.followup.send("That's not your button.", ephemeral=True)
                                 self.counter += 1
                             elif self.counter >= 5 and self.counter < 8:
-                                await interaction.followup.send(
-                                    "Dude stop.", ephemeral=True
-                                )
+                                await interaction.followup.send("Dude stop.", ephemeral=True)
                                 self.counter += 1
                             else:
-                                await interaction.followup.send(
-                                    "Seriously dude, enough.", ephemeral=True
-                                )
+                                await interaction.followup.send("Seriously dude, enough.", ephemeral=True)
 
-                    @discord.ui.button(
-                        style=discord.ButtonStyle.secondary, label="Roll again"
-                    )
+                    @discord.ui.button(style=discord.ButtonStyle.secondary, label="Roll again")
                     async def buttonRefresh(
                         self,
                         interaction: discord.Interaction,
@@ -137,9 +116,7 @@ class Names(commands.Cog):
                             emb = roll()
                             await self.msg.edit(embed=emb, view=self)
 
-                    @discord.ui.button(
-                        style=discord.ButtonStyle.secondary, label="Add a new name"
-                    )
+                    @discord.ui.button(style=discord.ButtonStyle.secondary, label="Add a new name")
                     async def buttonAdd(
                         self,
                         interaction: discord.Interaction,
@@ -164,9 +141,7 @@ class Names(commands.Cog):
                 ErrorLogger.run(traceback.format_exc())
                 await ctx.send("Error logged in Names.")
 
-    @app_commands.command(
-        name="addname", description="Add a name to the name generator."
-    )
+    @app_commands.command(name="addname", description="Add a name to the name generator.")
     async def addname(self, interaction: discord.Interaction):
         try:
 
@@ -194,23 +169,14 @@ class Names(commands.Cog):
                         and len(str(self.name2)) != 0
                         or str(self.name1) == ""
                         and str(self.name2) == ""
-                        or any(
-                            char in (str(self.name1)) + str(self.name2)
-                            for char in [":", "<", ">"]
-                        )
+                        or any(char in (str(self.name1)) + str(self.name2) for char in [":", "<", ">"])
                     ):
                         raise Exception
                     with open(self.file, "r+", encoding="utf-8") as f:
                         data = json.load(f)
-                        if (
-                            not str(self.name1) == ""
-                            and str(self.name1) not in data["firstnames"]
-                        ):
+                        if not str(self.name1) == "" and str(self.name1) not in data["firstnames"]:
                             data["firstnames"].append(str(self.name1))
-                        if (
-                            not str(self.name2) == ""
-                            and str(self.name2) not in data["lastnames"]
-                        ):
+                        if not str(self.name2) == "" and str(self.name2) not in data["lastnames"]:
                             data["lastnames"].append(str(self.name2))
                         f.seek(0)
                         json.dump(data, f, indent=4)

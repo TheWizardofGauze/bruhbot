@@ -40,11 +40,8 @@ class OPBR(commands.Cog):
         return names
 
     async def get_color(self, ctx):
-        color = (
-            ctx.guild.get_member(self.bot.user.id).top_role.color
-            if ctx.guild
-            else 0xE74C3C  # red
-        )
+        color = ctx.guild.get_member(self.bot.user.id).top_role.color if ctx.guild else 0xE74C3C  # red
+
         return color
 
     @commands.hybrid_group()
@@ -197,9 +194,7 @@ class OPBR(commands.Cog):
                     else:
                         combo = f"{name},** {data[name]['age']}**"
                     combined.append(combo)
-                combined.sort(
-                    key=lambda x: int(x.rpartition(" ")[-1].strip("*")), reverse=True
-                )
+                combined.sort(key=lambda x: int(x.rpartition(" ")[-1].strip("*")), reverse=True)
                 content = "\n".join(combined)
                 msg = discord.Embed(
                     title=self.title,

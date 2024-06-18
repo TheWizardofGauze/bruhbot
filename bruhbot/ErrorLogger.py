@@ -11,9 +11,7 @@ def run(exception: str):
     filename = f"ErrorLog {today.strftime('%Y-%m-%d')}.txt"  # YYYY-MM-DD
     if not os.path.isfile(logdir + filename):
         with open(logdir + filename, "w") as f:
-            f.write(
-                f"{today.strftime('%I:%M %p')} {str(exception)}\n"
-            )  # HH/MM (12 hour time)
+            f.write(f"{today.strftime('%I:%M %p')} {str(exception)}\n")  # HH/MM (12 hour time)
             return
     with open(logdir + filename, "a") as f:
         f.write(f"\n{today.strftime('%I:%M %p')} {str(exception)}\n")
