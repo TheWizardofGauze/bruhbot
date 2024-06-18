@@ -84,9 +84,7 @@ class HD2(commands.Cog):
                     async with ClientSession(headers=self.headers) as session:
                         for i in range(3):  # dresponse
                             try:
-                                async with session.get(
-                                    f"{self.api}/dispatches"
-                                ) as dresponse:
+                                async with session.get(f"{self.api}/dispatches") as dresponse:
                                     if dresponse.status == 200:
                                         derror = False
                                         dj = await dresponse.json()
@@ -101,10 +99,7 @@ class HD2(commands.Cog):
                                                         msg = msg.replace(tag, "**")
                                                     emb = await dembed(message=msg)
                                                     await channel.send(embed=emb)
-                                                    if (
-                                                        not d["id"]
-                                                        == data["dispatch_id"]
-                                                    ):
+                                                    if not d["id"] == data["dispatch_id"]:
                                                         data["dispatch_id"] = d["id"]
                                                         f.seek(0)
                                                         json.dump(data, f, indent=4)
@@ -123,73 +118,47 @@ class HD2(commands.Cog):
                                 break
                         if derror is True and derror is not None:
                             owner = await self.bot.fetch_user(self.owner_id)
-                            await owner.send(
-                                f"dresponse status code {dresponse.status}"
-                            )
+                            await owner.send(f"dresponse status code {dresponse.status}")
                     await asyncio.sleep(0)
                     async with ClientSession(headers=self.headers) as session:
                         for i in range(3):  # aresponse
                             try:
-                                async with session.get(
-                                    f"{self.api}/assignments"
-                                ) as aresponse:
+                                async with session.get(f"{self.api}/assignments") as aresponse:
                                     try:
                                         objectives = []
                                         if aresponse.status == 200:
                                             aerror = False
                                             aj = await aresponse.json()
                                             if aj == []:
-                                                ErrorLogger.run(
-                                                    "aresponse returned empty."
-                                                )
+                                                ErrorLogger.run("aresponse returned empty.")
                                                 break
                                             aj = aj[0]
                                             task = aj["tasks"][0]
                                             if aj["id"] != data["assign_id"]:
                                                 if task["type"] == 3:
-                                                    objectives.append(
-                                                        f"{task['values'][2]:,}"
-                                                    )
+                                                    objectives.append(f"{task['values'][2]:,}")
                                                 elif task["type"] == 12:
-                                                    objectives.append(
-                                                        str(task["values"][0])
-                                                    )
+                                                    objectives.append(str(task["values"][0]))
                                                 else:
                                                     pindex = []
                                                     for t in aj["tasks"]:
                                                         pindex.append(t["values"][2])
                                                     for i in range(3):
-                                                        async with session.get(
-                                                            f"{self.api}/planets"
-                                                        ) as presponse:
+                                                        async with session.get(f"{self.api}/planets") as presponse:
                                                             if presponse.status == 200:
                                                                 perror = False
                                                                 pj = await presponse.json()
                                                                 for p in pj:
-                                                                    if (
-                                                                        p["index"]
-                                                                        in pindex
-                                                                    ):
-                                                                        objectives.append(
-                                                                            f"-{p['name']}"
-                                                                        )
+                                                                    if p["index"] in pindex:
+                                                                        objectives.append(f"-{p['name']}")
                                                                 break
                                                             else:
                                                                 perror = True
                                                                 await asyncio.sleep(15)
                                                                 continue
-                                                    if (
-                                                        perror is True
-                                                        and perror is not None
-                                                    ):
-                                                        owner = (
-                                                            await self.bot.fetch_user(
-                                                                self.owner_id
-                                                            )
-                                                        )
-                                                        await owner.send(
-                                                            f"presponse status code {presponse.status}"
-                                                        )
+                                                    if perror is True and perror is not None:
+                                                        owner = await self.bot.fetch_user(self.owner_id)
+                                                        await owner.send(f"presponse status code {presponse.status}")
                                                         return
                                                 title = aj["title"]
                                                 briefing = aj["briefing"]
@@ -203,28 +172,17 @@ class HD2(commands.Cog):
                                                     .astimezone(tz=None)
                                                     .timestamp()
                                                 )
-                                                if (
-                                                    title is None
-                                                    or briefing is None
-                                                    or desc is None
-                                                    or exp is None
-                                                ):
+                                                if title is None or briefing is None or desc is None or exp is None:
                                                     break
                                                 for tag in tags:
                                                     title = title.replace(tag, "**")
-                                                    briefing = briefing.replace(
-                                                        tag, "**"
-                                                    )
+                                                    briefing = briefing.replace(tag, "**")
                                                     desc = desc.replace(tag, "**")
                                                 if aj["reward"]["type"] == 1:
                                                     reward = aj["reward"]["amount"]
                                                 else:
-                                                    owner = await self.bot.fetch_user(
-                                                        self.owner_id
-                                                    )
-                                                    await owner.send(
-                                                        f"Unknown reward type {str(aj['reward']['type'])}"
-                                                    )
+                                                    owner = await self.bot.fetch_user(self.owner_id)
+                                                    await owner.send(f"Unknown reward type {str(aj['reward']['type'])}")
                                                     return
                                                 morder = discord.File(
                                                     f"{self.here}\\images\\MajorOrder.png",
@@ -242,9 +200,7 @@ class HD2(commands.Cog):
                                                     reward,
                                                     exp,
                                                 )
-                                                msg = await channel.send(
-                                                    files=[morder, micon], embed=emb
-                                                )
+                                                msg = await channel.send(files=[morder, micon], embed=emb)
                                                 for pin in await channel.pins():
                                                     await pin.unpin()
                                                 await msg.pin()
@@ -267,9 +223,7 @@ class HD2(commands.Cog):
                                 break
                         if aerror is True and aerror is not None:
                             owner = await self.bot.fetch_user(self.owner_id)
-                            await owner.send(
-                                f"aresponse status code {aresponse.status}"
-                            )
+                            await owner.send(f"aresponse status code {aresponse.status}")
                     await asyncio.sleep(0)
                 await asyncio.sleep(3600)
             except Exception:
@@ -338,13 +292,9 @@ class HD2(commands.Cog):
                     h1.append(hz)
                 h2 = "\n".join(h1)
                 embed.add_field(name="Hazards:", value=h2, inline=False)
-                embed.set_footer(
-                    text=f"{players} Helldivers", icon_url="attachment://hdlogo.png"
-                )
+                embed.set_footer(text=f"{players} Helldivers", icon_url="attachment://hdlogo.png")
                 if major is True:
-                    embed.set_author(
-                        name="MAJOR ORDER", icon_url="attachment://mologo.png"
-                    )
+                    embed.set_author(name="MAJOR ORDER", icon_url="attachment://mologo.png")
                 embed.timestamp = datetime.now()
                 return embed
 
@@ -357,9 +307,7 @@ class HD2(commands.Cog):
                                 p1error = False
                                 p1j = await p1response.json()
                                 if p1j == []:
-                                    await interaction.followup.send(
-                                        "p1response returned empty"
-                                    )
+                                    await interaction.followup.send("p1response returned empty")
                                     return
                                 for p in p1j:
                                     if planet.lower() == p["name"].lower():
@@ -376,9 +324,7 @@ class HD2(commands.Cog):
                                                 event = True
                                                 end = (
                                                     datetime.strptime(
-                                                        p["event"]["endTime"][
-                                                            :19
-                                                        ].strip(),
+                                                        p["event"]["endTime"][:19].strip(),
                                                         "%Y-%m-%dT%H:%M:%S",
                                                     )
                                                     .replace(tzinfo=timezone.utc)
@@ -387,16 +333,11 @@ class HD2(commands.Cog):
                                                 now = datetime.now(UTC)
                                                 rdelta = relativedelta(end, now)
                                                 time = f"{rdelta.days}D:{rdelta.hours}H:{rdelta.minutes}M:{rdelta.seconds}S"
-                                                attacker = p["event"][
-                                                    "faction"
-                                                ].replace("Automaton", "Automatons")
+                                                attacker = p["event"]["faction"].replace("Automaton", "Automatons")
                                                 lib = str(
                                                     round(
                                                         float(
-                                                            (
-                                                                p["event"]["maxHealth"]
-                                                                - p["event"]["health"]
-                                                            )
+                                                            (p["event"]["maxHealth"] - p["event"]["health"])
                                                             / (p["event"]["maxHealth"])
                                                             * 100
                                                         ),
@@ -436,11 +377,7 @@ class HD2(commands.Cog):
                                                 color = 0x000000
                                             lib = str(
                                                 round(
-                                                    float(
-                                                        (p["maxHealth"] - p["health"])
-                                                        / (p["maxHealth"])
-                                                        * 100
-                                                    ),
+                                                    float((p["maxHealth"] - p["health"]) / (p["maxHealth"]) * 100),
                                                     5,
                                                 )
                                             )
@@ -465,16 +402,12 @@ class HD2(commands.Cog):
                                             p["hazards"],
                                             event,
                                         )
-                                        await interaction.followup.send(
-                                            files=files, embed=emb
-                                        )
+                                        await interaction.followup.send(files=files, embed=emb)
                                         await asyncio.sleep(0)
                                         return
                                     else:
                                         continue
-                                await interaction.followup.send(
-                                    "Planet not found. Double check spelling."
-                                )
+                                await interaction.followup.send("Planet not found. Double check spelling.")
                                 await asyncio.sleep(0)
                                 return
                             else:
@@ -493,9 +426,7 @@ class HD2(commands.Cog):
                             cerror = False
                             cj = await cresponse.json()
                             if cj == []:
-                                await interaction.followup.send(
-                                    "cresponse returned empty."
-                                )
+                                await interaction.followup.send("cresponse returned empty.")
                                 return
                             planets = []
                             aplanetdata = {}
@@ -521,16 +452,11 @@ class HD2(commands.Cog):
                                         .replace(tzinfo=timezone.utc)
                                         .astimezone(tz=None)
                                     )
-                                    attacker = planet["event"]["faction"].replace(
-                                        "Automaton", "Automatons"
-                                    )
+                                    attacker = planet["event"]["faction"].replace("Automaton", "Automatons")
                                     lib = str(
                                         round(
                                             float(
-                                                (
-                                                    planet["event"]["maxHealth"]
-                                                    - planet["event"]["health"]
-                                                )
+                                                (planet["event"]["maxHealth"] - planet["event"]["health"])
                                                 / (planet["event"]["maxHealth"])
                                                 * 100
                                             ),
@@ -555,9 +481,7 @@ class HD2(commands.Cog):
                                     lib = str(
                                         round(
                                             float(
-                                                (planet["maxHealth"] - planet["health"])
-                                                / (planet["maxHealth"])
-                                                * 100
+                                                (planet["maxHealth"] - planet["health"]) / (planet["maxHealth"]) * 100
                                             ),
                                             5,
                                         )
@@ -602,9 +526,7 @@ class HD2(commands.Cog):
                                             }
                                         )
                             for i in range(3):  # a2response
-                                async with session.get(
-                                    f"{self.api}/assignments"
-                                ) as a2response:
+                                async with session.get(f"{self.api}/assignments") as a2response:
                                     if a2response.status == 200:
                                         a2error = False
                                         a2j = await a2response.json()
@@ -664,9 +586,7 @@ class HD2(commands.Cog):
                                         None,
                                     )
                                     aembl.append(emb)
-                                await interaction.followup.send(
-                                    files=afiles, embeds=aembl
-                                )
+                                await interaction.followup.send(files=afiles, embeds=aembl)
                             if not tplanetdata == {}:
                                 tembl = []
                                 tfiles = set()
@@ -706,9 +626,7 @@ class HD2(commands.Cog):
                                         None,
                                     )
                                     tembl.append(emb)
-                                await interaction.followup.send(
-                                    files=tfiles, embeds=tembl
-                                )
+                                await interaction.followup.send(files=tfiles, embeds=tembl)
                             if not iplanetdata == {}:
                                 iembl = []
                                 ifiles = set()
@@ -748,9 +666,7 @@ class HD2(commands.Cog):
                                         None,
                                     )
                                     iembl.append(emb)
-                                await interaction.followup.send(
-                                    files=ifiles, embeds=iembl
-                                )
+                                await interaction.followup.send(files=ifiles, embeds=iembl)
                             if not seplanetdata == {}:
                                 seembl = []
                                 sefiles = set()
@@ -777,9 +693,7 @@ class HD2(commands.Cog):
                                     else:
                                         major = False
                                     now = datetime.now(UTC)
-                                    rdelta = relativedelta(
-                                        seplanetdata[planet]["end"], now
-                                    )
+                                    rdelta = relativedelta(seplanetdata[planet]["end"], now)
                                     time = f"{rdelta.days}D:{rdelta.hours}H:{rdelta.minutes}M:{rdelta.seconds}S"
                                     emb = await embed(
                                         planet,
@@ -795,9 +709,7 @@ class HD2(commands.Cog):
                                         True,
                                     )
                                     seembl.append(emb)
-                                await interaction.followup.send(
-                                    files=sefiles, embeds=seembl
-                                )
+                                await interaction.followup.send(files=sefiles, embeds=seembl)
 
                         else:
                             cerror = True
@@ -805,9 +717,7 @@ class HD2(commands.Cog):
                             continue
                         break
                 if cerror is True and cerror is not None:
-                    await interaction.followup.send(
-                        f"cresponse status code {cresponse.status}. Failed after 3 tries."
-                    )
+                    await interaction.followup.send(f"cresponse status code {cresponse.status}. Failed after 3 tries.")
                     return
             await asyncio.sleep(0)
         except Exception:
@@ -836,9 +746,7 @@ class HD2(commands.Cog):
                 ephemeral=True,
             )
 
-    @hd2.command(
-        name="mostatus", description="Get current Major Order status for Helldivers 2."
-    )
+    @hd2.command(name="mostatus", description="Get current Major Order status for Helldivers 2.")
     @app_commands.checks.cooldown(1, 30, key=lambda i: (i.guild_id))
     async def mostatus(self, interaction: discord.Interaction):
         try:
@@ -857,9 +765,7 @@ class HD2(commands.Cog):
                     embed.title = title
                     embed.description = briefing
                     embed.add_field(name=description, value=objective)
-                    embed.add_field(
-                        name="Expires:", value=f"<t:{expire}:R>", inline=False
-                    )
+                    embed.add_field(name="Expires:", value=f"<t:{expire}:R>", inline=False)
                     embed.set_thumbnail(url="attachment://mologo.png")
                     embed.set_footer(
                         text=f"REWARD: {reward} MEDALS",  # Reward type 1 is medals, maybe more rewards types in the future?
@@ -883,9 +789,7 @@ class HD2(commands.Cog):
                                 if aresponse.status == 200:
                                     aerror = False
                                     if aj == []:
-                                        await interaction.followup.send(
-                                            "Major Order not found."
-                                        )
+                                        await interaction.followup.send("Major Order not found.")
                                         return
                                     aj = aj[0]
                                     task = aj["tasks"][0]
@@ -898,18 +802,14 @@ class HD2(commands.Cog):
                                     elif task["type"] == 12:  # defend X planets
                                         prog = aj["progress"][0]
                                         goal = task["values"][0]
-                                        objectives.append(
-                                            f"{prog}/{goal} - {str(round(float((prog/goal)*100),1))}%"
-                                        )
+                                        objectives.append(f"{prog}/{goal} - {str(round(float((prog/goal)*100),1))}%")
                                     elif task["type"] == 11:  # liberation
                                         pindex = []
                                         prog = aj["progress"]
                                         for t in aj["tasks"]:
                                             pindex.append(t["values"][2])
                                         for i, p in enumerate(pindex):
-                                            async with session.get(
-                                                f"{self.api}/planets/{p}"
-                                            ) as presponse:
+                                            async with session.get(f"{self.api}/planets/{p}") as presponse:
                                                 if presponse.status == 200:
                                                     perror = False
                                                     pj = await presponse.json()
@@ -917,10 +817,7 @@ class HD2(commands.Cog):
                                                         lib = str(
                                                             round(
                                                                 float(
-                                                                    (
-                                                                        pj["maxHealth"]
-                                                                        - pj["health"]
-                                                                    )
+                                                                    (pj["maxHealth"] - pj["health"])
                                                                     / (pj["maxHealth"])
                                                                     * 100
                                                                 ),
@@ -936,18 +833,14 @@ class HD2(commands.Cog):
                                                     await asyncio.sleep(15)
                                                     continue
                                         if perror is True and perror is not None:
-                                            await interaction.followup.send(
-                                                f"presponse status code {presponse.status}"
-                                            )
+                                            await interaction.followup.send(f"presponse status code {presponse.status}")
                                     elif task["type"] == 13:  # hold planets
                                         pindex = []
                                         prog = aj["progress"]
                                         for t in aj["tasks"]:
                                             pindex.append(t["values"][2])
                                         for i, p in enumerate(pindex):
-                                            async with session.get(
-                                                f"{self.api}/planets/{p}"
-                                            ) as presponse:
+                                            async with session.get(f"{self.api}/planets/{p}") as presponse:
                                                 if presponse.status == 200:
                                                     perror = False
                                                     pj = await presponse.json()
@@ -961,9 +854,7 @@ class HD2(commands.Cog):
                                                     await asyncio.sleep(15)
                                                     continue
                                         if perror is True and perror is not None:
-                                            await interaction.followup.send(
-                                                f"presponse status code {presponse.status}"
-                                            )
+                                            await interaction.followup.send(f"presponse status code {presponse.status}")
                                     else:
                                         await interaction.followup.send(
                                             f"Unknown task type {str(task['type'])}. Aborting..."
@@ -1000,12 +891,8 @@ class HD2(commands.Cog):
                                         f"{self.here}\\images\\Medal.png",
                                         filename="medal.png",
                                     )
-                                    emb = await embed(
-                                        title, briefing, desc, objectives, reward, exp
-                                    )
-                                    await interaction.followup.send(
-                                        files=[morder, micon], embed=emb
-                                    )
+                                    emb = await embed(title, briefing, desc, objectives, reward, exp)
+                                    await interaction.followup.send(files=[morder, micon], embed=emb)
                                     break
                                 else:
                                     aerror = True
@@ -1019,9 +906,7 @@ class HD2(commands.Cog):
                         ErrorLogger.run(traceback.format_exc())
                         break
                 if aerror is True and aerror is not None:
-                    await interaction.followup.send(
-                        f"aresponse status code {aresponse.status}"
-                    )
+                    await interaction.followup.send(f"aresponse status code {aresponse.status}")
             await asyncio.sleep(0)
         except Exception:
             await interaction.followup.send("Error logged in HD2.")

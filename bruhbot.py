@@ -71,20 +71,14 @@ async def auto_backup():
 
 
 async def get_color(ctx):
-    color = (
-        ctx.guild.get_member(bot.user.id).top_role.color
-        if ctx.guild
-        else 0xE74C3C  # red
-    )
+    color = ctx.guild.get_member(bot.user.id).top_role.color if ctx.guild else 0xE74C3C  # red
     return color
 
 
 async def send_image(ctx, response: str):
     try:
         image = response.replace(" - image", "")
-        await ctx.reply(
-            file=discord.File(f"{here}\\images\\{image}"), mention_author=False
-        )
+        await ctx.reply(file=discord.File(f"{here}\\images\\{image}"), mention_author=False)
     except Exception:  # missing image
         await ctx.reply("Error logged in send_image.")
         ErrorLogger.run(traceback.format_exc())
@@ -108,9 +102,7 @@ async def on_message(msg):
             return
         nospace = re.sub("[^a-zA-Z0-9]", "", msg.content).lower()
         name = re.sub("[^a-zA-Z0-9]", "", ctx.me.display_name).lower()
-        top_role = (
-            str(ctx.guild.get_member(bot.user.id).top_role.id) if ctx.guild else None
-        )
+        top_role = str(ctx.guild.get_member(bot.user.id).top_role.id) if ctx.guild else None
 
         if (
             name in nospace
@@ -128,9 +120,7 @@ async def on_message(msg):
                     await ctx.reply(ctx.author.display_avatar, mention_author=False)
                     return
                 responses = []
-                with open(
-                    f"{here}\\bruhbot\\responses.txt", "r", encoding="utf-8"
-                ) as f:
+                with open(f"{here}\\bruhbot\\responses.txt", "r", encoding="utf-8") as f:
                     for line in f:
                         current = line[:-1]
                         responses.append(current)
@@ -165,9 +155,7 @@ async def addr(ctx, *, arg: str = None):
                         else:
                             size_counter += 1
                     ext = os.path.splitext(attachment.filename)[-1]
-                    with open(
-                        f"{here}\\bruhbot\\responses.txt", "r", encoding="utf-8"
-                    ) as f:
+                    with open(f"{here}\\bruhbot\\responses.txt", "r", encoding="utf-8") as f:
                         if arg and len(ctx.message.attachments) == 1:
                             pre = os.path.splitext("".join(arg[:]))[0] + ext
                         else:
@@ -176,10 +164,7 @@ async def addr(ctx, *, arg: str = None):
                                 or attachment.filename == f"unknown{ext}"
                                 or attachment.filename == f"image{ext}"
                             ):
-                                new = "".join(
-                                    choice(string.ascii_letters + string.digits)
-                                    for i in range(6)
-                                )
+                                new = "".join(choice(string.ascii_letters + string.digits) for i in range(6))
                                 while os.path.exists(f".\\images\\{new}"):
                                     new = new + "".join(choice(string.digits))
                                 pre = new + ext
@@ -189,9 +174,7 @@ async def addr(ctx, *, arg: str = None):
                         for line in file:
                             if pre.lower() == line.lower().replace(" - image\n", ""):
                                 if len(ctx.message.attachments) == 1:
-                                    await ctx.reply(
-                                        f"Error: **'{pre}'** already exists:"
-                                    )
+                                    await ctx.reply(f"Error: **'{pre}'** already exists:")
                                     return
                                 else:
                                     dupe_counter += 1
@@ -202,9 +185,7 @@ async def addr(ctx, *, arg: str = None):
                             await attachment.save(f"{here}\\images\\{pre}")
                     else:
                         continue
-                    with open(
-                        f"{here}\\bruhbot\\responses.txt", "a", encoding="utf-8"
-                    ) as f:
+                    with open(f"{here}\\bruhbot\\responses.txt", "a", encoding="utf-8") as f:
                         f.write(f"{pre} - image\n")
                 else:
                     if len(ctx.message.attachments) == 1:
@@ -289,9 +270,7 @@ async def delr(ctx, *arg: str):
                     raise Exception
 
             async def on_error(self, interaction: discord.Interaction):
-                await interaction.followup.send(
-                    "Error: Page must be a number.", ephemeral=True
-                )
+                await interaction.followup.send("Error: Page must be a number.", ephemeral=True)
 
         class menuView(discord.ui.View):
             async def on_timeout(self) -> None:
@@ -333,26 +312,20 @@ async def delr(ctx, *arg: str):
                     return True
                 else:
                     if self.counter < 5:
-                        await interaction.followup.send(
-                            "That's not your button.", ephemeral=True
-                        )
+                        await interaction.followup.send("That's not your button.", ephemeral=True)
                         self.counter += 1
                     elif self.counter >= 5 and self.counter < 8:
                         await interaction.followup.send("Dude stop.", ephemeral=True)
                         self.counter += 1
                     else:
-                        await interaction.followup.send(
-                            "Seriously dude, enough.", ephemeral=True
-                        )
+                        await interaction.followup.send("Seriously dude, enough.", ephemeral=True)
 
             counter: int = 0
             choice: int = None
             cancel: bool = None
 
             @discord.ui.button(style=discord.ButtonStyle.danger, label="1")
-            async def button1(
-                self, interaction: discord.Interaction, button: discord.ui.Button
-            ):
+            async def button1(self, interaction: discord.Interaction, button: discord.ui.Button):
                 await interaction.response.defer()
                 if await self.check(interaction) is True:
                     self.choice = 0
@@ -360,9 +333,7 @@ async def delr(ctx, *arg: str):
                     self.stop()
 
             @discord.ui.button(style=discord.ButtonStyle.danger, label="2")
-            async def button2(
-                self, interaction: discord.Interaction, button: discord.ui.Button
-            ):
+            async def button2(self, interaction: discord.Interaction, button: discord.ui.Button):
                 await interaction.response.defer()
                 if await self.check(interaction) is True:
                     self.choice = 1
@@ -370,9 +341,7 @@ async def delr(ctx, *arg: str):
                     self.stop()
 
             @discord.ui.button(style=discord.ButtonStyle.danger, label="3")
-            async def button3(
-                self, interaction: discord.Interaction, button: discord.ui.Button
-            ):
+            async def button3(self, interaction: discord.Interaction, button: discord.ui.Button):
                 await interaction.response.defer()
                 if await self.check(interaction) is True:
                     self.choice = 2
@@ -380,9 +349,7 @@ async def delr(ctx, *arg: str):
                     self.stop()
 
             @discord.ui.button(style=discord.ButtonStyle.danger, label="4")
-            async def button4(
-                self, interaction: discord.Interaction, button: discord.ui.Button
-            ):
+            async def button4(self, interaction: discord.Interaction, button: discord.ui.Button):
                 await interaction.response.defer()
                 if await self.check(interaction) is True:
                     self.choice = 3
@@ -390,9 +357,7 @@ async def delr(ctx, *arg: str):
                     self.stop()
 
             @discord.ui.button(style=discord.ButtonStyle.danger, label="5")
-            async def button5(
-                self, interaction: discord.Interaction, button: discord.ui.Button
-            ):
+            async def button5(self, interaction: discord.Interaction, button: discord.ui.Button):
                 await interaction.response.defer()
                 if await self.check(interaction) is True:
                     self.choice = 4
@@ -403,9 +368,7 @@ async def delr(ctx, *arg: str):
                 style=discord.ButtonStyle.blurple,
                 emoji=discord.PartialEmoji.from_str("⏪"),
             )
-            async def buttonBack10(
-                self, interaction: discord.Interaction, button: discord.ui.Button
-            ):
+            async def buttonBack10(self, interaction: discord.Interaction, button: discord.ui.Button):
                 await interaction.response.defer()
                 if await self.check(interaction) is True:
                     self.curPage = max(1, self.curPage - 10)
@@ -419,9 +382,7 @@ async def delr(ctx, *arg: str):
                 style=discord.ButtonStyle.blurple,
                 emoji=discord.PartialEmoji.from_str("◀️"),
             )
-            async def buttonBack(
-                self, interaction: discord.Interaction, button: discord.ui.Button
-            ):
+            async def buttonBack(self, interaction: discord.Interaction, button: discord.ui.Button):
                 await interaction.response.defer()
                 if await self.check(interaction) is True:
                     self.curPage -= 1
@@ -435,9 +396,7 @@ async def delr(ctx, *arg: str):
                 style=discord.ButtonStyle.blurple,
                 emoji=discord.PartialEmoji.from_str("▶️"),
             )
-            async def buttonNext(
-                self, interaction: discord.Interaction, button: discord.ui.Button
-            ):
+            async def buttonNext(self, interaction: discord.Interaction, button: discord.ui.Button):
                 await interaction.response.defer()
                 if await self.check(interaction) is True:
                     self.curPage += 1
@@ -451,9 +410,7 @@ async def delr(ctx, *arg: str):
                 style=discord.ButtonStyle.blurple,
                 emoji=discord.PartialEmoji.from_str("⏩"),
             )
-            async def buttonNext10(
-                self, interaction: discord.Interaction, button: discord.ui.Button
-            ):
+            async def buttonNext10(self, interaction: discord.Interaction, button: discord.ui.Button):
                 await interaction.response.defer()
                 if await self.check(interaction) is True:
                     self.curPage = min(self.pages, self.curPage + 10)
@@ -467,9 +424,7 @@ async def delr(ctx, *arg: str):
                 style=discord.ButtonStyle.secondary,
                 emoji=discord.PartialEmoji.from_str("📖"),
             )
-            async def buttonPage(
-                self, interaction: discord.Interaction, button: discord.ui.Button
-            ):
+            async def buttonPage(self, interaction: discord.Interaction, button: discord.ui.Button):
                 if await self.check(interaction) is True:
                     pageM = pageModal()
                     await interaction.response.send_modal(pageM)
@@ -497,9 +452,7 @@ async def delr(ctx, *arg: str):
                 style=discord.ButtonStyle.secondary,
                 emoji=discord.PartialEmoji.from_str("❌"),
             )
-            async def buttonCancel(
-                self, interaction: discord.Interaction, button: discord.ui.Button
-            ):
+            async def buttonCancel(self, interaction: discord.Interaction, button: discord.ui.Button):
                 await interaction.response.defer()
                 if await self.check(interaction) is True:
                     self.cancel = True
@@ -518,17 +471,13 @@ async def delr(ctx, *arg: str):
                 if interaction.user.id == ctx.author.id:
                     return True
                 else:
-                    await interaction.followup.send(
-                        "That's not your button.", ephemeral=True
-                    )
+                    await interaction.followup.send("That's not your button.", ephemeral=True)
 
             confirm: bool = None
             cancel: bool = None
 
             @discord.ui.button(style=discord.ButtonStyle.success, label="Confirm")
-            async def buttonConfirm(
-                self, interaction: discord.Interaction, button: discord.ui.Button
-            ):
+            async def buttonConfirm(self, interaction: discord.Interaction, button: discord.ui.Button):
                 await interaction.response.defer()
                 if await self.check(interaction) is True:
                     self.confirm = True
@@ -536,9 +485,7 @@ async def delr(ctx, *arg: str):
                     self.stop()
 
             @discord.ui.button(style=discord.ButtonStyle.danger, label="Cancel")
-            async def buttonCancel(
-                self, interaction: discord.Interaction, button: discord.ui.Button
-            ):
+            async def buttonCancel(self, interaction: discord.Interaction, button: discord.ui.Button):
                 await interaction.response.defer()
                 if await self.check(interaction) is True:
                     self.cancel = True
@@ -578,9 +525,7 @@ async def delr(ctx, *arg: str):
             cview.msg = msg
             await cview.wait()
             if cview.confirm is True:
-                with open(
-                    f"{here}\\bruhbot\\responses.txt", "w", encoding="utf-8"
-                ) as f:
+                with open(f"{here}\\bruhbot\\responses.txt", "w", encoding="utf-8") as f:
                     for line in file:
                         if line.strip("\n").lower() != responses[choice].lower():
                             f.write(line)
@@ -623,27 +568,16 @@ async def delr(ctx, *arg: str):
                 cview.msg = msg
                 await cview.wait()
                 if cview.confirm is True:
-                    with open(
-                        f"{here}\\bruhbot\\responses.txt", "w", encoding="utf-8"
-                    ) as f:
+                    with open(f"{here}\\bruhbot\\responses.txt", "w", encoding="utf-8") as f:
                         for line in file:
-                            if (
-                                line.strip("\n").lower()
-                                != responses[mview.start : mview.end][
-                                    mview.choice
-                                ].lower()
-                            ):
+                            if line.strip("\n").lower() != responses[mview.start : mview.end][mview.choice].lower():
                                 f.write(line)
                     if " - image" in responses[mview.start : mview.end][mview.choice]:
                         with suppress(FileNotFoundError):
-                            image = responses[mview.start : mview.end][
-                                mview.choice
-                            ].replace(" - image", "")
+                            image = responses[mview.start : mview.end][mview.choice].replace(" - image", "")
                             os.remove(f"{here}\\images\\{image}")
                     await ctx.reply(":ok_hand:", mention_author=False)
-                    await ctx.send(
-                        f"**'{responses[mview.start:mview.end][mview.choice]}'** was deleted."
-                    )
+                    await ctx.send(f"**'{responses[mview.start:mview.end][mview.choice]}'** was deleted.")
                 if cview.cancel is True or cview.timeout is True:
                     return
 
@@ -679,9 +613,7 @@ async def rlist(ctx):
                     raise Exception
 
             async def on_error(self, interaction: discord.Interaction):
-                await interaction.followup.send(
-                    "Error: Page must be a number.", ephemeral=True
-                )
+                await interaction.followup.send("Error: Page must be a number.", ephemeral=True)
 
         class menuView(discord.ui.View):
             async def on_timeout(self) -> None:
@@ -708,17 +640,13 @@ async def rlist(ctx):
                     return True
                 else:
                     if self.counter < 5:
-                        await interaction.followup.send(
-                            "That's not you button.", ephemeral=True
-                        )
+                        await interaction.followup.send("That's not you button.", ephemeral=True)
                         self.counter += 1
                     elif self.counter >= 5 and self.counter < 8:
                         await interaction.followup.send("Dude stop.", ephemeral=True)
                         self.counter += 1
                     else:
-                        await interaction.followup.send(
-                            "Seriously dude, enough.", ephemeral=True
-                        )
+                        await interaction.followup.send("Seriously dude, enough.", ephemeral=True)
 
             counter: int = 0
 
@@ -726,9 +654,7 @@ async def rlist(ctx):
                 style=discord.ButtonStyle.blurple,
                 emoji=discord.PartialEmoji.from_str("⏪"),
             )
-            async def buttonBack10(
-                self, interaction: discord.Interaction, button: discord.ui.Button
-            ):
+            async def buttonBack10(self, interaction: discord.Interaction, button: discord.ui.Button):
                 await interaction.response.defer()
                 if await self.check(interaction) is True:
                     self.curPage = max(1, self.curPage - 10)
@@ -742,9 +668,7 @@ async def rlist(ctx):
                 style=discord.ButtonStyle.blurple,
                 emoji=discord.PartialEmoji.from_str("◀️"),
             )
-            async def buttonBack(
-                self, interaction: discord.Interaction, button: discord.ui.Button
-            ):
+            async def buttonBack(self, interaction: discord.Interaction, button: discord.ui.Button):
                 await interaction.response.defer()
                 if await self.check(interaction) is True:
                     self.curPage -= 1
@@ -758,9 +682,7 @@ async def rlist(ctx):
                 style=discord.ButtonStyle.blurple,
                 emoji=discord.PartialEmoji.from_str("▶️"),
             )
-            async def buttonNext(
-                self, interaction: discord.Interaction, button: discord.ui.Button
-            ):
+            async def buttonNext(self, interaction: discord.Interaction, button: discord.ui.Button):
                 await interaction.response.defer()
                 if await self.check(interaction) is True:
                     self.curPage += 1
@@ -774,9 +696,7 @@ async def rlist(ctx):
                 style=discord.ButtonStyle.blurple,
                 emoji=discord.PartialEmoji.from_str("⏩"),
             )
-            async def buttonNext10(
-                self, interaction: discord.Interaction, button: discord.ui.Button
-            ):
+            async def buttonNext10(self, interaction: discord.Interaction, button: discord.ui.Button):
                 await interaction.response.defer()
                 if await self.check(interaction) is True:
                     self.curPage = min(self.pages, self.curPage + 10)
@@ -790,9 +710,7 @@ async def rlist(ctx):
                 style=discord.ButtonStyle.secondary,
                 emoji=discord.PartialEmoji.from_str("📖"),
             )
-            async def buttonPage(
-                self, interaction: discord.Interaction, button: discord.ui.Button
-            ):
+            async def buttonPage(self, interaction: discord.Interaction, button: discord.ui.Button):
                 if await self.check(interaction) is True:
                     pageM = pageModal()
                     await interaction.response.send_modal(pageM)
@@ -881,9 +799,7 @@ async def help(ctx, *arg: str):
             if pages > 1:
                 embed.title = "*Bruhbot*"
                 for page in range(pages):
-                    embed.add_field(
-                        name=name[page], value=description[page], inline=False
-                    )
+                    embed.add_field(name=name[page], value=description[page], inline=False)
             else:
                 embed.description = description
             embed.set_author(
@@ -991,9 +907,7 @@ async def logs(ctx):
                 self.stop()
 
             @discord.ui.button(style=discord.ButtonStyle.secondary, label="Clear Logs")
-            async def buttonClear(
-                self, interaction: discord.Interaction, button: discord.ui.Button
-            ):
+            async def buttonClear(self, interaction: discord.Interaction, button: discord.ui.Button):
                 await interaction.response.defer()
                 if interaction.user.id == 108105758578577408:
                     self.buttonClear.disabled = True
@@ -1001,18 +915,14 @@ async def logs(ctx):
                     await clear(ctx)
                     self.stop()
                 else:
-                    await interaction.followup.send(
-                        "You dare try to hide your crimes?", ephemeral=True
-                    )
+                    await interaction.followup.send("You dare try to hide your crimes?", ephemeral=True)
 
         last = ErrorLogger.last()
         if len(last) >= 2000:
             ab = map(str.encode, last)
             content = b"".join(ab)
             view = clearView(timeout=10)
-            msg = await ctx.send(
-                file=discord.File(BytesIO(content), "traceback.py"), view=view
-            )
+            msg = await ctx.send(file=discord.File(BytesIO(content), "traceback.py"), view=view)
             view.msg = msg
             return
         if last == "No logs found.":

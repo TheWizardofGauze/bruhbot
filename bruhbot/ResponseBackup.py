@@ -15,9 +15,7 @@ def run():
         shutil.copyfile(src, dst)
         filelist = os.listdir(bd)
         if len(filelist) > 25:  # max 5 of each
-            oldest = min(
-                filelist, key=lambda f: os.path.getmtime("{}/{}".format(bd, f))
-            )
+            oldest = min(filelist, key=lambda f: os.path.getmtime("{}/{}".format(bd, f)))
             os.remove(bd + oldest)
     for file in cogfiles:
         src = f"{cwd}cogs\\{file.replace('.json','')}\\{file}"
@@ -25,9 +23,7 @@ def run():
         shutil.copyfile(src, dst)
         filelist = os.listdir(bd)
         if len(filelist) > 25:  # max 5 of each
-            oldest = min(
-                filelist, key=lambda f: os.path.getmtime("{}/{}".format(bd, f))
-            )
+            oldest = min(filelist, key=lambda f: os.path.getmtime("{}/{}".format(bd, f)))
             os.remove(bd + oldest)
 
 
