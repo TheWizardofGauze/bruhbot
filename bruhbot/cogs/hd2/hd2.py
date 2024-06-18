@@ -808,30 +808,32 @@ class HD2(commands.Cog):
                                         prog = aj["progress"]
                                         for t in aj["tasks"]:
                                             pindex.append(t["values"][2])
-                                        for i, p in enumerate(pindex):
-                                            async with session.get(f"{self.api}/planets/{p}") as presponse:
-                                                if presponse.status == 200:
-                                                    perror = False
-                                                    pj = await presponse.json()
-                                                    if prog[i] == 0:
-                                                        lib = str(
-                                                            round(
-                                                                float(
-                                                                    (pj["maxHealth"] - pj["health"])
-                                                                    / (pj["maxHealth"])
-                                                                    * 100
-                                                                ),
-                                                                5,
-                                                            )
-                                                        )
-                                                        name = f"-{pj['name']} | {lib}%"
-                                                    elif prog[i] == 1:
-                                                        name = f"~~-{pj['name']}~~"
-                                                    objectives.append(name)
-                                                else:
-                                                    perror = True
-                                                    await asyncio.sleep(15)
-                                                    continue
+                                        async with session.get(f"{self.api}/planets") as presponse:
+                                            if presponse.status == 200:
+                                                perror = False
+                                                pj = await presponse.json()
+                                                for i, j in enumerate(pindex):
+                                                    for p in pj:
+                                                        if p["index"] == j:
+                                                            if prog[i] == 0:
+                                                                lib = str(
+                                                                    round(
+                                                                        float(
+                                                                            (p["maxHealth"] - p["health"])
+                                                                            / (p["maxHealth"])
+                                                                            * 100
+                                                                        ),
+                                                                        5,
+                                                                    )
+                                                                )
+                                                                name = f"-{p['name']} | {lib}%"
+                                                            elif prog[i] == 1:
+                                                                name = f"~~-{p['name']}~~"
+                                                            objectives.append(name)
+                                            else:
+                                                perror = True
+                                                await asyncio.sleep(15)
+                                                continue
                                         if perror is True and perror is not None:
                                             await interaction.followup.send(f"presponse status code {presponse.status}")
                                     elif task["type"] == 13:  # hold planets
@@ -839,20 +841,22 @@ class HD2(commands.Cog):
                                         prog = aj["progress"]
                                         for t in aj["tasks"]:
                                             pindex.append(t["values"][2])
-                                        for i, p in enumerate(pindex):
-                                            async with session.get(f"{self.api}/planets/{p}") as presponse:
-                                                if presponse.status == 200:
-                                                    perror = False
-                                                    pj = await presponse.json()
-                                                    if prog[i] == 0:
-                                                        name = f"-{pj['name']}"
-                                                    elif prog[i] == 1:
-                                                        name = f"-{pj['name']} ✓"
-                                                    objectives.append(name)
-                                                else:
-                                                    perror = True
-                                                    await asyncio.sleep(15)
-                                                    continue
+                                        async with session.get(f"{self.api}/planets") as presponse:
+                                            if presponse.status == 200:
+                                                perror = False
+                                                pj = await presponse.json()
+                                                for i, j in enumerate(pindex):
+                                                    for p in pj:
+                                                        if p["index"] == j:
+                                                            if prog[i] == 0:
+                                                                name = f"-{pj['name']}"
+                                                            elif prog[i] == 1:
+                                                                name = f"-{pj['name']} ✓"
+                                                            objectives.append(name)
+                                            else:
+                                                perror = True
+                                                await asyncio.sleep(15)
+                                                continue
                                         if perror is True and perror is not None:
                                             await interaction.followup.send(f"presponse status code {presponse.status}")
                                     else:
