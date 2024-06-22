@@ -849,9 +849,9 @@ class HD2(commands.Cog):
                                                     for p in pj:
                                                         if p["index"] == j:
                                                             if prog[i] == 0:
-                                                                name = f"-{pj['name']}"
+                                                                name = f"-{p['name']}"
                                                             elif prog[i] == 1:
-                                                                name = f"-{pj['name']} ✓"
+                                                                name = f"-{p['name']} ✓"
                                                             objectives.append(name)
                                             else:
                                                 perror = True
