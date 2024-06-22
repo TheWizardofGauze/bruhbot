@@ -849,9 +849,35 @@ class HD2(commands.Cog):
                                                     for p in pj:
                                                         if p["index"] == j:
                                                             if prog[i] == 0:
-                                                                name = f"-{p['name']}"
+                                                                lib = str(
+                                                                    round(
+                                                                        float(
+                                                                            (p["maxHealth"] - p["health"])
+                                                                            / (p["maxHealth"])
+                                                                            * 100
+                                                                        ),
+                                                                        5,
+                                                                    )
+                                                                )
+                                                                name = f"-{p['name']} | {lib}%"
                                                             elif prog[i] == 1:
-                                                                name = f"-{p['name']} ✓"
+                                                                if p["event"] is not None:
+                                                                    lib = str(
+                                                                        round(
+                                                                            float(
+                                                                                (
+                                                                                    p["event"]["maxHealth"]
+                                                                                    - p["event"]["health"]
+                                                                                )
+                                                                                / (p["event"]["maxHealth"])
+                                                                                * 100
+                                                                            ),
+                                                                            5,
+                                                                        )
+                                                                    )
+                                                                    name = f"-{p['name']} | ⚠ {lib}%"
+                                                                else:
+                                                                    name = f"-{p['name']} | ✓"
                                                             objectives.append(name)
                                             else:
                                                 perror = True
