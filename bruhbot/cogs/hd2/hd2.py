@@ -848,7 +848,7 @@ class HD2(commands.Cog):
                                                 for i, j in enumerate(pindex):
                                                     for p in pj:
                                                         if p["index"] == j:
-                                                            if prog[i] == 0:
+                                                            if prog[i] == 0 and p["currentOwner"] != "Humans":
                                                                 lib = str(
                                                                     round(
                                                                         float(
@@ -860,7 +860,7 @@ class HD2(commands.Cog):
                                                                     )
                                                                 )
                                                                 name = f"-{p['name']} | {lib}%"
-                                                            elif prog[i] == 1:
+                                                            else:
                                                                 if p["event"] is not None:
                                                                     lib = str(
                                                                         round(
