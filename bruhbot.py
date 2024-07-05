@@ -133,6 +133,9 @@ async def on_message(msg):
         if "69" in nospace:
             await ctx.reply("nice", mention_author=False)  # nice
             return
+        if "420" in nospace:
+            await ctx.reply("weed", mention_author=False)  # weed
+            return
     except Exception:
         await ctx.reply("Error logged in on_message.")
         ErrorLogger.run(traceback.format_exc())
