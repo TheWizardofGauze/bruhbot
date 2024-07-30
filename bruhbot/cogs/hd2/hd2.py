@@ -172,7 +172,7 @@ class HD2(commands.Cog):
                                                     .astimezone(tz=None)
                                                     .timestamp()
                                                 )
-                                                if title is None or briefing is None or desc is None or exp is None:
+                                                if any(field is None for field in [title, briefing, desc, exp]):
                                                     break
                                                 for tag in tags:
                                                     title = title.replace(tag, "**")
