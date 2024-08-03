@@ -160,9 +160,9 @@ class HD2(commands.Cog):
                                                         owner = await self.bot.fetch_user(self.owner_id)
                                                         await owner.send(f"presponse status code {presponse.status}")
                                                         return
-                                                title = aj["title"]
-                                                briefing = aj["briefing"]
-                                                desc = aj["description"]
+                                                title = aj["title"] if aj["title"] is not None else ""
+                                                briefing = aj["briefing"] if aj["briefing"] is not None else ""
+                                                desc = aj["description"] if aj["description"] is not None else ""
                                                 exp = round(
                                                     datetime.strptime(
                                                         aj["expiration"][:19].strip(),
@@ -890,9 +890,9 @@ class HD2(commands.Cog):
                                             f"Unknown task type {str(task['type'])}. Aborting..."
                                         )
                                         return
-                                    title = aj["title"]
-                                    briefing = aj["briefing"]
-                                    desc = aj["description"]
+                                    title = aj["title"] if aj["title"] is not None else ""
+                                    briefing = aj["briefing"] if aj["briefing"] is not None else ""
+                                    desc = aj["description"] if aj["description"] is not None else ""
                                     exp = round(
                                         datetime.strptime(
                                             aj["expiration"][:19].strip(),
