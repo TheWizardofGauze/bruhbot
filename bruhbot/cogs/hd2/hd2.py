@@ -226,6 +226,10 @@ class HD2(commands.Cog):
                             await owner.send(f"aresponse status code {aresponse.status}")
                     await asyncio.sleep(0)
                 await asyncio.sleep(3600)
+            except ConnectionAbortedError:
+                ErrorLogger.run(traceback.format_exc())
+                await asyncio.sleep(600)
+                continue
             except Exception:
                 owner = await self.bot.fetch_user(self.owner_id)
                 await owner.send("Error logged in HD2.")
@@ -720,6 +724,9 @@ class HD2(commands.Cog):
                     await interaction.followup.send(f"cresponse status code {cresponse.status}. Failed after 3 tries.")
                     return
             await asyncio.sleep(0)
+        except ConnectionAbortedError:
+            ErrorLogger.run(traceback.format_exc())
+            await asyncio.sleep(0)
         except Exception:
             await interaction.followup.send("Error logged in HD2.")
             ErrorLogger.run(traceback.format_exc())
@@ -938,6 +945,8 @@ class HD2(commands.Cog):
                 if aerror is True and aerror is not None:
                     await interaction.followup.send(f"aresponse status code {aresponse.status}")
             await asyncio.sleep(0)
+        except ConnectionAbortedError:
+            ErrorLogger.run(traceback.format_exc())
         except Exception:
             await interaction.followup.send("Error logged in HD2.")
             ErrorLogger.run(traceback.format_exc())
