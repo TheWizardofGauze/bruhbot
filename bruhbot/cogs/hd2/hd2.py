@@ -896,6 +896,7 @@ class HD2(commands.Cog):
                                         await interaction.followup.send(
                                             f"Unknown task type {str(task['type'])}. Aborting..."
                                         )
+                                        ErrorLogger.run(str(aj))
                                         return
                                     title = aj["title"] if aj["title"] is not None else ""
                                     briefing = aj["briefing"] if aj["briefing"] is not None else ""
