@@ -31,10 +31,10 @@
         "Jellycrutch",
         "Teak",
         "Hothands",
-        "Dr. Timothy",
-        "Ol' Banana",
+        "Timothy",
+        "Banana",
         "Viceroy",
-        "Prof. Gabriel",
+        "Gabriel",
         "Milferd",
         "Johesive",
         "Jim",
@@ -297,7 +297,9 @@
         "Squibbidy Dee",
         "White",
         "Hot",
-        "Steve"
+        "Steve",
+        "Patrick",
+        "Butt"
     ],
     "lastnames": [
         "McDichael",
@@ -401,7 +403,7 @@
         "Rockgroin",
         "Beefknob",
         "Brzeczyszczykiewicz",
-        "Backslashinfourth V",
+        "Backslashinfourth",
         "DeLowry",
         "Sweetroll",
         "Chafer",
@@ -537,6 +539,23 @@
         "Squibbidy Doo",
         "Blackman",
         "Coldman",
-        "Technician"
+        "Technician",
+        "Chugga"
+    ],
+    "prefix": [
+        "Dr.",
+        "Professor",
+        "Ol'",
+        "Mr. Dr. Prof.",
+        "Mr."
+    ],
+    "suffix": [
+        "Jr.",
+        "Sr.",
+        "III",
+        "IV",
+        "V",
+        "VI",
+        "VII"
     ]
 }
