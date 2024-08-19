@@ -1,6 +1,6 @@
 import json
 import os
-import random
+from random import choice, random
 import re
 import traceback
 
@@ -34,9 +34,11 @@ class Names(commands.Cog):
                 def roll():
                     with open(self.file, "r", encoding="utf-8") as f:
                         data = json.load(f)
-                        name1 = random.choice(data["firstnames"])
-                        name2 = random.choice(data["lastnames"])
-                        name = f"{name1} {name2}"
+                        name1 = choice(data["firstnames"])
+                        name2 = choice(data["lastnames"])
+                        prefix = choice(data["prefix"]) if random() < 0.05 else ""
+                        suffix = choice(data["suffix"]) if random() < 0.05 else ""
+                        name = f"{prefix} {name1} {name2} {suffix}".strip()
                         emb = discord.Embed(
                             title="Your Character's Name Is:",
                             description=f"**{name}**",
@@ -45,6 +47,12 @@ class Names(commands.Cog):
                         return emb
 
                 class addModal(discord.ui.Modal, title="Add a new name"):
+                    prefix = discord.ui.TextInput(
+                        style=discord.TextStyle.short,
+                        label="Title/Prefix",
+                        required=False,
+                        placeholder="(Not required)",
+                    )
                     name1 = discord.ui.TextInput(
                         style=discord.TextStyle.short,
                         label="First name",
@@ -57,30 +65,49 @@ class Names(commands.Cog):
                         required=False,
                         placeholder="(Not required)",
                     )
+                    suffix = discord.ui.TextInput(
+                        style=discord.TextStyle.short,
+                        label="Suffix",
+                        required=False,
+                        placeholder="(Not required)",
+                    )
 
                     async def on_submit(self, interaction: discord.Interaction):
                         await interaction.response.defer()
                         if (
-                            re.sub("[^a-zA-Z]", "", str(self.name1)) == ""
+                            re.sub("[^a-zA-Z]", "", str(self.prefix)) == ""
+                            and len(str(self.prefix)) != 0
+                            or re.sub("[^a-zA-Z]", "", str(self.name1)) == ""
                             and len(str(self.name1)) != 0
                             or re.sub("[^a-zA-z]", "", str(self.name2)) == ""
                             and len(str(self.name2)) != 0
-                            or str(self.name1) == ""
+                            or re.sub("[^a-zA-z]", "", str(self.suffix)) == ""
+                            and len(str(self.suffix)) != 0
+                            or str(self.suffix) == ""
+                            and str(self.name1) == ""
                             and str(self.name2) == ""
-                            or any(char in (str(self.name1)) + str(self.name2) for char in [":", "<", ">"])
+                            and str(self.suffix) == ""
+                            or any(
+                                char in (str(self.prefix) + str(self.name1)) + str(self.name2) + str(self.suffix)
+                                for char in [":", "<", ">"]
+                            )
                         ):
                             raise Exception
                         with open(self.file, "r+", encoding="utf-8") as f:
                             data = json.load(f)
+                            if not str(self.prefix) == "" and str(self.prefix) not in data["prefix"]:
+                                data["prefix"].append(str(self.prefix))
                             if not str(self.name1) == "" and str(self.name1) not in data["firstnames"]:
                                 data["firstnames"].append(str(self.name1))
                             if not str(self.name2) == "" and str(self.name2) not in data["lastnames"]:
                                 data["lastnames"].append(str(self.name2))
+                            if not str(self.suffix) == "" and str(self.suffix) not in data["suffix"]:
+                                data["suffix"].append(str(self.suffix))
                             f.seek(0)
                             json.dump(data, f, indent=4)
                             f.truncate()
                         await interaction.followup.send(
-                            f'"{self.name1} {self.name2}" was added.',
+                            f'"{f"{self.prefix} {self.name1} {self.name2} {self.suffix}".strip()}" was added.',
                             ephemeral=True,
                         )
 
@@ -146,6 +173,12 @@ class Names(commands.Cog):
         try:
 
             class addModal(discord.ui.Modal, title="Add a new name"):
+                prefix = discord.ui.TextInput(
+                    style=discord.TextStyle.short,
+                    label="Title/Prefix",
+                    required=False,
+                    placeholder="(Not required)",
+                )
                 name1 = discord.ui.TextInput(
                     style=discord.TextStyle.short,
                     label="First name",
@@ -158,31 +191,50 @@ class Names(commands.Cog):
                     required=False,
                     placeholder="(Not required)",
                 )
+                suffix = discord.ui.TextInput(
+                    style=discord.TextStyle.short,
+                    label="Suffix",
+                    required=False,
+                    placeholder="(Not required)",
+                )
                 file = f"{os.path.dirname(__file__)}\\names.json"
 
                 async def on_submit(self, interaction: discord.Interaction):
                     await interaction.response.defer()
                     if (
-                        re.sub("[^a-zA-Z]", "", str(self.name1)) == ""
+                        re.sub("[^a-zA-Z]", "", str(self.prefix)) == ""
+                        and len(str(self.prefix)) != 0
+                        or re.sub("[^a-zA-Z]", "", str(self.name1)) == ""
                         and len(str(self.name1)) != 0
                         or re.sub("[^a-zA-z]", "", str(self.name2)) == ""
                         and len(str(self.name2)) != 0
-                        or str(self.name1) == ""
+                        or re.sub("[^a-zA-z]", "", str(self.suffix)) == ""
+                        and len(str(self.suffix)) != 0
+                        or str(self.suffix) == ""
+                        and str(self.name1) == ""
                         and str(self.name2) == ""
-                        or any(char in (str(self.name1)) + str(self.name2) for char in [":", "<", ">"])
+                        and str(self.suffix) == ""
+                        or any(
+                            char in (str(self.prefix) + str(self.name1)) + str(self.name2) + str(self.suffix)
+                            for char in [":", "<", ">"]
+                        )
                     ):
                         raise Exception
                     with open(self.file, "r+", encoding="utf-8") as f:
                         data = json.load(f)
+                        if not str(self.prefix) == "" and str(self.prefix) not in data["prefix"]:
+                            data["prefix"].append(str(self.prefix))
                         if not str(self.name1) == "" and str(self.name1) not in data["firstnames"]:
                             data["firstnames"].append(str(self.name1))
                         if not str(self.name2) == "" and str(self.name2) not in data["lastnames"]:
                             data["lastnames"].append(str(self.name2))
+                        if not str(self.suffix) == "" and str(self.suffix) not in data["suffix"]:
+                            data["suffix"].append(str(self.suffix))
                         f.seek(0)
                         json.dump(data, f, indent=4)
                         f.truncate()
                     await interaction.followup.send(
-                        f'"{f"{self.name1} {self.name2}".strip()}" was added.',
+                        f'"{f"{self.prefix} {self.name1} {self.name2} {self.suffix}".strip()}" was added.',
                         ephemeral=True,
                     )
 
