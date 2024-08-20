@@ -136,27 +136,30 @@ class HD2(commands.Cog):
                                             tasks = aj["tasks"]
                                             if aj["id"] != data["assign_id"]:
                                                 for task in tasks:
-                                                    if task["type"] == 3:
-                                                        objectives.append(f"{task['values'][2]:,}")
-                                                    elif task["type"] == 12:
-                                                        objectives.append(str(task["values"][0]))
-                                                    else:
-                                                        pindex = []
-                                                        for t in aj["tasks"]:
-                                                            pindex.append(t["values"][2])
-                                                        for i in range(3):
-                                                            async with session.get(f"{self.api}/planets") as presponse:
-                                                                if presponse.status == 200:
-                                                                    perror = False
-                                                                    pj = await presponse.json()
-                                                                    for p in pj:
-                                                                        if p["index"] in pindex:
-                                                                            objectives.append(f"-{p['name']}")
-                                                                    break
-                                                                else:
-                                                                    perror = True
-                                                                    await asyncio.sleep(15)
-                                                                    continue
+                                                    match task["type"]:
+                                                        case 3:
+                                                            objectives.append(f"{task['values'][2]:,}")
+                                                        case 12:
+                                                            objectives.append(str(task["values"][0]))
+                                                        case _:
+                                                            pindex = []
+                                                            for t in aj["tasks"]:
+                                                                pindex.append(t["values"][2])
+                                                            for i in range(3):
+                                                                async with session.get(
+                                                                    f"{self.api}/planets"
+                                                                ) as presponse:
+                                                                    if presponse.status == 200:
+                                                                        perror = False
+                                                                        pj = await presponse.json()
+                                                                        for p in pj:
+                                                                            if p["index"] in pindex:
+                                                                                objectives.append(f"-{p['name']}")
+                                                                        break
+                                                                    else:
+                                                                        perror = True
+                                                                        await asyncio.sleep(15)
+                                                                        continue
                                                     if perror is True and perror is not None:
                                                         owner = await self.bot.fetch_user(self.owner_id)
                                                         await owner.send(f"presponse status code {presponse.status}")
@@ -356,30 +359,31 @@ class HD2(commands.Cog):
                                                 attacker = None
                                                 time = None
                                         else:
-                                            if p["currentOwner"] == "Terminids":
-                                                owner = "Terminid"
-                                                tlogo = discord.File(
-                                                    f"{self.here}\\images\\Terminid.png",
-                                                    filename="tlogo.png",
-                                                )
-                                                files.add(tlogo)
-                                                color = 0xFFB800
-                                            elif p["currentOwner"] == "Automaton":
-                                                owner = p["currentOwner"]
-                                                alogo = discord.File(
-                                                    f"{self.here}\\images\\Automaton.png",
-                                                    filename="alogo.png",
-                                                )
-                                                files.add(alogo)
-                                                color = 0xFF6161
-                                            elif p["currentOwner"] == "Illuminate":
-                                                owner = p["currentOwner"]
-                                                ilogo = discord.File(
-                                                    f"{self.here}\\images\\Illuminate.png",
-                                                    filename="ilogo.png",
-                                                )
-                                                files.add(ilogo)
-                                                color = 0x000000
+                                            match p["currentOwner"]:
+                                                case "Terminids":
+                                                    owner = "Terminid"
+                                                    tlogo = discord.File(
+                                                        f"{self.here}\\images\\Terminid.png",
+                                                        filename="tlogo.png",
+                                                    )
+                                                    files.add(tlogo)
+                                                    color = 0xFFB800
+                                                case "Automaton":
+                                                    owner = p["currentOwner"]
+                                                    alogo = discord.File(
+                                                        f"{self.here}\\images\\Automaton.png",
+                                                        filename="alogo.png",
+                                                    )
+                                                    files.add(alogo)
+                                                    color = 0xFF6161
+                                                case "Illuminate":
+                                                    owner = p["currentOwner"]
+                                                    ilogo = discord.File(
+                                                        f"{self.here}\\images\\Illuminate.png",
+                                                        filename="ilogo.png",
+                                                    )
+                                                    files.add(ilogo)
+                                                    color = 0x000000
                                             lib = str(
                                                 round(
                                                     float((p["maxHealth"] - p["health"]) / (p["maxHealth"]) * 100),
@@ -491,45 +495,46 @@ class HD2(commands.Cog):
                                             5,
                                         )
                                     )
-                                    if owner == "Automaton":
-                                        aplanetdata.update(
-                                            {
-                                                name: {
-                                                    "index": index,
-                                                    "lib": lib,
-                                                    "owner": owner,
-                                                    "players": players,
-                                                    "biome": biome,
-                                                    "hazards": hazards,
+                                    match owner:
+                                        case "Automaton":
+                                            aplanetdata.update(
+                                                {
+                                                    name: {
+                                                        "index": index,
+                                                        "lib": lib,
+                                                        "owner": owner,
+                                                        "players": players,
+                                                        "biome": biome,
+                                                        "hazards": hazards,
+                                                    }
                                                 }
-                                            }
-                                        )
-                                    elif owner == "Terminids":
-                                        tplanetdata.update(
-                                            {
-                                                name: {
-                                                    "index": index,
-                                                    "lib": lib,
-                                                    "owner": owner,
-                                                    "players": players,
-                                                    "biome": biome,
-                                                    "hazards": hazards,
+                                            )
+                                        case "Terminids":
+                                            tplanetdata.update(
+                                                {
+                                                    name: {
+                                                        "index": index,
+                                                        "lib": lib,
+                                                        "owner": owner,
+                                                        "players": players,
+                                                        "biome": biome,
+                                                        "hazards": hazards,
+                                                    }
                                                 }
-                                            }
-                                        )
-                                    elif owner == "Illuminate":
-                                        iplanetdata.update(
-                                            {
-                                                name: {
-                                                    "index": index,
-                                                    "lib": lib,
-                                                    "owner": owner,
-                                                    "players": players,
-                                                    "biome": biome,
-                                                    "hazards": hazards,
+                                            )
+                                        case "Illuminate":
+                                            iplanetdata.update(
+                                                {
+                                                    name: {
+                                                        "index": index,
+                                                        "lib": lib,
+                                                        "owner": owner,
+                                                        "players": players,
+                                                        "biome": biome,
+                                                        "hazards": hazards,
+                                                    }
                                                 }
-                                            }
-                                        )
+                                            )
                             for i in range(3):  # a2response
                                 async with session.get(f"{self.api}/assignments") as a2response:
                                     if a2response.status == 200:
@@ -804,27 +809,29 @@ class HD2(commands.Cog):
                                     tasks = aj["tasks"]
                                     index = 0
                                     for task in tasks:
-                                        if task["type"] == 3:  # elimination
-                                            goal = task["values"][2]
-                                            objectives.append(
-                                                f"-Enemies Eliminated | {prog[index]:,}/{goal:,} - {str(round(float((prog[index]/goal)*100),1))}%"
-                                            )
-                                        elif task["type"] == 12:  # defend X planets
-                                            goal = task["values"][0]
-                                            objectives.append(
-                                                f"-Planets Defended | {prog[index]}/{goal} - {str(round(float((prog[index]/goal)*100),1))}%"
-                                            )
-                                        elif task["type"] == 11:  # liberation
-                                            pindex = []
-                                        elif task["type"] == 13:  # hold planets
-                                            pindex = []
-                                            pindex.append(task["values"][2])
-                                        else:
-                                            await interaction.followup.send(
-                                                f"Unknown task type {str(task['type'])}. Aborting..."
-                                            )
-                                            ErrorLogger.run(str(aj))
-                                            return
+                                        match task["type"]:
+                                            case 3:  # elimination
+                                                goal = task["values"][2]
+                                                objectives.append(
+                                                    f"-Enemies Eliminated | {prog[index]:,}/{goal:,} - {str(round(float((prog[index]/goal)*100),1))}%"
+                                                )
+                                            case 12:  # defend X planets
+                                                goal = task["values"][0]
+                                                objectives.append(
+                                                    f"-Planets Defended | {prog[index]}/{goal} - {str(round(float((prog[index]/goal)*100),1))}%"
+                                                )
+                                            case 11:  # liberation
+                                                pindex = []
+                                                pindex.append(task["values"][2])
+                                            case 13:  # hold planets
+                                                pindex = []
+                                                pindex.append(task["values"][2])
+                                            case _:
+                                                await interaction.followup.send(
+                                                    f"Unknown task type {str(task['type'])}. Aborting..."
+                                                )
+                                                ErrorLogger.run(str(aj))
+                                                return
                                         index += 1
                                     async with session.get(f"{self.api}/planets") as presponse:
                                         if presponse.status == 200:
