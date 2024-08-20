@@ -211,8 +211,7 @@ async def addr(ctx, *, arg: str = None):
             else:
                 added = "Images were added."
             if not invalid_counter == len(ctx.message.attachments):
-                await ctx.reply(":ok_hand:", mention_author=False)
-                await ctx.send(added)
+                await ctx.reply(f"{added} :thumbsup:", mention_author=False)
             if dupe_counter > 0:
                 await ctx.send(f"Blocked {str(dupe_counter)} duplicate files.")
             if invalid_counter > 0:
@@ -233,8 +232,7 @@ async def addr(ctx, *, arg: str = None):
                     return
         with open(f"{here}\\bruhbot\\responses.txt", "a", encoding="utf-8") as f:
             f.write(pre + "\n")
-        await ctx.reply(":ok_hand:", mention_author=False)
-        await ctx.send(f"**'{pre1}'** was added")
+        await ctx.reply(f"**'{pre1}'** was added. :thumbsup:", mention_author=False)
     except Exception:
         await ctx.reply("Error logged in addr.")
         ErrorLogger.run(traceback.format_exc())
@@ -536,8 +534,7 @@ async def delr(ctx, *arg: str):
                     with suppress(FileNotFoundError):
                         image = responses[choice].replace(" - image", "")
                         os.remove(f"{here}\\images\\{image}")
-                await ctx.reply(":ok_hand:", mention_author=False)
-                await ctx.send(f"**'{responses[choice]}'** was deleted.")
+                await ctx.reply(f"**'{responses[choice]}'** was deleted. :thumbsup:", mention_author=False)
                 return
             if cview.cancel is True or cview.timeout is True:
                 return
@@ -579,8 +576,10 @@ async def delr(ctx, *arg: str):
                         with suppress(FileNotFoundError):
                             image = responses[mview.start : mview.end][mview.choice].replace(" - image", "")
                             os.remove(f"{here}\\images\\{image}")
-                    await ctx.reply(":ok_hand:", mention_author=False)
-                    await ctx.send(f"**'{responses[mview.start:mview.end][mview.choice]}'** was deleted.")
+                    await ctx.reply(
+                        f"**'{responses[mview.start:mview.end][mview.choice]}'** was deleted. :thumbsup:",
+                        mention_author=False,
+                    )
                 if cview.cancel is True or cview.timeout is True:
                     return
 
