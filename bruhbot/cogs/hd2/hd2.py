@@ -133,29 +133,30 @@ class HD2(commands.Cog):
                                                 ErrorLogger.run("aresponse returned empty.")
                                                 break
                                             aj = aj[0]
-                                            task = aj["tasks"][0]
+                                            tasks = aj["tasks"]
                                             if aj["id"] != data["assign_id"]:
-                                                if task["type"] == 3:
-                                                    objectives.append(f"{task['values'][2]:,}")
-                                                elif task["type"] == 12:
-                                                    objectives.append(str(task["values"][0]))
-                                                else:
-                                                    pindex = []
-                                                    for t in aj["tasks"]:
-                                                        pindex.append(t["values"][2])
-                                                    for i in range(3):
-                                                        async with session.get(f"{self.api}/planets") as presponse:
-                                                            if presponse.status == 200:
-                                                                perror = False
-                                                                pj = await presponse.json()
-                                                                for p in pj:
-                                                                    if p["index"] in pindex:
-                                                                        objectives.append(f"-{p['name']}")
-                                                                break
-                                                            else:
-                                                                perror = True
-                                                                await asyncio.sleep(15)
-                                                                continue
+                                                for task in tasks:
+                                                    if task["type"] == 3:
+                                                        objectives.append(f"{task['values'][2]:,}")
+                                                    elif task["type"] == 12:
+                                                        objectives.append(str(task["values"][0]))
+                                                    else:
+                                                        pindex = []
+                                                        for t in aj["tasks"]:
+                                                            pindex.append(t["values"][2])
+                                                        for i in range(3):
+                                                            async with session.get(f"{self.api}/planets") as presponse:
+                                                                if presponse.status == 200:
+                                                                    perror = False
+                                                                    pj = await presponse.json()
+                                                                    for p in pj:
+                                                                        if p["index"] in pindex:
+                                                                            objectives.append(f"-{p['name']}")
+                                                                    break
+                                                                else:
+                                                                    perror = True
+                                                                    await asyncio.sleep(15)
+                                                                    continue
                                                     if perror is True and perror is not None:
                                                         owner = await self.bot.fetch_user(self.owner_id)
                                                         await owner.send(f"presponse status code {presponse.status}")
@@ -799,105 +800,76 @@ class HD2(commands.Cog):
                                         await interaction.followup.send("Major Order not found.")
                                         return
                                     aj = aj[0]
-                                    task = aj["tasks"][0]
-                                    if task["type"] == 3:  # elimination
-                                        prog = aj["progress"][0]
-                                        goal = task["values"][2]
-                                        objectives.append(
-                                            f"{prog:,}/{goal:,} - {str(round(float((prog/goal)*100),1))}%"
-                                        )
-                                    elif task["type"] == 12:  # defend X planets
-                                        prog = aj["progress"][0]
-                                        goal = task["values"][0]
-                                        objectives.append(f"{prog}/{goal} - {str(round(float((prog/goal)*100),1))}%")
-                                    elif task["type"] == 11:  # liberation
-                                        pindex = []
-                                        prog = aj["progress"]
-                                        for t in aj["tasks"]:
-                                            pindex.append(t["values"][2])
-                                        async with session.get(f"{self.api}/planets") as presponse:
-                                            if presponse.status == 200:
-                                                perror = False
-                                                pj = await presponse.json()
-                                                for i, j in enumerate(pindex):
-                                                    for p in pj:
-                                                        if p["index"] == j:
-                                                            if prog[i] == 0:
+                                    prog = aj["progress"]
+                                    tasks = aj["tasks"]
+                                    index = 0
+                                    for task in tasks:
+                                        if task["type"] == 3:  # elimination
+                                            goal = task["values"][2]
+                                            objectives.append(
+                                                f"-Enemies Eliminated | {prog[index]:,}/{goal:,} - {str(round(float((prog[index]/goal)*100),1))}%"
+                                            )
+                                        elif task["type"] == 12:  # defend X planets
+                                            goal = task["values"][0]
+                                            objectives.append(
+                                                f"-Planets Defended | {prog[index]}/{goal} - {str(round(float((prog[index]/goal)*100),1))}%"
+                                            )
+                                        elif task["type"] == 11:  # liberation
+                                            pindex = []
+                                        elif task["type"] == 13:  # hold planets
+                                            pindex = []
+                                            pindex.append(task["values"][2])
+                                        else:
+                                            await interaction.followup.send(
+                                                f"Unknown task type {str(task['type'])}. Aborting..."
+                                            )
+                                            ErrorLogger.run(str(aj))
+                                            return
+                                        index += 1
+                                    async with session.get(f"{self.api}/planets") as presponse:
+                                        if presponse.status == 200:
+                                            perror = False
+                                            pj = await presponse.json()
+                                            for i, j in enumerate(pindex):
+                                                for p in pj:
+                                                    if p["index"] == j:
+                                                        if prog[i] == 0 and p["currentOwner"] != "Humans":
+                                                            lib = str(
+                                                                round(
+                                                                    float(
+                                                                        (p["maxHealth"] - p["health"])
+                                                                        / (p["maxHealth"])
+                                                                        * 100
+                                                                    ),
+                                                                    5,
+                                                                )
+                                                            )
+                                                            name = f"-{p['name']} | {lib}%"
+                                                        else:
+                                                            if p["event"] is not None:
                                                                 lib = str(
                                                                     round(
                                                                         float(
-                                                                            (p["maxHealth"] - p["health"])
-                                                                            / (p["maxHealth"])
+                                                                            (
+                                                                                p["event"]["maxHealth"]
+                                                                                - p["event"]["health"]
+                                                                            )
+                                                                            / (p["event"]["maxHealth"])
                                                                             * 100
                                                                         ),
                                                                         5,
                                                                     )
                                                                 )
-                                                                name = f"-{p['name']} | {lib}%"
-                                                            elif prog[i] == 1:
-                                                                name = f"~~-{p['name']}~~"
-                                                            objectives.append(name)
-                                            else:
-                                                perror = True
-                                                await asyncio.sleep(15)
-                                                continue
-                                        if perror is True and perror is not None:
-                                            await interaction.followup.send(f"presponse status code {presponse.status}")
-                                    elif task["type"] == 13:  # hold planets
-                                        pindex = []
-                                        prog = aj["progress"]
-                                        for t in aj["tasks"]:
-                                            pindex.append(t["values"][2])
-                                        async with session.get(f"{self.api}/planets") as presponse:
-                                            if presponse.status == 200:
-                                                perror = False
-                                                pj = await presponse.json()
-                                                for i, j in enumerate(pindex):
-                                                    for p in pj:
-                                                        if p["index"] == j:
-                                                            if prog[i] == 0 and p["currentOwner"] != "Humans":
-                                                                lib = str(
-                                                                    round(
-                                                                        float(
-                                                                            (p["maxHealth"] - p["health"])
-                                                                            / (p["maxHealth"])
-                                                                            * 100
-                                                                        ),
-                                                                        5,
-                                                                    )
-                                                                )
-                                                                name = f"-{p['name']} | {lib}%"
+                                                                name = f"-{p['name']} | ⚠ {lib}%"
                                                             else:
-                                                                if p["event"] is not None:
-                                                                    lib = str(
-                                                                        round(
-                                                                            float(
-                                                                                (
-                                                                                    p["event"]["maxHealth"]
-                                                                                    - p["event"]["health"]
-                                                                                )
-                                                                                / (p["event"]["maxHealth"])
-                                                                                * 100
-                                                                            ),
-                                                                            5,
-                                                                        )
-                                                                    )
-                                                                    name = f"-{p['name']} | ⚠ {lib}%"
-                                                                else:
-                                                                    name = f"-{p['name']} | ✓"
-                                                            objectives.append(name)
-                                            else:
-                                                perror = True
-                                                await asyncio.sleep(15)
-                                                continue
-                                        if perror is True and perror is not None:
-                                            await interaction.followup.send(f"presponse status code {presponse.status}")
-                                    else:
-                                        await interaction.followup.send(
-                                            f"Unknown task type {str(task['type'])}. Aborting..."
-                                        )
-                                        ErrorLogger.run(str(aj))
-                                        return
+                                                                name = f"-{p['name']} | ✓"
+                                                        objectives.append(name)
+                                        else:
+                                            perror = True
+                                            await asyncio.sleep(15)
+                                            continue
+                                    if perror is True and perror is not None:
+                                        await interaction.followup.send(f"presponse status code {presponse.status}")
                                     title = aj["title"] if aj["title"] is not None else ""
                                     briefing = aj["briefing"] if aj["briefing"] is not None else ""
                                     desc = aj["description"] if aj["description"] is not None else ""
