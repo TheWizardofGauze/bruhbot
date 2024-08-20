@@ -31,6 +31,7 @@ class HD2(commands.Cog):
         self.file = f"{self.here}\\hd2.json"
         load_dotenv(os.path.abspath(".\\bruhbot\\.env"))
         self.owner_id = int(os.getenv("OWNER_ID"))
+        self.retry = 15
 
     hd2 = app_commands.Group(name="hd2", description="...")
 
@@ -158,7 +159,7 @@ class HD2(commands.Cog):
                                                                         break
                                                                     else:
                                                                         perror = True
-                                                                        await asyncio.sleep(15)
+                                                                        await asyncio.sleep(self.retry)
                                                                         continue
                                                     if perror is True and perror is not None:
                                                         owner = await self.bot.fetch_user(self.owner_id)
@@ -215,10 +216,10 @@ class HD2(commands.Cog):
                                                 break
                                         else:
                                             aerror = True
-                                            await asyncio.sleep(15)
+                                            await asyncio.sleep(self.retry)
                                             continue
                                     except json.JSONDecodeError:
-                                        await asyncio.sleep(15)
+                                        await asyncio.sleep(self.retry)
                                         continue
                             except Exception:
                                 owner = await self.bot.fetch_user(self.owner_id)
@@ -238,7 +239,7 @@ class HD2(commands.Cog):
                 owner = await self.bot.fetch_user(self.owner_id)
                 await owner.send("Error logged in HD2.")
                 ErrorLogger.run(traceback.format_exc())
-                await asyncio.sleep(15)
+                await asyncio.sleep(self.retry)
                 continue
 
     @commands.Cog.listener()
@@ -421,7 +422,7 @@ class HD2(commands.Cog):
                                 return
                             else:
                                 p1error = True
-                                await asyncio.sleep(15)
+                                await asyncio.sleep(self.retry)
                                 continue
                     if p1error is True and p1error is not None:
                         await interaction.followup.send(
@@ -549,7 +550,7 @@ class HD2(commands.Cog):
                                         break
                                     else:
                                         a2error = True
-                                        await asyncio.sleep(15)
+                                        await asyncio.sleep(self.retry)
                                         continue
                             if a2error is True and a2error is not None:
                                 await interaction.followup.send(
@@ -723,7 +724,7 @@ class HD2(commands.Cog):
 
                         else:
                             cerror = True
-                            await asyncio.sleep(15)
+                            await asyncio.sleep(self.retry)
                             continue
                         break
                 if cerror is True and cerror is not None:
@@ -873,7 +874,7 @@ class HD2(commands.Cog):
                                                         objectives.append(name)
                                         else:
                                             perror = True
-                                            await asyncio.sleep(15)
+                                            await asyncio.sleep(self.retry)
                                             continue
                                     if perror is True and perror is not None:
                                         await interaction.followup.send(f"presponse status code {presponse.status}")
@@ -913,10 +914,10 @@ class HD2(commands.Cog):
                                     break
                                 else:
                                     aerror = True
-                                    await asyncio.sleep(15)
+                                    await asyncio.sleep(self.retry)
                                     continue
                             except json.JSONDecodeError:
-                                await asyncio.sleep(15)
+                                await asyncio.sleep(self.retry)
                                 continue
                     except Exception:
                         await interaction.followup.send("Error logged in HD2.")
