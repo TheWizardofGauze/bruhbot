@@ -74,24 +74,11 @@ class Names(commands.Cog):
 
                     async def on_submit(self, interaction: discord.Interaction):
                         await interaction.response.defer()
-                        if (
-                            re.sub("[^a-zA-Z]", "", str(self.prefix)) == ""
-                            and len(str(self.prefix)) != 0
-                            or re.sub("[^a-zA-Z]", "", str(self.name1)) == ""
-                            and len(str(self.name1)) != 0
-                            or re.sub("[^a-zA-z]", "", str(self.name2)) == ""
-                            and len(str(self.name2)) != 0
-                            or re.sub("[^a-zA-z]", "", str(self.suffix)) == ""
-                            and len(str(self.suffix)) != 0
-                            or str(self.suffix) == ""
-                            and str(self.name1) == ""
-                            and str(self.name2) == ""
-                            and str(self.suffix) == ""
-                            or any(
-                                char in (str(self.prefix) + str(self.name1)) + str(self.name2) + str(self.suffix)
-                                for char in [":", "<", ">"]
-                            )
-                        ):
+                        if any(
+                            re.sub("[^a-zA-Z]", "", str(name)) == "" and len(str(name)) != 0
+                            for name in [self.prefix, self.name1, self.name2, self.suffix]
+                        ) or all(name == "" for name in [self.prefix, self.name1, self.name2, self.suffix]):
+                            await interaction.followup.send("Invalid Name.", ephemeral=True)
                             raise Exception
                         with open(self.file, "r+", encoding="utf-8") as f:
                             data = json.load(f)
@@ -111,8 +98,8 @@ class Names(commands.Cog):
                             ephemeral=True,
                         )
 
-                    async def on_error(self, interaction: discord.Interaction):
-                        await interaction.followup.send("Invalid Name.", ephemeral=True)
+                    # async def on_error(self, interaction: discord.Interaction):
+                    #     await interaction.followup.send("Invalid Name.", ephemeral=True)
 
                 class refreshView(discord.ui.View):
                     async def on_timeout(self) -> None:
@@ -201,24 +188,11 @@ class Names(commands.Cog):
 
                 async def on_submit(self, interaction: discord.Interaction):
                     await interaction.response.defer()
-                    if (
-                        re.sub("[^a-zA-Z]", "", str(self.prefix)) == ""
-                        and len(str(self.prefix)) != 0
-                        or re.sub("[^a-zA-Z]", "", str(self.name1)) == ""
-                        and len(str(self.name1)) != 0
-                        or re.sub("[^a-zA-z]", "", str(self.name2)) == ""
-                        and len(str(self.name2)) != 0
-                        or re.sub("[^a-zA-z]", "", str(self.suffix)) == ""
-                        and len(str(self.suffix)) != 0
-                        or str(self.suffix) == ""
-                        and str(self.name1) == ""
-                        and str(self.name2) == ""
-                        and str(self.suffix) == ""
-                        or any(
-                            char in (str(self.prefix) + str(self.name1)) + str(self.name2) + str(self.suffix)
-                            for char in [":", "<", ">"]
-                        )
-                    ):
+                    if any(
+                        re.sub("[^a-zA-Z]", "", str(name)) == "" and len(str(name)) != 0
+                        for name in [self.prefix, self.name1, self.name2, self.suffix]
+                    ) or all(name == "" for name in [self.prefix, self.name1, self.name2, self.suffix]):
+                        await interaction.followup.send("Invalid Name.", ephemeral=True)
                         raise Exception
                     with open(self.file, "r+", encoding="utf-8") as f:
                         data = json.load(f)
@@ -238,8 +212,8 @@ class Names(commands.Cog):
                         ephemeral=True,
                     )
 
-                async def on_error(self, interaction: discord.Interaction):
-                    await interaction.followup.send("Invalid Name.", ephemeral=True)
+                # async def on_error(self, interaction: discord.Interaction):
+                #     await interaction.followup.send("Invalid Name.", ephemeral=True)
 
             addM = addModal()
             await interaction.response.send_modal(addM)
