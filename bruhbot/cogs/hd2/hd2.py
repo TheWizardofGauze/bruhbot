@@ -136,35 +136,57 @@ class HD2(commands.Cog):
                                             aj = aj[0]
                                             tasks = aj["tasks"]
                                             if aj["id"] != data["assign_id"]:
+                                                pindex = []
                                                 for task in tasks:
                                                     match task["type"]:
                                                         case 3:
-                                                            objectives.append(f"{task['values'][2]:,}")
+                                                            if task["valueTypes"][3] == 4 and task["values"][3] != 0:
+                                                                match task["values"][3]:
+                                                                    case 2514244534:
+                                                                        target = "Bile Titans"
+                                                                    case _:
+                                                                        target = "Enemies"
+                                                            else:
+                                                                match task["values"][0]:
+                                                                    # case 1:
+                                                                    case 2:
+                                                                        target = "Terminids"
+                                                                    # case 3:
+                                                                    case _:
+                                                                        target = "Enemies"
+                                                            objectives.append(
+                                                                f"-Eliminate {target} | {task['values'][2]:,}"
+                                                            )
                                                         case 12:
                                                             objectives.append(str(task["values"][0]))
+                                                        case 11:
+                                                            pindex.append(task["values"][2])
+                                                        case 13:
+                                                            pindex.append(task["values"][2])
                                                         case _:
-                                                            pindex = []
-                                                            for t in aj["tasks"]:
-                                                                pindex.append(t["values"][2])
-                                                            for i in range(3):
-                                                                async with session.get(
-                                                                    f"{self.api}/planets"
-                                                                ) as presponse:
-                                                                    if presponse.status == 200:
-                                                                        perror = False
-                                                                        pj = await presponse.json()
-                                                                        for p in pj:
-                                                                            if p["index"] in pindex:
-                                                                                objectives.append(f"-{p['name']}")
-                                                                        break
-                                                                    else:
-                                                                        perror = True
-                                                                        await asyncio.sleep(self.retry)
-                                                                        continue
-                                                    if perror is True and perror is not None:
-                                                        owner = await self.bot.fetch_user(self.owner_id)
-                                                        await owner.send(f"presponse status code {presponse.status}")
-                                                        return
+                                                            owner = await self.bot.fetch_user(self.owner_id)
+                                                            await owner.send(
+                                                                f"Unknown task type {str(task['type'])}. Aborting..."
+                                                            )
+                                                            ErrorLogger.run(str(aj))
+                                                            return
+                                                for i in range(3):
+                                                    async with session.get(f"{self.api}/planets") as presponse:
+                                                        if presponse.status == 200:
+                                                            perror = False
+                                                            pj = await presponse.json()
+                                                            for p in pj:
+                                                                if p["index"] in pindex:
+                                                                    objectives.append(f"-{p['name']}")
+                                                            break
+                                                        else:
+                                                            perror = True
+                                                            await asyncio.sleep(self.retry)
+                                                            continue
+                                                if perror is True and perror is not None:
+                                                    owner = await self.bot.fetch_user(self.owner_id)
+                                                    await owner.send(f"presponse status code {presponse.status}")
+                                                    return
                                                 title = aj["title"] if aj["title"] is not None else ""
                                                 briefing = aj["briefing"] if aj["briefing"] is not None else ""
                                                 desc = aj["description"] if aj["description"] is not None else ""
@@ -808,13 +830,28 @@ class HD2(commands.Cog):
                                     aj = aj[0]
                                     prog = aj["progress"]
                                     tasks = aj["tasks"]
+                                    pindex = []
                                     index = 0
                                     for task in tasks:
                                         match task["type"]:
                                             case 3:  # elimination
+                                                if task["valueTypes"][3] == 4 and task["values"][3] != 0:
+                                                    match task["values"][3]:
+                                                        case 2514244534:
+                                                            target = "Bile Titans"
+                                                        case _:
+                                                            target = "Enemies"
+                                                else:
+                                                    match task["values"][0]:
+                                                        # case 1:
+                                                        case 2:
+                                                            target = "Terminids"
+                                                        # case 3:
+                                                        case _:
+                                                            target = "Enemies"
                                                 goal = task["values"][2]
                                                 objectives.append(
-                                                    f"-Eliminate Enemies | {prog[index]:,}/{goal:,} - {str(round(float((prog[index]/goal)*100),1))}%"
+                                                    f"-Eliminate {target} | {prog[index]:,}/{goal:,} - {str(round(float((prog[index]/goal)*100),1))}%"
                                                 )
                                             case 12:  # defend X planets
                                                 goal = task["values"][0]
@@ -822,10 +859,8 @@ class HD2(commands.Cog):
                                                     f"-Defend Planets | {prog[index]}/{goal} - {str(round(float((prog[index]/goal)*100),1))}%"
                                                 )
                                             case 11:  # liberation
-                                                pindex = []
                                                 pindex.append(task["values"][2])
                                             case 13:  # hold planets
-                                                pindex = []
                                                 pindex.append(task["values"][2])
                                             case _:
                                                 await interaction.followup.send(
