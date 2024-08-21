@@ -814,12 +814,12 @@ class HD2(commands.Cog):
                                             case 3:  # elimination
                                                 goal = task["values"][2]
                                                 objectives.append(
-                                                    f"-Enemies Eliminated | {prog[index]:,}/{goal:,} - {str(round(float((prog[index]/goal)*100),1))}%"
+                                                    f"-Eliminate Enemies | {prog[index]:,}/{goal:,} - {str(round(float((prog[index]/goal)*100),1))}%"
                                                 )
                                             case 12:  # defend X planets
                                                 goal = task["values"][0]
                                                 objectives.append(
-                                                    f"-Planets Defended | {prog[index]}/{goal} - {str(round(float((prog[index]/goal)*100),1))}%"
+                                                    f"-Defend Planets | {prog[index]}/{goal} - {str(round(float((prog[index]/goal)*100),1))}%"
                                                 )
                                             case 11:  # liberation
                                                 pindex = []
