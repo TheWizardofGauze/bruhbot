@@ -834,33 +834,35 @@ class HD2(commands.Cog):
                                     index = 0
                                     for task in tasks:
                                         match task["type"]:
-                                            case 3:  # elimination
+                                            case 3:  # eradicate
                                                 if task["valueTypes"][3] == 4 and task["values"][3] != 0:
-                                                    match task["values"][3]:
-                                                        case 2514244534:
+                                                    match task["values"][3]:  # specific target eradication.
+                                                        case 2514244534:  # bile titan
                                                             target = "Bile Titans"
                                                         case _:
                                                             target = "Enemies"
                                                 else:
                                                     match task["values"][0]:
-                                                        # case 1:
                                                         case 2:
                                                             target = "Terminids"
-                                                        # case 3:
+                                                        case 3:
+                                                            target = "Automatons"
+                                                        case 4:
+                                                            target = "Illuminate"
                                                         case _:
                                                             target = "Enemies"
                                                 goal = task["values"][2]
                                                 objectives.append(
                                                     f"-Eliminate {target} | {prog[index]:,}/{goal:,} - {str(round(float((prog[index]/goal)*100),1))}%"
                                                 )
-                                            case 12:  # defend X planets
+                                            case 12:  # defend
                                                 goal = task["values"][0]
                                                 objectives.append(
                                                     f"-Defend Planets | {prog[index]}/{goal} - {str(round(float((prog[index]/goal)*100),1))}%"
                                                 )
-                                            case 11:  # liberation
+                                            case 11:  # liberate
                                                 pindex.append(task["values"][2])
-                                            case 13:  # hold planets
+                                            case 13:  # control
                                                 pindex.append(task["values"][2])
                                             case _:
                                                 await interaction.followup.send(
