@@ -148,17 +148,21 @@ class HD2(commands.Cog):
                                                                         target = "Enemies"
                                                             else:
                                                                 match task["values"][0]:
-                                                                    # case 1:
                                                                     case 2:
                                                                         target = "Terminids"
-                                                                    # case 3:
+                                                                    case 3:
+                                                                        target = "Automatons"
+                                                                    case 4:
+                                                                        target = "Illuminate"
                                                                     case _:
                                                                         target = "Enemies"
                                                             objectives.append(
-                                                                f"-Eliminate {target} | {task['values'][2]:,}"
+                                                                f"-Eradicate {target} | {task['values'][2]:,}"
                                                             )
                                                         case 12:
-                                                            objectives.append(str(task["values"][0]))
+                                                            objectives.append(
+                                                                f"-Defend Planets | {str(task["values"][0])}"
+                                                            )
                                                         case 11:
                                                             pindex.append(task["values"][2])
                                                         case 13:
@@ -853,7 +857,7 @@ class HD2(commands.Cog):
                                                             target = "Enemies"
                                                 goal = task["values"][2]
                                                 objectives.append(
-                                                    f"-Eliminate {target} | {prog[index]:,}/{goal:,} - {str(round(float((prog[index]/goal)*100),1))}%"
+                                                    f"-Eradicate {target} | {prog[index]:,}/{goal:,} - {str(round(float((prog[index]/goal)*100),1))}%"
                                                 )
                                             case 12:  # defend
                                                 goal = task["values"][0]
