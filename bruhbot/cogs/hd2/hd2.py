@@ -161,7 +161,7 @@ class HD2(commands.Cog):
                                                             )
                                                         case 12:
                                                             objectives.append(
-                                                                f"-Defend Planets | {str(task["values"][0])}"
+                                                                f"-Defend Planets | {str(task['values'][0])}"
                                                             )
                                                         case 11:
                                                             pindex.append(task["values"][2])
