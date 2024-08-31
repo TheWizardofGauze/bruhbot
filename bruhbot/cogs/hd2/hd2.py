@@ -31,6 +31,7 @@ class HD2(commands.Cog):
         self.file = f"{self.here}\\hd2.json"
         load_dotenv(os.path.abspath(".\\bruhbot\\.env"))
         self.owner_id = int(os.getenv("OWNER_ID"))
+
         self.retry = 15
 
     hd2 = app_commands.Group(name="hd2", description="...")
@@ -271,12 +272,17 @@ class HD2(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         await self.bot.wait_until_ready()
-        await self.update()
+        self.update_task = asyncio.create_task(self.update())
+        await self.update_task
+
+    async def cog_unload(self):
+        self.update_task.cancel()
 
     @commands.command(hidden=True)
     @commands.is_owner()
     async def hd(self, ctx):
-        await self.update()
+        self.update_task = asyncio.create_task(self.update())
+        await self.update_task
 
     @hd2.command(
         name="warstatus",
