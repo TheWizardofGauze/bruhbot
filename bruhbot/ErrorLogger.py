@@ -36,7 +36,8 @@ def last():
         last = last.replace(r"\n", "\n")
     time = last[:8]
     error = last[9:]
-    return f"{log}, {time}:\n```py\n{error}```"
+    # return f"{log}, {time}:\n```py\n{error}```"
+    return {"log": log, "time": time, "error": error}
 
 
 if __name__ == "__main__":
