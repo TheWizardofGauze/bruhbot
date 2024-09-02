@@ -920,8 +920,8 @@ async def logs(ctx):
                     await interaction.followup.send("You dare try to hide your crimes?", ephemeral=True)
 
         last = ErrorLogger.last()
-        if len(last) >= 2000:
-            ab = map(str.encode, last)
+        if len(last["error"]) >= 2000:
+            ab = map(str.encode, last["error"])
             content = b"".join(ab)
             view = clearView(timeout=10)
             msg = await ctx.send(file=discord.File(BytesIO(content), "traceback.py"), view=view)
@@ -931,7 +931,7 @@ async def logs(ctx):
             await ctx.reply(last, mention_author=False)
         else:
             view = clearView(timeout=10)
-            msg = await ctx.send(last, view=view)
+            msg = await ctx.send(f"{last['log']}, {last['time']}\n```py\n{last['error']}```", view=view)
             view.msg = msg
 
 
