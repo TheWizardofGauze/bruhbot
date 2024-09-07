@@ -138,6 +138,8 @@ class HD2(commands.Cog):
                                             tasks = aj["tasks"]
                                             if aj["id"] != data["assign_id"]:
                                                 pindex = []
+                                                atype = {}
+                                                acount = 0
                                                 for task in tasks:
                                                     match task["type"]:
                                                         case 3:
@@ -166,8 +168,12 @@ class HD2(commands.Cog):
                                                             )
                                                         case 11:
                                                             pindex.append(task["values"][2])
+                                                            atype[acount] = 11
+                                                            acount += 1
                                                         case 13:
                                                             pindex.append(task["values"][2])
+                                                            atype[acount] = 13
+                                                            acount += 1
                                                         case _:
                                                             owner = await self.bot.fetch_user(self.owner_id)
                                                             await owner.send(
@@ -180,9 +186,18 @@ class HD2(commands.Cog):
                                                         if presponse.status == 200:
                                                             perror = False
                                                             pj = await presponse.json()
-                                                            for p in pj:
-                                                                if p["index"] in pindex:
-                                                                    objectives.append(f"-{p['name']}")
+                                                            for i, j in enumerate(pindex):
+                                                                for p in pj:
+                                                                    if p["index"] == j:
+                                                                        match atype[i]:
+                                                                            case 11:
+                                                                                objectives.append(
+                                                                                    f"-Liberate {p['name']}"
+                                                                                )
+                                                                            case 13:
+                                                                                objectives.append(f"-Hold {p['name']}")
+                                                                            case _:
+                                                                                objectives.append(f"-{p['name']}")
                                                             break
                                                         else:
                                                             perror = True
@@ -416,7 +431,7 @@ class HD2(commands.Cog):
                                                         filename="ilogo.png",
                                                     )
                                                     files.add(ilogo)
-                                                    color = 0x000000
+                                                    color = 0x000000  # 0x9023FF possibly?
                                             lib = str(
                                                 round(
                                                     float((p["maxHealth"] - p["health"]) / (p["maxHealth"]) * 100),
@@ -703,7 +718,7 @@ class HD2(commands.Cog):
                                         major,
                                         None,
                                         None,
-                                        0x000000,
+                                        0x000000,  # 0x9023FF possibly?
                                         iplanetdata[planet]["biome"],
                                         iplanetdata[planet]["hazards"],
                                         None,
@@ -841,6 +856,8 @@ class HD2(commands.Cog):
                                     prog = aj["progress"]
                                     tasks = aj["tasks"]
                                     pindex = []
+                                    atype = {}
+                                    acount = 0
                                     index = 0
                                     for task in tasks:
                                         match task["type"]:
@@ -872,8 +889,12 @@ class HD2(commands.Cog):
                                                 )
                                             case 11:  # liberate
                                                 pindex.append(task["values"][2])
+                                                atype[acount] = 11
+                                                acount += 1
                                             case 13:  # control
                                                 pindex.append(task["values"][2])
+                                                atype[acount] = 13
+                                                acount += 1
                                             case _:
                                                 await interaction.followup.send(
                                                     f"Unknown task type {str(task['type'])}. Aborting..."
@@ -899,7 +920,7 @@ class HD2(commands.Cog):
                                                                     5,
                                                                 )
                                                             )
-                                                            name = f"-{p['name']} | {lib}%"
+                                                            name = f"{p['name']} | {lib}%"
                                                         else:
                                                             if p["event"] is not None:
                                                                 lib = str(
@@ -915,10 +936,16 @@ class HD2(commands.Cog):
                                                                         5,
                                                                     )
                                                                 )
-                                                                name = f"-{p['name']} | ⚠ {lib}%"
+                                                                name = f"{p['name']} | ⚠ {lib}%"
                                                             else:
-                                                                name = f"-{p['name']} | ✓"
-                                                        objectives.append(name)
+                                                                name = f"{p['name']} | ✓"
+                                                        match atype[i]:
+                                                            case 11:
+                                                                objectives.append(f"-Liberate {name}")
+                                                            case 13:
+                                                                objectives.append(f"-Hold {name}")
+                                                            case _:
+                                                                objectives.append(name)
                                         else:
                                             perror = True
                                             await asyncio.sleep(self.retry)
