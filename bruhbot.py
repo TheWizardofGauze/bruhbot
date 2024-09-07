@@ -34,7 +34,7 @@ async def check_age():
 
     while True:
         now = date.today()
-        bday = date(2020, 3, 8)
+        bday = date(2020, 6, 20)
         rdelta = relativedelta(now, bday)
         year = ["year", "years"]
         if rdelta.months == 0 and rdelta.days == 0:
