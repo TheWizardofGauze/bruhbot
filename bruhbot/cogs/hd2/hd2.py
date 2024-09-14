@@ -144,10 +144,11 @@ class HD2(commands.Cog):
                                                     match task["type"]:
                                                         case 3:
                                                             if task["valueTypes"][3] == 4 and task["values"][3] != 0:
-                                                                match task["values"][3]:
-                                                                    case 2514244534:
-                                                                        target = "Bile Titans"
-                                                                    case _:
+                                                                for target in data["target_ids"]:
+                                                                    if task["values"][3] == target["id"]:
+                                                                        target = target["target"]
+                                                                        break
+                                                                    else:
                                                                         target = "Enemies"
                                                             else:
                                                                 match task["values"][0]:
@@ -863,11 +864,14 @@ class HD2(commands.Cog):
                                         match task["type"]:
                                             case 3:  # eradicate
                                                 if task["valueTypes"][3] == 4 and task["values"][3] != 0:
-                                                    match task["values"][3]:  # specific target eradication.
-                                                        case 2514244534:  # bile titan
-                                                            target = "Bile Titans"
-                                                        case _:
-                                                            target = "Enemies"
+                                                    with open(self.file, "r", encoding="utf-8") as f:
+                                                        data = json.load(f)
+                                                        for target in data["target_ids"]:
+                                                            if task["values"][3] == target["id"]:
+                                                                target = target["target"]
+                                                                break
+                                                            else:
+                                                                target = "Enemies"
                                                 else:
                                                     match task["values"][0]:
                                                         case 2:
