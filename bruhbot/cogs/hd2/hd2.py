@@ -334,7 +334,7 @@ class HD2(commands.Cog):
                 else:
                     bar1 = "█" * int((math.floor(float(liberation)) / 10))
                     bar3 = "▁" * (10 - len(bar1) - 1)
-                    embed.add_field(name="Liberation:", value=f"{liberation}%\n│{bar1}▒{bar3}│")
+                    embed.add_field(name="Liberation:", value=f"│{bar1}▒{bar3}│ {liberation}%")
                     if owner == "Automaton":
                         embed.set_thumbnail(url="attachment://alogo.png")
                     elif owner == "Terminid":
