@@ -6,11 +6,20 @@
             "ccid": 215041807946481664
         }
     ],
-    "dispatch_id": 2964,
+    "dispatch_id": 2967,
     "assign_id": 746824688,
     "target_ids": [
-        {"id":2514244534,"target":"Bile Titans"},
-        {"id":1379865898,"target":"Bile Spewers"},
-        {"id":2058088313,"target":"Warriors"}
+        {
+            "id": 2514244534,
+            "target": "Bile Titans"
+        },
+        {
+            "id": 1379865898,
+            "target": "Bile Spewers"
+        },
+        {
+            "id": 2058088313,
+            "target": "Warriors"
+        }
     ]
 }
