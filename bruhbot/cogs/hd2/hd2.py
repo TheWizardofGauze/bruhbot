@@ -2,6 +2,7 @@ import asyncio
 from contextlib import suppress
 from datetime import datetime, UTC, timezone
 import json
+import math
 import os
 import traceback
 import typing
@@ -331,7 +332,9 @@ class HD2(commands.Cog):
                         embed.add_field(name="Defense:", value=f"{liberation}%")
                     embed.set_thumbnail(url="attachment://selogo.png")
                 else:
-                    embed.add_field(name="Liberation:", value=f"{liberation}%")
+                    bar1 = "█" * int((math.floor(float(liberation)) / 10))
+                    bar3 = "▁" * (10 - len(bar1) - 1)
+                    embed.add_field(name="Liberation:", value=f"{liberation}%\n│{bar1}▒{bar3}│")
                     if owner == "Automaton":
                         embed.set_thumbnail(url="attachment://alogo.png")
                     elif owner == "Terminid":
