@@ -177,7 +177,9 @@ class HD2(commands.Cog):
                                                             atype[acount] = 13
                                                             acount += 1
                                                         case 15:
-                                                            continue  # unknown how this type works yet
+                                                            objectives.append(
+                                                                "-Capture more planets than the enemy."
+                                                            )  # unknown how this type works yet
                                                         case _:
                                                             owner = await self.bot.fetch_user(self.owner_id)
                                                             await owner.send(
@@ -905,7 +907,7 @@ class HD2(commands.Cog):
                                                 atype[acount] = 13
                                                 acount += 1
                                             case 15:
-                                                continue
+                                                objectives.append("-Capture more planets than the enemy.")
                                             case _:
                                                 await interaction.followup.send(
                                                     f"Unknown task type {str(task['type'])}. Aborting..."
