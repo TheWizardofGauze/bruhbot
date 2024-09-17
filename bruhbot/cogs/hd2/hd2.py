@@ -32,6 +32,7 @@ class HD2(commands.Cog):
         self.file = f"{self.here}\\hd2.json"
         load_dotenv(os.path.abspath(".\\bruhbot\\.env"))
         self.owner_id = int(os.getenv("OWNER_ID"))
+        self.planet_tasks = [11, 12, 13]
 
         self.retry = 15
 
@@ -331,9 +332,11 @@ class HD2(commands.Cog):
                 embed.description = f"{owner} control"
                 if owner == "Super Earth":
                     if event is not None:
+                        bar1 = "█" * int((math.floor(float(liberation)) / 10))
+                        bar3 = "▁" * (10 - len(bar1) - 1)
                         embed.add_field(name="Attacker:", value=attacker)
-                        embed.add_field(name="Time Remaining:", value=time)
-                        embed.add_field(name="Defense:", value=f"{liberation}%")
+                        embed.add_field(name="Time Remaining:", value=time, inline=False)
+                        embed.add_field(name="Defense:", value=f"{bar1}▒{bar3} │ {liberation}%")
                     embed.set_thumbnail(url="attachment://selogo.png")
                 else:
                     bar1 = "█" * int((math.floor(float(liberation)) / 10))
@@ -601,7 +604,10 @@ class HD2(commands.Cog):
                                             break
                                         else:
                                             for t in a2j[0]["tasks"]:
-                                                mo.append(t["values"][2])
+                                                if t["type"] in self.planet_tasks:
+                                                    mo.append(t["values"][2])
+                                                else:
+                                                    continue
                                         break
                                     else:
                                         a2error = True
