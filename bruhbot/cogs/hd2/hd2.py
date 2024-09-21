@@ -913,7 +913,19 @@ class HD2(commands.Cog):
                                                 atype[acount] = 13
                                                 acount += 1
                                             case 15:
-                                                objectives.append("-Capture more planets than the enemy.")
+                                                bar1 = (
+                                                    "▁" * (10 + prog[index]) + "█" * (prog[index] * -1)
+                                                    if prog[index] < 0
+                                                    else "▁" * 10
+                                                )
+                                                bar2 = (
+                                                    "█" * prog[index] + "▁" * (10 - prog[index])
+                                                    if prog[index] > 0
+                                                    else "▁" * 10
+                                                )
+                                                objectives.append(
+                                                    f"-Capture more planets than the enemy.\n\n{bar1}│{bar2}"
+                                                )
                                             case _:
                                                 await interaction.followup.send(
                                                     f"Unknown task type {str(task['type'])}. Aborting..."
