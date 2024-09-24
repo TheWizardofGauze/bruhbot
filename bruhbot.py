@@ -852,7 +852,7 @@ async def age(ctx):
         return 0 if num == 1 else 1
 
     now = date.today()
-    bday = date(2020, 3, 8)
+    bday = date(2020, 6, 20)
     rdelta = relativedelta(now, bday)
     plurals = [["year", "years"], ["month", "months"], ["day", "days"]]
     await ctx.reply(
