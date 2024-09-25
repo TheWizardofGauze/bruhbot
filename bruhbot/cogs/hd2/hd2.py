@@ -326,6 +326,7 @@ class HD2(commands.Cog):
                 biome: dict,
                 hazards: dict,
                 event: bool,
+                regen: str,
             ):
                 embed = discord.Embed(color=color)
                 embed.title = name
@@ -342,6 +343,7 @@ class HD2(commands.Cog):
                     bar1 = "█" * int((math.floor(float(liberation)) / 10))
                     bar3 = "▁" * (10 - len(bar1) - 1)
                     embed.add_field(name="Liberation:", value=f"{bar1}▒{bar3} │ {liberation}%")
+                    embed.add_field(name="Regen Per Hour:", value=f"{regen}%", inline=False)
                     if owner == "Automaton":
                         embed.set_thumbnail(url="attachment://alogo.png")
                     elif owner == "Terminid":
@@ -387,6 +389,7 @@ class HD2(commands.Cog):
                                             )
                                             files.add(selogo)
                                             color = 0xB5D9E9
+                                            regen = None
                                             if p["event"] is not None:
                                                 event = True
                                                 end = (
@@ -449,6 +452,15 @@ class HD2(commands.Cog):
                                                     5,
                                                 )
                                             )
+                                            regen = str(
+                                                round(
+                                                    round(
+                                                        float(((p["regenPerSecond"] * 3600) / p["maxHealth"]) * 100), 1
+                                                    )
+                                                    * 2
+                                                )
+                                                / 2
+                                            )
                                             time = None
                                             attacker = None
                                             event = None
@@ -469,6 +481,7 @@ class HD2(commands.Cog):
                                             p["biome"],
                                             p["hazards"],
                                             event,
+                                            regen,
                                         )
                                         await interaction.followup.send(files=files, embed=emb)
                                         await asyncio.sleep(0)
@@ -554,6 +567,16 @@ class HD2(commands.Cog):
                                             5,
                                         )
                                     )
+                                    regen = str(
+                                        round(
+                                            round(
+                                                float(((planet["regenPerSecond"] * 3600) / planet["maxHealth"]) * 100),
+                                                1,
+                                            )
+                                            * 2
+                                        )
+                                        / 2
+                                    )
                                     match owner:
                                         case "Automaton":
                                             aplanetdata.update(
@@ -565,6 +588,7 @@ class HD2(commands.Cog):
                                                         "players": players,
                                                         "biome": biome,
                                                         "hazards": hazards,
+                                                        "regen": regen,
                                                     }
                                                 }
                                             )
@@ -578,6 +602,7 @@ class HD2(commands.Cog):
                                                         "players": players,
                                                         "biome": biome,
                                                         "hazards": hazards,
+                                                        "regen": regen,
                                                     }
                                                 }
                                             )
@@ -591,6 +616,7 @@ class HD2(commands.Cog):
                                                         "players": players,
                                                         "biome": biome,
                                                         "hazards": hazards,
+                                                        "regen": regen,
                                                     }
                                                 }
                                             )
@@ -656,6 +682,7 @@ class HD2(commands.Cog):
                                         aplanetdata[planet]["biome"],
                                         aplanetdata[planet]["hazards"],
                                         None,
+                                        aplanetdata[planet]["regen"],
                                     )
                                     aembl.append(emb)
                                 await interaction.followup.send(files=afiles, embeds=aembl)
@@ -696,6 +723,7 @@ class HD2(commands.Cog):
                                         tplanetdata[planet]["biome"],
                                         tplanetdata[planet]["hazards"],
                                         None,
+                                        tplanetdata[planet]["regen"],
                                     )
                                     tembl.append(emb)
                                 await interaction.followup.send(files=tfiles, embeds=tembl)
@@ -736,6 +764,7 @@ class HD2(commands.Cog):
                                         iplanetdata[planet]["biome"],
                                         iplanetdata[planet]["hazards"],
                                         None,
+                                        iplanetdata[planet]["regen"],
                                     )
                                     iembl.append(emb)
                                 await interaction.followup.send(files=ifiles, embeds=iembl)
@@ -779,6 +808,7 @@ class HD2(commands.Cog):
                                         seplanetdata[planet]["biome"],
                                         seplanetdata[planet]["hazards"],
                                         True,
+                                        None,
                                     )
                                     seembl.append(emb)
                                 await interaction.followup.send(files=sefiles, embeds=seembl)
