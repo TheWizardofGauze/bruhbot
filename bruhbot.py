@@ -25,6 +25,7 @@ bot.remove_command("help")
 load_dotenv(".\\bruhbot\\.env")
 token = os.getenv("TOKEN")
 owner_id = int(os.getenv("OWNER_ID"))
+ignored_channel = int(os.getenv("IGNORED_CHANNEL"))
 here = os.path.dirname(__file__)
 
 
@@ -98,7 +99,7 @@ async def on_message(msg):
     try:
         await bot.process_commands(msg)
         ctx = await bot.get_context(msg)
-        if ctx.author.bot or ctx.channel.id == 1040461583027011645:
+        if ctx.author.bot or ctx.channel.id == ignored_channel:
             return
         nospace = re.sub("[^a-zA-Z0-9]", "", msg.content).lower()
         name = re.sub("[^a-zA-Z0-9]", "", ctx.me.display_name).lower()
@@ -148,10 +149,11 @@ async def addr(ctx, *, arg: str = None):
             invalid_counter = 0
             size_counter = 0
             dupe_counter = 0
+            filesize_limit = 26214400
             for attachment in ctx.message.attachments:
                 dupe = False
                 if "image" in attachment.content_type:
-                    if attachment.size > 26214400:
+                    if attachment.size > filesize_limit:
                         if len(ctx.message.attachments) == 1:
                             await ctx.reply("Error: File too large. (Max 25MB)")
                             return
