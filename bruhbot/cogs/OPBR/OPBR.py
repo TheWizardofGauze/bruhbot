@@ -21,7 +21,6 @@ class OPBR(commands.Cog):
         self.bot = bot
         self.file = f"{os.path.dirname(__file__)}\\opbr.json"
         self.title = "*Old Person Battle Royale*"
-        self.url = "https://jamboard.google.com/d/1DikJQQONWUW7odKQoFLlrcri_li4DxVvcyZ_kkfJ77M/edit?usp=sharing"
 
     async def get_names(self, mode: int):
         if mode == 0:
@@ -95,7 +94,6 @@ class OPBR(commands.Cog):
                                         title=self.title,
                                         description=deathDesc,
                                         color=color,
-                                        url=self.url,
                                     )
                                     msg.set_footer(text=foot)
                                     await ctx.send(embed=msg)
@@ -167,7 +165,6 @@ class OPBR(commands.Cog):
                         title=self.title,
                         description=f"**__Contestants__**\n{content}",
                         color=color,
-                        url=self.url,
                     ).set_footer(text=f"Last updated {data['updated']}")
                     await ctx.send(embed=msg)
             except Exception:
@@ -199,7 +196,6 @@ class OPBR(commands.Cog):
                     title=self.title,
                     description=f"**__Contestants__**\n{content}",
                     color=color,
-                    url=self.url,
                 ).set_footer(text=f"Last updated {data['updated']}")
                 await ctx.send(embed=msg)
         except Exception:
