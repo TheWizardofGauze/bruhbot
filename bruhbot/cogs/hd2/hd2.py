@@ -322,6 +322,7 @@ class HD2(commands.Cog):
                 major: bool,
                 time: str,
                 attacker: str,
+                attorigin: str,
                 color: discord.Color,
                 biome: dict,
                 hazards: dict,
@@ -336,7 +337,7 @@ class HD2(commands.Cog):
                         bar1 = "█" * int((math.floor(float(liberation)) / 10))
                         bar3 = "▁" * (10 - len(bar1) - 1)
                         embed.add_field(name="Attacker:", value=attacker)
-#add attack origin
+                        embed.add_field(name="Attack Origin:", value=attorigin)
                         embed.add_field(name="Time Remaining:", value=time, inline=False)
                         embed.add_field(name="Defense:", value=f"{bar1}▒{bar3} │ {liberation}%")
                     embed.set_thumbnail(url="attachment://selogo.png")
@@ -405,6 +406,12 @@ class HD2(commands.Cog):
                                                 rdelta = relativedelta(end, now)
                                                 time = f"{rdelta.days}D:{rdelta.hours}H:{rdelta.minutes}M:{rdelta.seconds}S"
                                                 attacker = p["event"]["faction"].replace("Automaton", "Automatons")
+                                                for p2 in p1j:
+                                                    if p2["index"] == p["attacking"][0]:
+                                                        attorigin = p2["name"]
+                                                        break
+                                                    else:
+                                                        attorigin = None
                                                 lib = str(
                                                     round(
                                                         float(
@@ -420,6 +427,7 @@ class HD2(commands.Cog):
                                                 end = None
                                                 lib = None
                                                 attacker = None
+                                                attorigin = None
                                                 time = None
                                         else:
                                             match p["currentOwner"]:
@@ -464,6 +472,7 @@ class HD2(commands.Cog):
                                             )
                                             time = None
                                             attacker = None
+                                            attorigin = None
                                             event = None
                                         hdlogo = discord.File(
                                             f"{self.here}\\images\\Helldivers.png",
@@ -478,6 +487,7 @@ class HD2(commands.Cog):
                                             None,
                                             time,
                                             attacker,
+                                            attorigin,
                                             color,
                                             p["biome"],
                                             p["hazards"],
@@ -535,6 +545,12 @@ class HD2(commands.Cog):
                                         .astimezone(tz=None)
                                     )
                                     attacker = planet["event"]["faction"].replace("Automaton", "Automatons")
+                                    for p in planets:
+                                        if p["index"] == planet["attacking"][0]:
+                                            attorigin = p["name"]
+                                            break
+                                        else:
+                                            attorigin = None
                                     lib = str(
                                         round(
                                             float(
@@ -553,6 +569,7 @@ class HD2(commands.Cog):
                                                 "owner": owner,
                                                 "end": end,
                                                 "attacker": attacker,
+                                                "attorigin": attorigin,
                                                 "players": players,
                                                 "biome": biome,
                                                 "hazards": hazards,
@@ -679,6 +696,7 @@ class HD2(commands.Cog):
                                         major,
                                         None,
                                         None,
+                                        None,
                                         0xFF6161,
                                         aplanetdata[planet]["biome"],
                                         aplanetdata[planet]["hazards"],
@@ -720,6 +738,7 @@ class HD2(commands.Cog):
                                         major,
                                         None,
                                         None,
+                                        None,
                                         0xFFB800,
                                         tplanetdata[planet]["biome"],
                                         tplanetdata[planet]["hazards"],
@@ -759,6 +778,7 @@ class HD2(commands.Cog):
                                         iplanetdata[planet]["lib"],
                                         iplanetdata[planet]["players"],
                                         major,
+                                        None,
                                         None,
                                         None,
                                         0x000000,  # 0x9023FF possibly?
@@ -805,6 +825,7 @@ class HD2(commands.Cog):
                                         major,
                                         time,
                                         seplanetdata[planet]["attacker"],
+                                        seplanetdata[planet]["attorigin"],
                                         0xB5D9E9,
                                         seplanetdata[planet]["biome"],
                                         seplanetdata[planet]["hazards"],
