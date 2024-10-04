@@ -336,6 +336,7 @@ class HD2(commands.Cog):
                         bar1 = "█" * int((math.floor(float(liberation)) / 10))
                         bar3 = "▁" * (10 - len(bar1) - 1)
                         embed.add_field(name="Attacker:", value=attacker)
+#add attack origin
                         embed.add_field(name="Time Remaining:", value=time, inline=False)
                         embed.add_field(name="Defense:", value=f"{bar1}▒{bar3} │ {liberation}%")
                     embed.set_thumbnail(url="attachment://selogo.png")
