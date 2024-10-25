@@ -370,9 +370,9 @@ class HD2(commands.Cog):
                 return embed
 
             await interaction.response.defer()
-            if planet is not None:
+            if planet is not None:  # single planet
                 async with ClientSession(headers=self.headers) as session:
-                    for i in range(3):  # single planet
+                    for i in range(3):
                         async with session.get(f"{self.api}/planets") as p1response:
                             if p1response.status == 200:
                                 p1error = False
