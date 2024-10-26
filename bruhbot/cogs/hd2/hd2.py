@@ -57,7 +57,7 @@ class HD2(commands.Cog):
             briefing: str,
             description: str,
             objectives: list,
-            reward: str,
+            # reward: str,
             expire: int,
         ):
             try:
@@ -68,10 +68,10 @@ class HD2(commands.Cog):
                 embed.add_field(name=description, value=objective)
                 embed.add_field(name="Expires:", value=f"<t:{expire}:R>", inline=False)
                 embed.set_thumbnail(url="attachment://mologo.png")
-                embed.set_footer(
-                    text=f"REWARD: {reward} MEDALS",  # Reward type 1 is medals, maybe more rewards types in the future?
-                    icon_url="attachment://medal.png",
-                )
+                # embed.set_footer(
+                #     text=f"REWARD: {reward} MEDALS",
+                #     icon_url="attachment://medal.png",
+                # )
                 embed.timestamp = datetime.now()
                 return embed
             except Exception:
@@ -232,29 +232,31 @@ class HD2(commands.Cog):
                                                     title = title.replace(tag, "**")
                                                     briefing = briefing.replace(tag, "**")
                                                     desc = desc.replace(tag, "**")
-                                                if aj["reward"]["type"] == 1:
-                                                    reward = aj["reward"]["amount"]
-                                                else:
-                                                    owner = await self.bot.fetch_user(self.owner_id)
-                                                    await owner.send(f"Unknown reward type {str(aj['reward']['type'])}")
-                                                    return
+                                                # if aj["reward"]["type"] == 1:
+                                                #   reward = aj["reward"]["amount"]
+                                                # this is not how rewards work
+                                                # else:
+                                                #     owner = await self.bot.fetch_user(self.owner_id)
+                                                #     await owner.send(f"Unknown reward type {str(aj['reward']['type'])}")
+                                                #     return
                                                 morder = discord.File(
                                                     f"{self.here}\\images\\MajorOrder.png",
                                                     filename="mologo.png",
                                                 )
-                                                micon = discord.File(
-                                                    f"{self.here}\\images\\Medal.png",
-                                                    filename="medal.png",
-                                                )
+                                                # micon = discord.File(
+                                                #     f"{self.here}\\images\\Medal.png",
+                                                #     filename="medal.png",
+                                                # )
                                                 emb = await aembed(
                                                     title,
                                                     briefing,
                                                     desc,
                                                     objectives,
-                                                    reward,
+                                                    # reward,
                                                     exp,
                                                 )
-                                                msg = await channel.send(files=[morder, micon], embed=emb)
+                                                # msg = await channel.send(files=[morder, micon], embed=emb)
+                                                msg = await channel.send(files=[morder], embed=emb)
                                                 for pin in await channel.pins():
                                                     await pin.unpin()
                                                 await msg.pin()
@@ -883,7 +885,7 @@ class HD2(commands.Cog):
                 briefing: str,
                 description: str,
                 objectives: list,
-                reward: str,
+                # reward: str,
                 expire: int,
             ):
                 try:
@@ -894,10 +896,10 @@ class HD2(commands.Cog):
                     embed.add_field(name=description, value=objective)
                     embed.add_field(name="Expires:", value=f"<t:{expire}:R>", inline=False)
                     embed.set_thumbnail(url="attachment://mologo.png")
-                    embed.set_footer(
-                        text=f"REWARD: {reward} MEDALS",  # Reward type 1 is medals, maybe more rewards types in the future?
-                        icon_url="attachment://medal.png",
-                    )
+                    # embed.set_footer(
+                    #     text=f"REWARD: {reward} MEDALS",
+                    #     icon_url="attachment://medal.png",
+                    # )
                     embed.timestamp = datetime.now()
                     return embed
                 except Exception:
@@ -1051,23 +1053,25 @@ class HD2(commands.Cog):
                                         title = title.replace(tag, "**")
                                         briefing = briefing.replace(tag, "**")
                                         desc = desc.replace(tag, "**")
-                                    if aj["reward"]["type"] == 1:
-                                        reward = aj["reward"]["amount"]
-                                    else:
-                                        await interaction.followup.send(
-                                            f"Unknown reward type {str(aj['reward']['type'])}"
-                                        )
-                                        return
+                                    # if aj["reward"]["type"] == 1:
+                                    #     reward = aj["reward"]["amount"]
+                                    # else:
+                                    #     await interaction.followup.send(
+                                    #         f"Unknown reward type {str(aj['reward']['type'])}"
+                                    #     )
+                                    #     return
                                     morder = discord.File(
                                         f"{self.here}\\images\\MajorOrder.png",
                                         filename="mologo.png",
                                     )
-                                    micon = discord.File(
-                                        f"{self.here}\\images\\Medal.png",
-                                        filename="medal.png",
-                                    )
-                                    emb = await embed(title, briefing, desc, objectives, reward, exp)
-                                    await interaction.followup.send(files=[morder, micon], embed=emb)
+                                    # micon = discord.File(
+                                    #     f"{self.here}\\images\\Medal.png",
+                                    #     filename="medal.png",
+                                    # )
+                                    # emb = await embed(title, briefing, desc, objectives, reward, exp)
+                                    emb = await embed(title, briefing, desc, objectives, exp)
+                                    # await interaction.followup.send(files=[morder, micon], embed=emb)
+                                    await interaction.followup.send(files=[morder], embed=emb)
                                     break
                                 else:
                                     aerror = True
