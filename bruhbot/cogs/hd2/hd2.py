@@ -409,7 +409,10 @@ class HD2(commands.Cog):
                                                 time = f"{rdelta.days}D:{rdelta.hours}H:{rdelta.minutes}M:{rdelta.seconds}S"
                                                 attacker = p["event"]["faction"].replace("Automaton", "Automatons")
                                                 for p2 in p1j:
-                                                    if p2["index"] == p["attacking"][0]:
+                                                    if not p["attacking"]:
+                                                        attorigin = None
+                                                        break
+                                                    elif p2["index"] == p["attacking"][0]:
                                                         attorigin = p2["name"]
                                                         break
                                                     else:
@@ -548,7 +551,10 @@ class HD2(commands.Cog):
                                     )
                                     attacker = planet["event"]["faction"].replace("Automaton", "Automatons")
                                     for p in planets:
-                                        if p["index"] == planet["attacking"][0]:
+                                        if not p["attacking"]:
+                                            attorigin = None
+                                            break
+                                        elif p["index"] == planet["attacking"][0]:
                                             attorigin = p["name"]
                                             break
                                         else:
@@ -667,27 +673,13 @@ class HD2(commands.Cog):
 
                             if not aplanetdata == {}:
                                 aembl = []
-                                afiles = set()
+                                aembl2 = []
                                 morder = None
-                                hdlogo = discord.File(
-                                    f"{self.here}\\images\\Helldivers.png",
-                                    filename="hdlogo.png",
-                                )
-                                afiles.add(hdlogo)
-                                alogo = discord.File(
-                                    f"{self.here}\\images\\Automaton.png",
-                                    filename="alogo.png",
-                                )
-                                afiles.add(alogo)
+                                major2 = None
                                 for planet in aplanetdata:
                                     if aplanetdata[planet]["index"] in mo:
                                         major = True
-                                        if morder is None:
-                                            morder = discord.File(
-                                                f"{self.here}\\images\\MajorOrder.png",
-                                                filename="mologo.png",
-                                            )
-                                            afiles.add(morder)
+                                        major2 = True
                                     else:
                                         major = False
                                     emb = await embed(
@@ -705,31 +697,40 @@ class HD2(commands.Cog):
                                         None,
                                         aplanetdata[planet]["regen"],
                                     )
-                                    aembl.append(emb)
-                                await interaction.followup.send(files=afiles, embeds=aembl)
-                            if not tplanetdata == {}:
-                                tembl = []
-                                tfiles = set()
-                                morder = None
-                                hdlogo = discord.File(
-                                    f"{self.here}\\images\\Helldivers.png",
-                                    filename="hdlogo.png",
-                                )
-                                tfiles.add(hdlogo)
-                                tlogo = discord.File(
-                                    f"{self.here}\\images\\Terminid.png",
-                                    filename="tlogo.png",
-                                )
-                                tfiles.add(tlogo)
-                                for planet in tplanetdata:
-                                    if tplanetdata[planet]["index"] in mo:
-                                        major = True
-                                        if morder is None:
+                                    if len(aembl) < 10:
+                                        aembl.append(emb)
+                                    else:
+                                        aembl2.append(emb)
+                                    aembll = [aembl, aembl2]
+                                for elist in aembll:
+                                    if elist:
+                                        afiles = set()
+                                        hdlogo = discord.File(
+                                            f"{self.here}\\images\\Helldivers.png",
+                                            filename="hdlogo.png",
+                                        )
+                                        afiles.add(hdlogo)
+                                        alogo = discord.File(
+                                            f"{self.here}\\images\\Automaton.png",
+                                            filename="alogo.png",
+                                        )
+                                        afiles.add(alogo)
+                                        if major2 is not None and morder is None:
                                             morder = discord.File(
                                                 f"{self.here}\\images\\MajorOrder.png",
                                                 filename="mologo.png",
                                             )
-                                            tfiles.add(morder)
+                                            afiles.add(morder)
+                                        await interaction.followup.send(files=afiles, embeds=elist)
+                            if not tplanetdata == {}:
+                                tembl = []
+                                tembl2 = []
+                                morder = None
+                                major2 = None
+                                for planet in tplanetdata:
+                                    if tplanetdata[planet]["index"] in mo:
+                                        major = True
+                                        major2 = True
                                     else:
                                         major = False
                                     emb = await embed(
@@ -747,31 +748,40 @@ class HD2(commands.Cog):
                                         None,
                                         tplanetdata[planet]["regen"],
                                     )
-                                    tembl.append(emb)
-                                await interaction.followup.send(files=tfiles, embeds=tembl)
-                            if not iplanetdata == {}:
-                                iembl = []
-                                ifiles = set()
-                                morder = None
-                                hdlogo = discord.File(
-                                    f"{self.here}\\images\\Helldivers.png",
-                                    filename="hdlogo.png",
-                                )
-                                ifiles.add(hdlogo)
-                                ilogo = discord.File(
-                                    f"{self.here}\\images\\Illuminate.png",
-                                    filename="ilogo.png",
-                                )
-                                ifiles.add(ilogo)
-                                for planet in iplanetdata:
-                                    if iplanetdata[planet]["index"] in mo:
-                                        major = True
-                                        if morder is None:
+                                    if len(tembl) < 10:
+                                        tembl.append(emb)
+                                    else:
+                                        tembl2.append(emb)
+                                    tembll = [tembl, tembl2]
+                                for elist in tembll:
+                                    if elist:
+                                        tfiles = set()
+                                        hdlogo = discord.File(
+                                            f"{self.here}\\images\\Helldivers.png",
+                                            filename="hdlogo.png",
+                                        )
+                                        tfiles.add(hdlogo)
+                                        tlogo = discord.File(
+                                            f"{self.here}\\images\\Terminid.png",
+                                            filename="tlogo.png",
+                                        )
+                                        tfiles.add(tlogo)
+                                        if major2 is not None and morder is None:
                                             morder = discord.File(
                                                 f"{self.here}\\images\\MajorOrder.png",
                                                 filename="mologo.png",
                                             )
-                                            ifiles.add(morder)
+                                            tfiles.add(morder)
+                                        await interaction.followup.send(files=tfiles, embeds=elist)
+                            if not iplanetdata == {}:
+                                iembl = []
+                                iembl2 = []
+                                morder = None
+                                major2 = None
+                                for planet in iplanetdata:
+                                    if iplanetdata[planet]["index"] in mo:
+                                        major = True
+                                        major2 = True
                                     else:
                                         major = False
                                     emb = await embed(
@@ -789,31 +799,40 @@ class HD2(commands.Cog):
                                         None,
                                         iplanetdata[planet]["regen"],
                                     )
-                                    iembl.append(emb)
-                                await interaction.followup.send(files=ifiles, embeds=iembl)
-                            if not seplanetdata == {}:
-                                seembl = []
-                                sefiles = set()
-                                morder = None
-                                hdlogo = discord.File(
-                                    f"{self.here}\\images\\Helldivers.png",
-                                    filename="hdlogo.png",
-                                )
-                                sefiles.add(hdlogo)
-                                selogo = discord.File(
-                                    f"{self.here}\\images\\SuperEarth.png",
-                                    filename="selogo.png",
-                                )
-                                sefiles.add(selogo)
-                                for planet in seplanetdata:
-                                    if seplanetdata[planet]["index"] in mo:
-                                        major = True
-                                        if morder is None:
+                                    if len(iembl) < 10:
+                                        iembl.append(emb)
+                                    else:
+                                        iembl2.append(emb)
+                                    iembll = [iembl, iembl2]
+                                for elist in iembll:
+                                    if elist:
+                                        ifiles = set()
+                                        hdlogo = discord.File(
+                                            f"{self.here}\\images\\Helldivers.png",
+                                            filename="hdlogo.png",
+                                        )
+                                        ifiles.add(hdlogo)
+                                        ilogo = discord.File(
+                                            f"{self.here}\\images\\Illuminate.png",
+                                            filename="ilogo.png",
+                                        )
+                                        ifiles.add(ilogo)
+                                        if major2 is not None and morder is None:
                                             morder = discord.File(
                                                 f"{self.here}\\images\\MajorOrder.png",
                                                 filename="mologo.png",
                                             )
-                                            sefiles.add(morder)
+                                            ifiles.add(morder)
+                                        await interaction.followup.send(files=ifiles, embeds=elist)
+                            if not seplanetdata == {}:
+                                seembl = []
+                                seembl2 = []
+                                morder = None
+                                major2 = None
+                                for planet in seplanetdata:
+                                    if seplanetdata[planet]["index"] in mo:
+                                        major = True
+                                        major2 = True
                                     else:
                                         major = False
                                     now = datetime.now(UTC)
@@ -834,8 +853,31 @@ class HD2(commands.Cog):
                                         True,
                                         None,
                                     )
-                                    seembl.append(emb)
-                                await interaction.followup.send(files=sefiles, embeds=seembl)
+                                    if len(seembl) < 10:
+                                        seembl.append(emb)
+                                    else:
+                                        seembl2.append(emb)
+                                    seembll = [seembl, seembl2]
+                                for elist in seembll:
+                                    if elist:
+                                        sefiles = set()
+                                        hdlogo = discord.File(
+                                            f"{self.here}\\images\\Helldivers.png",
+                                            filename="hdlogo.png",
+                                        )
+                                        sefiles.add(hdlogo)
+                                        selogo = discord.File(
+                                            f"{self.here}\\images\\SuperEarth.png",
+                                            filename="selogo.png",
+                                        )
+                                        sefiles.add(selogo)
+                                        if major2 is not None and morder is None:
+                                            morder = discord.File(
+                                                f"{self.here}\\images\\MajorOrder.png",
+                                                filename="mologo.png",
+                                            )
+                                            sefiles.add(morder)
+                                        await interaction.followup.send(files=sefiles, embeds=elist)
 
                         else:
                             cerror = True
