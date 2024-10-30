@@ -145,23 +145,27 @@ async def on_message(msg):
 @bot.command()
 async def addr(ctx, *, arg: str = None):
     try:
-        if ctx.message.attachments:  # image support
+        if ctx.message.attachments or ctx.message.reference:  # image support
+            if ctx.message.reference:
+                attachments = ctx.message.reference.resolved.attachments
+            else:
+                attachments = ctx.message.attachments
             invalid_counter = 0
             size_counter = 0
             dupe_counter = 0
             filesize_limit = 26214400
-            for attachment in ctx.message.attachments:
+            for attachment in attachments:
                 dupe = False
                 if "image" in attachment.content_type:
                     if attachment.size > filesize_limit:
-                        if len(ctx.message.attachments) == 1:
+                        if len(attachments) == 1:
                             await ctx.reply("Error: File too large. (Max 25MB)")
                             return
                         else:
                             size_counter += 1
                     ext = os.path.splitext(attachment.filename)[-1]
                     with open(f"{here}\\bruhbot\\responses.txt", "r", encoding="utf-8") as f:
-                        if arg and len(ctx.message.attachments) == 1:
+                        if arg and len(attachments) == 1:
                             pre = os.path.splitext("".join(arg[:]))[0] + ext
                         else:
                             if (
@@ -178,7 +182,7 @@ async def addr(ctx, *, arg: str = None):
                         file = f.readlines()
                         for line in file:
                             if pre.lower() == line.lower().replace(" - image\n", ""):
-                                if len(ctx.message.attachments) == 1:
+                                if len(attachments) == 1:
                                     await ctx.reply(f"Error: **'{pre}'** already exists:")
                                     return
                                 else:
@@ -193,26 +197,26 @@ async def addr(ctx, *, arg: str = None):
                     with open(f"{here}\\bruhbot\\responses.txt", "a", encoding="utf-8") as f:
                         f.write(f"{pre} - image\n")
                 else:
-                    if len(ctx.message.attachments) == 1:
+                    if len(attachments) == 1:
                         await ctx.reply("Error: Invalid file type.")
                         return
                     else:
                         invalid_counter += 1
             if (
-                len(ctx.message.attachments) - invalid_counter == 1
-                or len(ctx.message.attachments) - dupe_counter == 1
-                or len(ctx.message.attachments) - size_counter == 1
+                len(attachments) - invalid_counter == 1
+                or len(attachments) - dupe_counter == 1
+                or len(attachments) - size_counter == 1
             ):
                 added = "Image was added."
             elif (
-                len(ctx.message.attachments) - invalid_counter == 0
-                or len(ctx.message.attachments) - dupe_counter == 0
-                or len(ctx.message.attachments) - size_counter == 0
+                len(attachments) - invalid_counter == 0
+                or len(attachments) - dupe_counter == 0
+                or len(attachments) - size_counter == 0
             ):
                 added = "No images were added."
             else:
                 added = "Images were added."
-            if not invalid_counter == len(ctx.message.attachments):
+            if not invalid_counter == len(attachments):
                 await ctx.reply(f"{added} :thumbsup:", mention_author=False)
             if dupe_counter > 0:
                 await ctx.send(f"Blocked {str(dupe_counter)} duplicate files.")
@@ -221,7 +225,7 @@ async def addr(ctx, *, arg: str = None):
             if size_counter > 0:
                 await ctx.send(f"Blocked {str(size_counter)} large files. (Max 25MB)")
             return
-        if not arg:
+        if not arg and not ctx.message.reference:
             await help(ctx, "addr")
             return
         with open(f"{here}\\bruhbot\\responses.txt", "r", encoding="utf-8") as f:
