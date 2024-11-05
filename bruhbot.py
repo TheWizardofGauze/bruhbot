@@ -522,9 +522,17 @@ async def delr(ctx, *arg: str):
             except IndexError:
                 await ctx.reply("Error: Selection out of range.")
                 return
+            if responses[choice].endswith("- image"):
+                try:
+                    await send_image(ctx, responses[choice])
+                except FileNotFoundError:
+                    pass
+                item = "image?"
+            else:
+                item = f"response?: \n**{responses[choice]}**"
             emb = discord.Embed(
                 title="Delete response",
-                description=f"Are you sure you want to delete this response?: \n**{responses[choice]}**",
+                description=f"Are you sure you want to delete this {item}",
                 color=color,
             )
             cview = confirmView(timeout=10)
@@ -539,8 +547,11 @@ async def delr(ctx, *arg: str):
                 if " - image" in responses[choice]:
                     with suppress(FileNotFoundError):
                         image = responses[choice].replace(" - image", "")
+                        name = image
                         os.remove(f"{here}\\images\\{image}")
-                await ctx.reply(f"**'{responses[choice]}'** was deleted. :thumbsup:", mention_author=False)
+                else:
+                    name = responses[choice]
+                await ctx.reply(f"**'{name}'** was deleted. :thumbsup:", mention_author=False)
                 return
             if cview.cancel is True or cview.timeout is True:
                 return
@@ -564,9 +575,17 @@ async def delr(ctx, *arg: str):
                 if mview.choice + 1 > len(responses[mview.start : mview.end]):
                     await ctx.reply("Invalid selection. That shouldn't happen...")
                     raise Exception
+                if responses[mview.start : mview.end][mview.choice].endswith("- image"):
+                    try:
+                        await send_image(ctx, responses[mview.start : mview.end][mview.choice])
+                    except FileNotFoundError:
+                        pass
+                    item = "image"
+                else:
+                    item = f"response?: \n**{responses[mview.start : mview.end][mview.choice]}**"
                 emb = discord.Embed(
                     title="Delete response",
-                    description=f"Are you sure you want to delete this response?: \n**{responses[mview.start:mview.end][mview.choice]}**",
+                    description=f"Are you sure you want to delete this {item}",
                     color=color,
                 )
                 cview = confirmView(timeout=10)
@@ -581,9 +600,12 @@ async def delr(ctx, *arg: str):
                     if " - image" in responses[mview.start : mview.end][mview.choice]:
                         with suppress(FileNotFoundError):
                             image = responses[mview.start : mview.end][mview.choice].replace(" - image", "")
+                            name = image
                             os.remove(f"{here}\\images\\{image}")
+                    else:
+                        name = responses[mview.start : mview.end][mview.choice]
                     await ctx.reply(
-                        f"**'{responses[mview.start:mview.end][mview.choice]}'** was deleted. :thumbsup:",
+                        f"**'{name}'** was deleted. :thumbsup:",
                         mention_author=False,
                     )
                 if cview.cancel is True or cview.timeout is True:
