@@ -76,14 +76,17 @@ async def get_color(ctx):
     return color
 
 
-async def send_image(ctx, response: str):
+async def send_image(ctx, response: str, suppress: bool):
     try:
         image = response.replace(" - image", "")
         await ctx.reply(file=discord.File(f"{here}\\images\\{image}"), mention_author=False)
     except Exception:  # missing image
-        await ctx.reply("Error logged in send_image.")
-        ErrorLogger.run(traceback.format_exc())
-        return
+        if suppress is False:
+            await ctx.reply("Error logged in send_image.")
+            ErrorLogger.run(traceback.format_exc())
+            return
+        else:
+            return
 
 
 @bot.event
@@ -127,7 +130,7 @@ async def on_message(msg):
                         responses.append(current)
                 response = choice(responses).replace(r"\n", "\n")
                 if response.endswith("- image"):
-                    await send_image(ctx, response)
+                    await send_image(ctx, response, False)
                     return
                 await ctx.reply(response, mention_author=False)
                 return
@@ -523,10 +526,7 @@ async def delr(ctx, *arg: str):
                 await ctx.reply("Error: Selection out of range.")
                 return
             if responses[choice].endswith("- image"):
-                try:
-                    await send_image(ctx, responses[choice])
-                except FileNotFoundError:
-                    pass
+                await send_image(ctx, responses[choice], True)
                 item = "image?"
             else:
                 item = f"response?: \n**{responses[choice]}**"
@@ -576,10 +576,7 @@ async def delr(ctx, *arg: str):
                     await ctx.reply("Invalid selection. That shouldn't happen...")
                     raise Exception
                 if responses[mview.start : mview.end][mview.choice].endswith("- image"):
-                    try:
-                        await send_image(ctx, responses[mview.start : mview.end][mview.choice])
-                    except FileNotFoundError:
-                        pass
+                    await send_image(ctx, responses[mview.start : mview.end][mview.choice], True)
                     item = "image"
                 else:
                     item = f"response?: \n**{responses[mview.start : mview.end][mview.choice]}**"
@@ -815,7 +812,7 @@ async def rtest(ctx, arg: str):  # for testing responses
         return
     response = responses[choice].replace(r"\n", "\n")
     if response.endswith("- image"):
-        await send_image(ctx, response)
+        await send_image(ctx, response, False)
         return
     await ctx.reply(response, mention_author=False)
 
