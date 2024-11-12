@@ -35,6 +35,7 @@ class HD2(commands.Cog):
         self.planet_tasks = [11, 12, 13]
 
         self.retry = 15
+        self.update_cooldown = 600
 
     hd2 = app_commands.Group(name="hd2", description="...")
 
@@ -265,6 +266,8 @@ class HD2(commands.Cog):
                                                 json.dump(data, f, indent=4)
                                                 f.truncate()
                                                 break
+                                            else:
+                                                break
                                         else:
                                             aerror = True
                                             await asyncio.sleep(self.retry)
@@ -281,10 +284,10 @@ class HD2(commands.Cog):
                             owner = await self.bot.fetch_user(self.owner_id)
                             await owner.send(f"aresponse status code {aresponse.status}")
                     await asyncio.sleep(0)
-                await asyncio.sleep(3600)
+                await asyncio.sleep(self.update_cooldown)
             except ConnectionAbortedError:
                 ErrorLogger.run(traceback.format_exc())
-                await asyncio.sleep(600)
+                await asyncio.sleep(self.update_cooldown)
                 continue
             except Exception:
                 owner = await self.bot.fetch_user(self.owner_id)
