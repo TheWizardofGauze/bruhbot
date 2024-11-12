@@ -36,8 +36,8 @@ class Names(commands.Cog):
                         data = json.load(f)
                         name1 = choice(data["firstnames"])
                         name2 = choice(data["lastnames"])
-                        prefix = choice(data["prefix"]) if random() < 0.05 else ""
-                        suffix = choice(data["suffix"]) if random() < 0.05 else ""
+                        prefix = choice(data["prefix"]) if random() < 0.1 else ""
+                        suffix = choice(data["suffix"]) if random() < 0.1 else ""
                         name = f"{prefix} {name1} {name2} {suffix}".strip()
                         emb = discord.Embed(
                             title="Your Character's Name Is:",
