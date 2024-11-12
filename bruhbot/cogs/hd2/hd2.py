@@ -35,7 +35,7 @@ class HD2(commands.Cog):
         self.planet_tasks = [11, 12, 13]
 
         self.retry = 15
-        self.update_cooldown = 600
+        self.update_cooldown = 1800
 
     hd2 = app_commands.Group(name="hd2", description="...")
 
