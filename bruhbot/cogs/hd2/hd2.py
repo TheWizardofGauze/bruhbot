@@ -554,7 +554,7 @@ class HD2(commands.Cog):
                                     )
                                     attacker = planet["event"]["faction"].replace("Automaton", "Automatons")
                                     for p in planets:
-                                        if not p["attacking"]:
+                                        if not planet["attacking"]:
                                             attorigin = None
                                             break
                                         elif p["index"] == planet["attacking"][0]:
