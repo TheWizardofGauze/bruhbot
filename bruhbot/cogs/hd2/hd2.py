@@ -411,15 +411,15 @@ class HD2(commands.Cog):
                                                 rdelta = relativedelta(end, now)
                                                 time = f"{rdelta.days}D:{rdelta.hours}H:{rdelta.minutes}M:{rdelta.seconds}S"
                                                 attacker = p["event"]["faction"].replace("Automaton", "Automatons")
-                                                for p2 in p1j:
-                                                    if not p["attacking"]:
-                                                        attorigin = None
-                                                        break
-                                                    elif p2["index"] == p["attacking"][0]:
-                                                        attorigin = p2["name"]
-                                                        break
-                                                    else:
-                                                        attorigin = None
+                                                if not p["attacking"]:
+                                                    attorigin = None
+                                                else:
+                                                    for p2 in p1j:
+                                                        if p2["index"] == p["attacking"][0]:
+                                                            attorigin = p2["name"]
+                                                            break
+                                                        else:
+                                                            attorigin = None
                                                 lib = str(
                                                     round(
                                                         float(
@@ -553,15 +553,15 @@ class HD2(commands.Cog):
                                         .astimezone(tz=None)
                                     )
                                     attacker = planet["event"]["faction"].replace("Automaton", "Automatons")
-                                    for p in planets:
-                                        if not planet["attacking"]:
-                                            attorigin = None
-                                            break
-                                        elif p["index"] == planet["attacking"][0]:
-                                            attorigin = p["name"]
-                                            break
-                                        else:
-                                            attorigin = None
+                                    if not planet["attacking"]:
+                                        attorigin = None
+                                    else:
+                                        for p in planets:
+                                            if p["index"] == planet["attacking"][0]:
+                                                attorigin = p["name"]
+                                                break
+                                            else:
+                                                attorigin = None
                                     lib = str(
                                         round(
                                             float(
