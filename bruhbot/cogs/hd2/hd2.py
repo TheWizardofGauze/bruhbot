@@ -163,6 +163,16 @@ class HD2(commands.Cog):
                                                                         target = "Illuminate"
                                                                     case _:
                                                                         target = "Enemies"
+                                                            if task["valueTypes"][5] == 5 and task["values"][5] != 0:
+                                                                with open(self.file, "r", encoding="utf-8") as f:
+                                                                    data = json.load(f)
+                                                                    for weapon in data["weapon_ids"]:
+                                                                        if task["values"][5] == weapon["id"]:
+                                                                            t2 = f"with the {weapon['weapon']}"
+                                                                            break
+                                                                        else:
+                                                                            t2 = "with a specific weapon"
+                                                                    target = f"{target} {t2}"
                                                             objectives.append(
                                                                 f"-Eradicate {target} | {task['values'][2]:,}"
                                                             )
@@ -994,6 +1004,16 @@ class HD2(commands.Cog):
                                                             target = "Illuminate"
                                                         case _:
                                                             target = "Enemies"
+                                                if task["valueTypes"][5] == 5 and task["values"][5] != 0:
+                                                    with open(self.file, "r", encoding="utf-8") as f:
+                                                        data = json.load(f)
+                                                        for weapon in data["weapon_ids"]:
+                                                            if task["values"][5] == weapon["id"]:
+                                                                t2 = f"with the {weapon['weapon']}"
+                                                                break
+                                                            else:
+                                                                t2 = "with a specific weapon"
+                                                        target = f"{target} {t2}"
                                                 goal = task["values"][2]
                                                 objectives.append(
                                                     f"-Eradicate {target} | {prog[index]:,}/{goal:,} - {str(round(float((prog[index]/goal)*100),1))}%"
