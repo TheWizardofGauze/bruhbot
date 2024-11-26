@@ -6,8 +6,8 @@
             "ccid": 215041807946481664
         }
     ],
-    "dispatch_id": 3012,
-    "assign_id": 963668453,
+    "dispatch_id": 3027,
+    "assign_id": 1659376888,
     "target_ids": [
         {
             "id": 2514244534,
@@ -20,6 +20,20 @@
         {
             "id": 2058088313,
             "target": "Warriors"
+        }
+    ],
+    "weapon_ids": [
+        {
+            "id": 1978117092,
+            "weapon": "M-105 Stalwart"
+        },
+        {
+            "id": 934703916,
+            "weapon": "MG-43 Machine Gun"
+        },
+        {
+            "id": 4038802832,
+            "weapon": "MG-206 Heavy Machine Gun"
         }
     ]
 }
