@@ -40,13 +40,11 @@ class HD2(commands.Cog):
     hd2 = app_commands.Group(name="hd2", description="...")
 
     async def update(self):
-        async def dembed(
-            message: str,
-        ):
+        async def dembed(message: str, timestamp: datetime):
             try:
                 embed = discord.Embed(color=0x2E3C4B)
                 embed.description = message
-                embed.timestamp = datetime.now()
+                embed.timestamp = timestamp
                 return embed
             except Exception:
                 owner = await self.bot.fetch_user(self.owner_id)
@@ -73,7 +71,7 @@ class HD2(commands.Cog):
                 #     text=f"REWARD: {reward} MEDALS",
                 #     icon_url="attachment://medal.png",
                 # )
-                embed.timestamp = datetime.now()
+                # embed.timestamp = datetime.now()
                 return embed
             except Exception:
                 owner = await self.bot.fetch_user(self.owner_id)
@@ -102,7 +100,14 @@ class HD2(commands.Cog):
                                                     msg = d["message"]
                                                     for tag in tags:
                                                         msg = msg.replace(tag, "**")
-                                                    emb = await dembed(message=msg)
+                                                    ts = (
+                                                        datetime.strptime(
+                                                            d["published"][:19].strip(), "%Y-%m-%dT%H:%M:%S"
+                                                        )
+                                                        .replace(tzinfo=timezone.utc)
+                                                        .astimezone(tz=None)
+                                                    )
+                                                    emb = await dembed(message=msg, timestamp=ts)
                                                     await channel.send(embed=emb)
                                                     if not d["id"] == data["dispatch_id"]:
                                                         data["dispatch_id"] = d["id"]
@@ -164,15 +169,13 @@ class HD2(commands.Cog):
                                                                     case _:
                                                                         target = "Enemies"
                                                             if task["valueTypes"][5] == 5 and task["values"][5] != 0:
-                                                                with open(self.file, "r", encoding="utf-8") as f:
-                                                                    data = json.load(f)
-                                                                    for weapon in data["weapon_ids"]:
-                                                                        if task["values"][5] == weapon["id"]:
-                                                                            t2 = f"with the {weapon['weapon']}"
-                                                                            break
-                                                                        else:
-                                                                            t2 = "with a specific weapon"
-                                                                    target = f"{target} {t2}"
+                                                                for weapon in data["weapon_ids"]:
+                                                                    if task["values"][5] == weapon["id"]:
+                                                                        t2 = f"with the {weapon['weapon']}"
+                                                                        break
+                                                                    else:
+                                                                        t2 = "with a specific weapon"
+                                                                target = f"{target} {t2}"
                                                             objectives.append(
                                                                 f"-Eradicate {target} | {task['values'][2]:,}"
                                                             )
@@ -381,7 +384,7 @@ class HD2(commands.Cog):
                 embed.set_footer(text=f"{players} Helldivers", icon_url="attachment://hdlogo.png")
                 if major is True:
                     embed.set_author(name="MAJOR ORDER", icon_url="attachment://mologo.png")
-                embed.timestamp = datetime.now()
+                # embed.timestamp = datetime.now()
                 return embed
 
             await interaction.response.defer()
@@ -955,7 +958,7 @@ class HD2(commands.Cog):
                     #     text=f"REWARD: {reward} MEDALS",
                     #     icon_url="attachment://medal.png",
                     # )
-                    embed.timestamp = datetime.now()
+                    # embed.timestamp = datetime.now()
                     return embed
                 except Exception:
                     await interaction.followup.send("Error logged in HD2.")
