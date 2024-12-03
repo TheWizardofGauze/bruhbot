@@ -71,7 +71,6 @@ class HD2(commands.Cog):
                 #     text=f"REWARD: {reward} MEDALS",
                 #     icon_url="attachment://medal.png",
                 # )
-                # embed.timestamp = datetime.now()
                 return embed
             except Exception:
                 owner = await self.bot.fetch_user(self.owner_id)
@@ -192,9 +191,7 @@ class HD2(commands.Cog):
                                                             atype[acount] = 13
                                                             acount += 1
                                                         case 15:
-                                                            objectives.append(
-                                                                "-Capture more planets than the enemy."
-                                                            )  # unknown how this type works yet
+                                                            objectives.append("-Capture more planets than the enemy.")
                                                         case _:
                                                             owner = await self.bot.fetch_user(self.owner_id)
                                                             await owner.send(
@@ -384,7 +381,6 @@ class HD2(commands.Cog):
                 embed.set_footer(text=f"{players} Helldivers", icon_url="attachment://hdlogo.png")
                 if major is True:
                     embed.set_author(name="MAJOR ORDER", icon_url="attachment://mologo.png")
-                # embed.timestamp = datetime.now()
                 return embed
 
             await interaction.response.defer()
@@ -690,12 +686,9 @@ class HD2(commands.Cog):
                             if not aplanetdata == {}:
                                 aembl = []
                                 aembl2 = []
-                                morder = None
-                                major2 = None
                                 for planet in aplanetdata:
                                     if aplanetdata[planet]["index"] in mo:
                                         major = True
-                                        major2 = True
                                     else:
                                         major = False
                                     emb = await embed(
@@ -720,6 +713,7 @@ class HD2(commands.Cog):
                                     aembll = [aembl, aembl2]
                                 for elist in aembll:
                                     if elist:
+                                        morder = None
                                         afiles = set()
                                         hdlogo = discord.File(
                                             f"{self.here}\\images\\Helldivers.png",
@@ -731,22 +725,21 @@ class HD2(commands.Cog):
                                             filename="alogo.png",
                                         )
                                         afiles.add(alogo)
-                                        if major2 is not None and morder is None:
-                                            morder = discord.File(
-                                                f"{self.here}\\images\\MajorOrder.png",
-                                                filename="mologo.png",
-                                            )
-                                            afiles.add(morder)
+                                        for e in elist:
+                                            if e.author and morder is None:
+                                                morder = discord.File(
+                                                    f"{self.here}\\images\\MajorOrder.png",
+                                                    filename="mologo.png",
+                                                )
+                                                afiles.add(morder)
+                                                break
                                         await interaction.followup.send(files=afiles, embeds=elist)
                             if not tplanetdata == {}:
                                 tembl = []
                                 tembl2 = []
-                                morder = None
-                                major2 = None
                                 for planet in tplanetdata:
                                     if tplanetdata[planet]["index"] in mo:
                                         major = True
-                                        major2 = True
                                     else:
                                         major = False
                                     emb = await embed(
@@ -771,6 +764,7 @@ class HD2(commands.Cog):
                                     tembll = [tembl, tembl2]
                                 for elist in tembll:
                                     if elist:
+                                        morder = None
                                         tfiles = set()
                                         hdlogo = discord.File(
                                             f"{self.here}\\images\\Helldivers.png",
@@ -782,22 +776,21 @@ class HD2(commands.Cog):
                                             filename="tlogo.png",
                                         )
                                         tfiles.add(tlogo)
-                                        if major2 is not None and morder is None:
-                                            morder = discord.File(
-                                                f"{self.here}\\images\\MajorOrder.png",
-                                                filename="mologo.png",
-                                            )
-                                            tfiles.add(morder)
+                                        for e in elist:
+                                            if e.author and morder is None:
+                                                morder = discord.File(
+                                                    f"{self.here}\\images\\MajorOrder.png",
+                                                    filename="mologo.png",
+                                                )
+                                                tfiles.add(morder)
+                                                break
                                         await interaction.followup.send(files=tfiles, embeds=elist)
                             if not iplanetdata == {}:
                                 iembl = []
                                 iembl2 = []
-                                morder = None
-                                major2 = None
                                 for planet in iplanetdata:
                                     if iplanetdata[planet]["index"] in mo:
                                         major = True
-                                        major2 = True
                                     else:
                                         major = False
                                     emb = await embed(
@@ -822,6 +815,7 @@ class HD2(commands.Cog):
                                     iembll = [iembl, iembl2]
                                 for elist in iembll:
                                     if elist:
+                                        morder = None
                                         ifiles = set()
                                         hdlogo = discord.File(
                                             f"{self.here}\\images\\Helldivers.png",
@@ -833,22 +827,21 @@ class HD2(commands.Cog):
                                             filename="ilogo.png",
                                         )
                                         ifiles.add(ilogo)
-                                        if major2 is not None and morder is None:
-                                            morder = discord.File(
-                                                f"{self.here}\\images\\MajorOrder.png",
-                                                filename="mologo.png",
-                                            )
-                                            ifiles.add(morder)
+                                        for e in elist:
+                                            if e.author and morder is None:
+                                                morder = discord.File(
+                                                    f"{self.here}\\images\\MajorOrder.png",
+                                                    filename="mologo.png",
+                                                )
+                                                tfiles.add(morder)
+                                                break
                                         await interaction.followup.send(files=ifiles, embeds=elist)
                             if not seplanetdata == {}:
                                 seembl = []
                                 seembl2 = []
-                                morder = None
-                                major2 = None
                                 for planet in seplanetdata:
                                     if seplanetdata[planet]["index"] in mo:
                                         major = True
-                                        major2 = True
                                     else:
                                         major = False
                                     now = datetime.now(UTC)
@@ -876,6 +869,7 @@ class HD2(commands.Cog):
                                     seembll = [seembl, seembl2]
                                 for elist in seembll:
                                     if elist:
+                                        morder = None
                                         sefiles = set()
                                         hdlogo = discord.File(
                                             f"{self.here}\\images\\Helldivers.png",
@@ -887,12 +881,14 @@ class HD2(commands.Cog):
                                             filename="selogo.png",
                                         )
                                         sefiles.add(selogo)
-                                        if major2 is not None and morder is None:
-                                            morder = discord.File(
-                                                f"{self.here}\\images\\MajorOrder.png",
-                                                filename="mologo.png",
-                                            )
-                                            sefiles.add(morder)
+                                        for e in elist:
+                                            if e.author and morder is None:
+                                                morder = discord.File(
+                                                    f"{self.here}\\images\\MajorOrder.png",
+                                                    filename="mologo.png",
+                                                )
+                                                tfiles.add(morder)
+                                                break
                                         await interaction.followup.send(files=sefiles, embeds=elist)
 
                         else:
@@ -958,7 +954,6 @@ class HD2(commands.Cog):
                     #     text=f"REWARD: {reward} MEDALS",
                     #     icon_url="attachment://medal.png",
                     # )
-                    # embed.timestamp = datetime.now()
                     return embed
                 except Exception:
                     await interaction.followup.send("Error logged in HD2.")
