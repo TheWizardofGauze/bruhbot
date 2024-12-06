@@ -525,16 +525,17 @@ async def delr(ctx, *arg: str):
             except IndexError:
                 await ctx.reply("Error: Selection out of range.")
                 return
-            if responses[choice].endswith("- image"):
-                await send_image(ctx, responses[choice], True)
-                item = "image?"
-            else:
-                item = f"response?: \n**{responses[choice]}**"
-            emb = discord.Embed(
-                title="Delete response",
-                description=f"Are you sure you want to delete this {item}",
-                color=color,
-            )
+            async with ctx.typing():
+                if responses[choice].endswith("- image"):
+                    await send_image(ctx, responses[choice], True)
+                    item = "image?"
+                else:
+                    item = f"response?: \n**{responses[choice]}**"
+                emb = discord.Embed(
+                    title="Delete response",
+                    description=f"Are you sure you want to delete this {item}",
+                    color=color,
+                )
             cview = confirmView(timeout=10)
             msg = await ctx.send(embed=emb, view=cview)
             cview.msg = msg
@@ -575,16 +576,17 @@ async def delr(ctx, *arg: str):
                 if mview.choice + 1 > len(responses[mview.start : mview.end]):
                     await ctx.reply("Invalid selection. That shouldn't happen...")
                     raise Exception
-                if responses[mview.start : mview.end][mview.choice].endswith("- image"):
-                    await send_image(ctx, responses[mview.start : mview.end][mview.choice], True)
-                    item = "image"
-                else:
-                    item = f"response?: \n**{responses[mview.start : mview.end][mview.choice]}**"
-                emb = discord.Embed(
-                    title="Delete response",
-                    description=f"Are you sure you want to delete this {item}",
-                    color=color,
-                )
+                async with ctx.typing():
+                    if responses[mview.start : mview.end][mview.choice].endswith("- image"):
+                        await send_image(ctx, responses[mview.start : mview.end][mview.choice], True)
+                        item = "image"
+                    else:
+                        item = f"response?: \n**{responses[mview.start : mview.end][mview.choice]}**"
+                    emb = discord.Embed(
+                        title="Delete response",
+                        description=f"Are you sure you want to delete this {item}",
+                        color=color,
+                    )
                 cview = confirmView(timeout=10)
                 msg = await ctx.send(embed=emb, view=cview)
                 cview.msg = msg
