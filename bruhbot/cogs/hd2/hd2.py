@@ -471,7 +471,7 @@ class HD2(commands.Cog):
                                                         filename="ilogo.png",
                                                     )
                                                     files.add(ilogo)
-                                                    color = 0x000000  # 0x9023FF possibly?
+                                                    color = 0x9729FF
                                             lib = str(
                                                 round(
                                                     float((p["maxHealth"] - p["health"]) / (p["maxHealth"]) * 100),
@@ -802,7 +802,7 @@ class HD2(commands.Cog):
                                         None,
                                         None,
                                         None,
-                                        0x000000,  # 0x9023FF possibly?
+                                        0x9729FF,
                                         iplanetdata[planet]["biome"],
                                         iplanetdata[planet]["hazards"],
                                         None,
