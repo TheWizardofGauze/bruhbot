@@ -39,6 +39,9 @@ class HD2(commands.Cog):
 
     hd2 = app_commands.Group(name="hd2", description="...")
 
+    async def plural(self, num: int):
+        return 0 if num == 1 else 1
+
     async def update(self):
         async def dembed(message: str, timestamp: datetime):
             try:
@@ -179,6 +182,20 @@ class HD2(commands.Cog):
                                                                 f"-Eradicate {target} | {task['values'][2]:,}"
                                                             )
                                                         case 12:
+                                                            if task["values"][3] != 0:
+                                                                async with session.get(
+                                                                    f"{self.api}/planets/{task['values'][3]}"
+                                                                ) as piresponse:
+                                                                    pij = await piresponse.json()
+                                                                    if piresponse.status == 200:
+                                                                        pname = pij["name"]
+                                                                    else:
+                                                                        objectives.append(
+                                                                            f"-Defend Planet | {str(task['values'][0])}"
+                                                                        )
+                                                                objectives.append(
+                                                                    f"-Defend {pname} from {task['values'][0]} {['attack', 'attacks'][await self.plural(task['values'][0])]}"
+                                                                )
                                                             objectives.append(
                                                                 f"-Defend Planets | {str(task['values'][0])}"
                                                             )
@@ -1018,9 +1035,24 @@ class HD2(commands.Cog):
                                                 )
                                             case 12:  # defend
                                                 goal = task["values"][0]
-                                                objectives.append(
-                                                    f"-Defend Planets | {prog[index]}/{goal} - {str(round(float((prog[index]/goal)*100),1))}%"
-                                                )
+                                                if task["values"][3] != 0:
+                                                    async with session.get(
+                                                        f"{self.api}/planets/{task['values'][3]}"
+                                                    ) as piresponse:
+                                                        pij = await piresponse.json()
+                                                        if piresponse.status == 200:
+                                                            pname = pij["name"]
+                                                        else:
+                                                            objectives.append(
+                                                                f"-Defend Planet from {goal} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]}/{goal} - {str(round(float((prog[index]/goal)*100),1))}%"
+                                                            )
+                                                    objectives.append(
+                                                        f"-Defend {pname} from {goal} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]}/{goal} - {str(round(float((prog[index]/goal)*100),1))}%"
+                                                    )
+                                                else:
+                                                    objectives.append(
+                                                        f"-Defend Planets | {prog[index]}/{goal} - {str(round(float((prog[index]/goal)*100),1))}%"
+                                                    )
                                             case 11:  # liberate
                                                 pindex.append(task["values"][2])
                                                 atype[acount] = 11
@@ -1050,56 +1082,57 @@ class HD2(commands.Cog):
                                                 ErrorLogger.run(str(aj))
                                                 return
                                         index += 1
-                                    async with session.get(f"{self.api}/planets") as presponse:
-                                        if presponse.status == 200:
-                                            perror = False
-                                            pj = await presponse.json()
-                                            for i, j in enumerate(pindex):
-                                                for p in pj:
-                                                    if p["index"] == j:
-                                                        if prog[i] == 0 and p["currentOwner"] != "Humans":
-                                                            lib = str(
-                                                                round(
-                                                                    float(
-                                                                        (p["maxHealth"] - p["health"])
-                                                                        / (p["maxHealth"])
-                                                                        * 100
-                                                                    ),
-                                                                    5,
-                                                                )
-                                                            )
-                                                            name = f"{p['name']} | {lib}%"
-                                                        else:
-                                                            if p["event"] is not None:
+                                    if pindex:
+                                        async with session.get(f"{self.api}/planets") as presponse:
+                                            if presponse.status == 200:
+                                                perror = False
+                                                pj = await presponse.json()
+                                                for i, j in enumerate(pindex):
+                                                    for p in pj:
+                                                        if p["index"] == j:
+                                                            if prog[i] == 0 and p["currentOwner"] != "Humans":
                                                                 lib = str(
                                                                     round(
                                                                         float(
-                                                                            (
-                                                                                p["event"]["maxHealth"]
-                                                                                - p["event"]["health"]
-                                                                            )
-                                                                            / (p["event"]["maxHealth"])
+                                                                            (p["maxHealth"] - p["health"])
+                                                                            / (p["maxHealth"])
                                                                             * 100
                                                                         ),
                                                                         5,
                                                                     )
                                                                 )
-                                                                name = f"{p['name']} | ⚠ {lib}%"
+                                                                name = f"{p['name']} | {lib}%"
                                                             else:
-                                                                name = f"{p['name']} | ✓"
-                                                        match atype[i]:
-                                                            case 11:
-                                                                objectives.append(f"-Liberate {name}")
-                                                            case 13:
-                                                                objectives.append(f"-Hold {name}")
-                                                            case _:
-                                                                objectives.append(name)
-                                        else:
-                                            perror = True
-                                            await asyncio.sleep(self.retry)
-                                            continue
-                                    if perror is True and perror is not None:
-                                        await interaction.followup.send(f"presponse status code {presponse.status}")
+                                                                if p["event"] is not None:
+                                                                    lib = str(
+                                                                        round(
+                                                                            float(
+                                                                                (
+                                                                                    p["event"]["maxHealth"]
+                                                                                    - p["event"]["health"]
+                                                                                )
+                                                                                / (p["event"]["maxHealth"])
+                                                                                * 100
+                                                                            ),
+                                                                            5,
+                                                                        )
+                                                                    )
+                                                                    name = f"{p['name']} | ⚠ {lib}%"
+                                                                else:
+                                                                    name = f"{p['name']} | ✓"
+                                                            match atype[i]:
+                                                                case 11:
+                                                                    objectives.append(f"-Liberate {name}")
+                                                                case 13:
+                                                                    objectives.append(f"-Hold {name}")
+                                                                case _:
+                                                                    objectives.append(name)
+                                            else:
+                                                perror = True
+                                                await asyncio.sleep(self.retry)
+                                                continue
+                                        if perror is True and perror is not None:
+                                            await interaction.followup.send(f"presponse status code {presponse.status}")
                                     title = aj["title"] if aj["title"] is not None else ""
                                     briefing = aj["briefing"] if aj["briefing"] is not None else ""
                                     desc = aj["description"] if aj["description"] is not None else ""
