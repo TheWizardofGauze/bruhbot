@@ -377,7 +377,7 @@ class HD2(commands.Cog):
                     bar1 = "█" * int((math.floor(float(liberation)) / 10))
                     bar3 = "▁" * (10 - len(bar1) - 1)
                     embed.add_field(name="Liberation:", value=f"{bar1}▒{bar3} │ {liberation}%")
-                    embed.add_field(name="Regen Per Hour:", value=f"{regen}%", inline=False)
+                    embed.add_field(name="Enemy Resistance:", value=f"{regen}%", inline=False)
                     if owner == "Automaton":
                         embed.set_thumbnail(url="attachment://alogo.png")
                     elif owner == "Terminid":
@@ -438,14 +438,14 @@ class HD2(commands.Cog):
                                                 time = f"{rdelta.days}D:{rdelta.hours}H:{rdelta.minutes}M:{rdelta.seconds}S"
                                                 attacker = p["event"]["faction"].replace("Automaton", "Automatons")
                                                 if not p["attacking"]:
-                                                    attorigin = None
+                                                    attorigin = "Unknown"
                                                 else:
                                                     for p2 in p1j:
                                                         if p2["index"] == p["attacking"][0]:
                                                             attorigin = p2["name"]
                                                             break
                                                         else:
-                                                            attorigin = None
+                                                            attorigin = "Unknown"
                                                 lib = str(
                                                     round(
                                                         float(
@@ -580,14 +580,14 @@ class HD2(commands.Cog):
                                     )
                                     attacker = planet["event"]["faction"].replace("Automaton", "Automatons")
                                     if not planet["attacking"]:
-                                        attorigin = None
+                                        attorigin = "Unknown"
                                     else:
                                         for p in planets:
                                             if p["index"] == planet["attacking"][0]:
                                                 attorigin = p["name"]
                                                 break
                                             else:
-                                                attorigin = None
+                                                attorigin = "Unknown"
                                     lib = str(
                                         round(
                                             float(
