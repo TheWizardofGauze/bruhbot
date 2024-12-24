@@ -148,6 +148,9 @@ async def on_message(msg):
 @bot.command()
 async def addr(ctx, *, arg: str = None):
     try:
+        if len(ctx.message.clean_content) > 2000:
+            await ctx.reply("Error: Response must be 2000 characters or less.", mention_author=False)
+            return
         if ctx.message.attachments or ctx.message.reference:  # image support
             if ctx.message.reference:
                 attachments = ctx.message.reference.resolved.attachments
