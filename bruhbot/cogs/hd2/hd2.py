@@ -159,7 +159,15 @@ class HD2(commands.Cog):
                                                                         target = target["target"]
                                                                         break
                                                                     else:
-                                                                        target = "Enemies"
+                                                                        match task["values"][0]:
+                                                                            case 2:
+                                                                                target = "Unknown Terminids"
+                                                                            case 3:
+                                                                                target = "Unknown Automatons"
+                                                                            case 4:
+                                                                                target = "Unknown Illuminate"
+                                                                            case _:
+                                                                                target = "Enemies"
                                                             else:
                                                                 match task["values"][0]:
                                                                     case 2:
@@ -1008,7 +1016,15 @@ class HD2(commands.Cog):
                                                                 target = target["target"]
                                                                 break
                                                             else:
-                                                                target = "Enemies"
+                                                                match task["values"][0]:
+                                                                    case 2:
+                                                                        target = "Unknown Terminids"
+                                                                    case 3:
+                                                                        target = "Unknown Automatons"
+                                                                    case 4:
+                                                                        target = "Unknown Illuminate"
+                                                                    case _:
+                                                                        target = "Enemies"
                                                 else:
                                                     match task["values"][0]:
                                                         case 2:
