@@ -6,8 +6,8 @@
             "ccid": 215041807946481664
         }
     ],
-    "dispatch_id": 3056,
-    "assign_id": 560191010,
+    "dispatch_id": 3065,
+    "assign_id": 123897210,
     "target_ids": [
         {
             "id": 2514244534,
@@ -20,6 +20,14 @@
         {
             "id": 2058088313,
             "target": "Warriors"
+        },
+        {
+            "id": 4211847317,
+            "target": "Voteless"
+        },
+        {
+            "id": 1405979473,
+            "target": "Harvesters"
         }
     ],
     "weapon_ids": [
