@@ -110,7 +110,6 @@ class OPBR(commands.Cog):
                                     title=self.title,
                                     description=f"**A contestant has advanced!**\n{name} is now {age} years old.",
                                     color=color,
-                                    url=self.url,
                                 )
                                 await ctx.send(embed=msg)
                                 data[name]["age"] = age
@@ -132,7 +131,6 @@ class OPBR(commands.Cog):
                     title=self.title,
                     description=f"**Victory Royale!**\n{winner} has won the battle royale at {age} years old.",
                     color=color,
-                    url=self.url,
                 )
                 await ctx.send(embed=msg)
         except Exception:
