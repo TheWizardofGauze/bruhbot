@@ -1,5 +1,5 @@
 {
-    "updated": "12/04/2024 06:36 PM",
+    "updated": "01/12/2025 11:18 PM",
     "names": [
         "Tony Bennett",
         "Betty White",
@@ -76,7 +76,7 @@
     },
     "Dick Van Dyke": {
         "id": "Q310295",
-        "age": 98,
+        "age": 99,
         "dead": 0
     },
     "Cicely Tyson": {
@@ -187,7 +187,7 @@
     "Jimmy Carter": {
         "id": "Q23685",
         "age": 100,
-        "dead": 0
+        "dead": 1
     },
     "John Williams": {
         "id": "Q131285",
