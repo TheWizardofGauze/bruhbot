@@ -104,7 +104,8 @@ async def on_message(msg):
         ctx = await bot.get_context(msg)
         if ctx.author.bot or ctx.channel.id == ignored_channel:
             return
-        nospace = re.sub("[^a-zA-Z0-9]", "", msg.content).lower()
+        notag = re.sub(r"<.*?>", "", msg.content)
+        nospace = re.sub("[^a-zA-Z0-9]", "", notag).lower()
         name = re.sub("[^a-zA-Z0-9]", "", ctx.me.display_name).lower()
         top_role = str(ctx.guild.get_member(bot.user.id).top_role.id) if ctx.guild else None
 
