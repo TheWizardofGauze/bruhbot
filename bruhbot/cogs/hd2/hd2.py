@@ -152,6 +152,31 @@ class HD2(commands.Cog):
                                                 acount = 0
                                                 for task in tasks:
                                                     match task["type"]:
+                                                        case 2:
+                                                            if (
+                                                                task["valueTypes"][4] == 5
+                                                                and task["valueTypes"][4] != 0
+                                                            ):
+                                                                for sample in data["sample_ids"]:
+                                                                    if task["values"][4] == sample["id"]:
+                                                                        samples = sample["sample"]
+                                                            else:
+                                                                sample = "Unknown Samples"
+                                                            if (
+                                                                task["valueTypes"][8] == 12
+                                                                and task["valueTypes"][8] != 0
+                                                            ):
+                                                                async with session.get(
+                                                                    f"{self.api}/planets/{task['values'][8]}"
+                                                                ) as psresponse:
+                                                                    psj = await psresponse.json()
+                                                                    if psresponse.status == 200:
+                                                                        pname = f" on {psj['name']}"
+                                                            else:
+                                                                pname = ""
+                                                            objectives.append(
+                                                                f"Collect {samples}{pname} | {task['values'][2]:,}"
+                                                            )
                                                         case 3:
                                                             if task["valueTypes"][3] == 4 and task["values"][3] != 0:
                                                                 for target in data["target_ids"]:
@@ -1007,6 +1032,28 @@ class HD2(commands.Cog):
                                     index = 0
                                     for task in tasks:
                                         match task["type"]:
+                                            case 2:  # collect
+                                                if task["valueTypes"][4] == 5 and task["valueTypes"][4] != 0:
+                                                    with open(self.file, "r", encoding="utf-8") as f:
+                                                        data = json.load(f)
+                                                        for sample in data["sample_ids"]:
+                                                            if task["values"][4] == sample["id"]:
+                                                                samples = sample["sample"]
+                                                else:
+                                                    sample = "Unknown Samples"
+                                                if task["valueTypes"][8] == 12 and task["valueTypes"][8] != 0:
+                                                    async with session.get(
+                                                        f"{self.api}/planets/{task['values'][8]}"
+                                                    ) as psresponse:
+                                                        psj = await psresponse.json()
+                                                        if psresponse.status == 200:
+                                                            pname = f" on {psj['name']}"
+                                                else:
+                                                    pname = ""
+                                                goal = task["values"][2]
+                                                objectives.append(
+                                                    f"Collect {samples}{pname} | {prog[index]:,}/{goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                )
                                             case 3:  # eradicate
                                                 if task["valueTypes"][3] == 4 and task["values"][3] != 0:
                                                     with open(self.file, "r", encoding="utf-8") as f:
@@ -1047,7 +1094,7 @@ class HD2(commands.Cog):
                                                         target = f"{target} {t2}"
                                                 goal = task["values"][2]
                                                 objectives.append(
-                                                    f"-Eradicate {target} | {prog[index]:,}/{goal:,} - {str(round(float((prog[index]/goal)*100),1))}%"
+                                                    f"-Eradicate {target} | {prog[index]:,}/{goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                 )
                                             case 12:  # defend
                                                 goal = task["values"][0]
@@ -1060,14 +1107,14 @@ class HD2(commands.Cog):
                                                             pname = pij["name"]
                                                         else:
                                                             objectives.append(
-                                                                f"-Defend Planet from {goal} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]}/{goal} - {str(round(float((prog[index]/goal)*100),1))}%"
+                                                                f"-Defend Planet from {goal} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]}/{goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                             )
                                                     objectives.append(
-                                                        f"-Defend {pname} from {goal} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]}/{goal} - {str(round(float((prog[index]/goal)*100),1))}%"
+                                                        f"-Defend {pname} from {goal} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]}/{goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                     )
                                                 else:
                                                     objectives.append(
-                                                        f"-Defend Planets | {prog[index]}/{goal} - {str(round(float((prog[index]/goal)*100),1))}%"
+                                                        f"-Defend Planets | {prog[index]}/{goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                     )
                                             case 11:  # liberate
                                                 pindex.append(task["values"][2])

@@ -6,8 +6,8 @@
             "ccid": 215041807946481664
         }
     ],
-    "dispatch_id": 3075,
-    "assign_id": 1693742226,
+    "dispatch_id": 3079,
+    "assign_id": 2943476110,
     "target_ids": [
         {
             "id": 2514244534,
@@ -42,6 +42,16 @@
         {
             "id": 4038802832,
             "weapon": "MG-206 Heavy Machine Gun"
+        }
+    ],
+    "sample_ids": [
+        {
+            "id": 3992382197,
+            "sample": "Common Samples"
+        },
+        {
+            "id": 2985106497,
+            "sample": "Rare Samples"
         }
     ]
 }
