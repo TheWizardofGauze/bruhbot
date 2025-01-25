@@ -175,7 +175,7 @@ class HD2(commands.Cog):
                                                             else:
                                                                 pname = ""
                                                             objectives.append(
-                                                                f"Collect {samples}{pname} | {task['values'][2]:,}"
+                                                                f"-Collect {samples}{pname} | {task['values'][2]:,}"
                                                             )
                                                         case 3:
                                                             if task["valueTypes"][3] == 4 and task["values"][3] != 0:
@@ -1052,7 +1052,7 @@ class HD2(commands.Cog):
                                                     pname = ""
                                                 goal = task["values"][2]
                                                 objectives.append(
-                                                    f"Collect {samples}{pname} | {prog[index]:,}/{goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                    f"-Collect {samples}{pname} | {prog[index]:,}/{goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                 )
                                             case 3:  # eradicate
                                                 if task["valueTypes"][3] == 4 and task["values"][3] != 0:
