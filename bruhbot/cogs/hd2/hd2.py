@@ -446,7 +446,40 @@ class HD2(commands.Cog):
                                     return
                                 for p in p1j:
                                     if planet.lower() == p["name"].lower():
+                                        for i in range(3):
+                                            async with session.get(f"{self.api}/assignments") as a1response:
+                                                if a1response.status == 200:
+                                                    a1error = False
+                                                    a1j = await a1response.json()
+                                                    mo = []
+                                                    if a1j == []:
+                                                        await interaction.followup.send("a1response returned empty")
+                                                        break
+                                                    else:
+                                                        for t in a1j[0]["tasks"]:
+                                                            if t["type"] in self.planet_tasks:
+                                                                mo.append(t["values"][2])
+                                                            else:
+                                                                continue
+                                                    break
+                                                else:
+                                                    a1error = True
+                                                    await asyncio.sleep(self.retry)
+                                                    continue
+                                        if a1error is True and a1error is not None:
+                                            await interaction.followup.send(
+                                                f"a1response status code {a1response.status}. Failed after 3 tries."
+                                            )
+                                            return
                                         files = set()
+                                        if p["index"] in mo:
+                                            major = True
+                                            morder = discord.File(
+                                                f"{self.here}\\images\\MajorOrder.png", filename="mologo.png"
+                                            )
+                                            files.add(morder)
+                                        else:
+                                            major = False
                                         if p["currentOwner"] == "Humans":
                                             owner = "Super Earth"
                                             selogo = discord.File(
@@ -551,7 +584,7 @@ class HD2(commands.Cog):
                                             owner,
                                             lib,
                                             p["statistics"]["playerCount"],
-                                            None,
+                                            major,
                                             time,
                                             attacker,
                                             attorigin,
@@ -729,7 +762,7 @@ class HD2(commands.Cog):
                                         continue
                             if a2error is True and a2error is not None:
                                 await interaction.followup.send(
-                                    f"aresponse status code {a2response.status}. Failed after 3 tries."
+                                    f"a2response status code {a2response.status}. Failed after 3 tries."
                                 )
                                 return
 
