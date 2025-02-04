@@ -19,3 +19,4 @@ __pycache__/
 *.py[cod]
 bruhbot/responses.txt
 bruhbot/.megaignore
+bruhbot/desktop.ini
