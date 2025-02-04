@@ -18,3 +18,4 @@ images
 __pycache__/
 *.py[cod]
 bruhbot/responses.txt
+bruhbot/.megaignore
