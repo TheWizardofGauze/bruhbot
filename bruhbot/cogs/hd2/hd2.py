@@ -215,6 +215,19 @@ class HD2(commands.Cog):
                                                                 f"-Eradicate {target} | {task['values'][2]:,}"
                                                             )
                                                         case 12:
+                                                            if task["values"][1] != 0:
+                                                                match task["values"][1]:
+                                                                    case 2:
+                                                                        invader = "Terminid"
+                                                                    case 3:
+                                                                        invader = "Automaton"
+                                                                    case 4:
+                                                                        invader = "Illuminate"
+                                                                    case _:
+                                                                        invader = "[Unknown]"
+                                                                faction = f" from {invader} invasion"
+                                                            else:
+                                                                faction = ""
                                                             if task["values"][3] != 0:
                                                                 async with session.get(
                                                                     f"{self.api}/planets/{task['values'][3]}"
@@ -230,7 +243,7 @@ class HD2(commands.Cog):
                                                                     f"-Defend {pname} from {task['values'][0]} {['attack', 'attacks'][await self.plural(task['values'][0])]}"
                                                                 )
                                                             objectives.append(
-                                                                f"-Defend Planets | {str(task['values'][0])}"
+                                                                f"-Defend Planets{faction} | {str(task['values'][0])}"
                                                             )
                                                         case 11:
                                                             pindex.append(task["values"][2])
@@ -1131,6 +1144,19 @@ class HD2(commands.Cog):
                                                 )
                                             case 12:  # defend
                                                 goal = task["values"][0]
+                                                if task["values"][1] != 0:
+                                                    match task["values"][1]:
+                                                        case 2:
+                                                            invader = "Terminid"
+                                                        case 3:
+                                                            invader = "Automaton"
+                                                        case 4:
+                                                            invader = "Illuminate"
+                                                        case _:
+                                                            invader = "[Unknown]"
+                                                    faction = f" from {invader} invasion"
+                                                else:
+                                                    faction = ""
                                                 if task["values"][3] != 0:
                                                     async with session.get(
                                                         f"{self.api}/planets/{task['values'][3]}"
@@ -1147,7 +1173,7 @@ class HD2(commands.Cog):
                                                     )
                                                 else:
                                                     objectives.append(
-                                                        f"-Defend Planets | {prog[index]}/{goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                        f"-Defend Planets{faction} | {prog[index]}/{goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                     )
                                             case 11:  # liberate
                                                 pindex.append(task["values"][2])
