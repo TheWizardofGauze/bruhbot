@@ -410,18 +410,16 @@ class HD2(commands.Cog):
                 embed = discord.Embed(color=color)
                 embed.title = name
                 embed.description = f"{owner} control"
+                bar1 = "█" * int((math.floor(float(liberation)) / 10))
+                bar3 = "▁" * (10 - len(bar1) - 1)
                 if owner == "Super Earth":
                     if event is not None:
-                        bar1 = "█" * int((math.floor(float(liberation)) / 10))
-                        bar3 = "▁" * (10 - len(bar1) - 1)
                         embed.add_field(name="Attacker:", value=attacker)
                         embed.add_field(name="Attack Origin:", value=attorigin)
                         embed.add_field(name="Time Remaining:", value=time, inline=False)
                         embed.add_field(name="Defense:", value=f"{bar1}▒{bar3} │ {liberation}%")
                     embed.set_thumbnail(url="attachment://selogo.png")
                 else:
-                    bar1 = "█" * int((math.floor(float(liberation)) / 10))
-                    bar3 = "▁" * (10 - len(bar1) - 1)
                     embed.add_field(name="Liberation:", value=f"{bar1}▒{bar3} │ {liberation}%")
                     embed.add_field(name="Enemy Resistance:", value=f"{regen}%", inline=False)
                     if owner == "Automaton":
