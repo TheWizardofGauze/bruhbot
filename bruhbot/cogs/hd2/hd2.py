@@ -33,6 +33,7 @@ class HD2(commands.Cog):
         load_dotenv(os.path.abspath(".\\bruhbot\\.env"))
         self.owner_id = int(os.getenv("OWNER_ID"))
         self.planet_tasks = [11, 12, 13]
+        self.colors = {"SE": 0xB5D9E9, "DP": 0x2E3C4B, "AT": 0xFF6161, "TR": 0xFFB800, "IL": 0x9729FF}
 
         self.retry = 15
         self.update_cooldown = 1800
@@ -45,7 +46,7 @@ class HD2(commands.Cog):
     async def update(self):
         async def dembed(message: str, timestamp: datetime):
             try:
-                embed = discord.Embed(color=0x2E3C4B)
+                embed = discord.Embed(color=self.colors["DP"])
                 embed.description = message
                 embed.timestamp = timestamp
                 return embed
@@ -64,7 +65,7 @@ class HD2(commands.Cog):
         ):
             try:
                 objective = "\n".join(objectives)
-                embed = discord.Embed(color=0xB5D9E9)
+                embed = discord.Embed(color=self.colors["SE"])
                 embed.title = title
                 embed.description = briefing
                 embed.add_field(name=description, value=objective)
@@ -498,7 +499,7 @@ class HD2(commands.Cog):
                                                 filename="selogo.png",
                                             )
                                             files.add(selogo)
-                                            color = 0xB5D9E9
+                                            color = self.colors["SE"]
                                             regen = None
                                             if p["event"] is not None:
                                                 event = True
@@ -549,7 +550,7 @@ class HD2(commands.Cog):
                                                         filename="tlogo.png",
                                                     )
                                                     files.add(tlogo)
-                                                    color = 0xFFB800
+                                                    color = self.colors["TR"]
                                                 case "Automaton":
                                                     owner = p["currentOwner"]
                                                     alogo = discord.File(
@@ -557,7 +558,7 @@ class HD2(commands.Cog):
                                                         filename="alogo.png",
                                                     )
                                                     files.add(alogo)
-                                                    color = 0xFF6161
+                                                    color = self.colors["AT"]
                                                 case "Illuminate":
                                                     owner = p["currentOwner"]
                                                     ilogo = discord.File(
@@ -565,7 +566,7 @@ class HD2(commands.Cog):
                                                         filename="ilogo.png",
                                                     )
                                                     files.add(ilogo)
-                                                    color = 0x9729FF
+                                                    color = self.colors["IL"]
                                             lib = str(
                                                 round(
                                                     float((p["maxHealth"] - p["health"]) / (p["maxHealth"]) * 100),
@@ -794,7 +795,7 @@ class HD2(commands.Cog):
                                         None,
                                         None,
                                         None,
-                                        0xFF6161,
+                                        self.colors["AT"],
                                         aplanetdata[planet]["biome"],
                                         aplanetdata[planet]["hazards"],
                                         None,
@@ -845,7 +846,7 @@ class HD2(commands.Cog):
                                         None,
                                         None,
                                         None,
-                                        0xFFB800,
+                                        self.colors["TR"],
                                         tplanetdata[planet]["biome"],
                                         tplanetdata[planet]["hazards"],
                                         None,
@@ -896,7 +897,7 @@ class HD2(commands.Cog):
                                         None,
                                         None,
                                         None,
-                                        0x9729FF,
+                                        self.colors["IL"],
                                         iplanetdata[planet]["biome"],
                                         iplanetdata[planet]["hazards"],
                                         None,
@@ -950,7 +951,7 @@ class HD2(commands.Cog):
                                         time,
                                         seplanetdata[planet]["attacker"],
                                         seplanetdata[planet]["attorigin"],
-                                        0xB5D9E9,
+                                        self.colors["SE"],
                                         seplanetdata[planet]["biome"],
                                         seplanetdata[planet]["hazards"],
                                         True,
@@ -1038,7 +1039,7 @@ class HD2(commands.Cog):
             ):
                 try:
                     objective = "\n".join(objectives)
-                    embed = discord.Embed(color=0xB5D9E9)
+                    embed = discord.Embed(color=self.colors["SE"])
                     embed.title = title
                     embed.description = briefing
                     embed.add_field(name=description, value=objective)
