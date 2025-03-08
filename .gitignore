@@ -20,3 +20,4 @@ __pycache__/
 bruhbot/responses.txt
 bruhbot/.megaignore
 bruhbot/desktop.ini
+cogs/Audio/localtracks/suno/online.txt
