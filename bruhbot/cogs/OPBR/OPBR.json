@@ -1,5 +1,5 @@
 {
-    "updated": "01/12/2025 11:18 PM",
+    "updated": "02/27/2025 12:08 PM",
     "names": [
         "Tony Bennett",
         "Betty White",
@@ -156,7 +156,7 @@
     },
     "Buzz Aldrin": {
         "id": "Q2252",
-        "age": 94,
+        "age": 95,
         "dead": 0
     },
     "Michael Collins (astronaut)": {
@@ -176,8 +176,8 @@
     },
     "Gene Hackman": {
         "id": "Q150943",
-        "age": 94,
-        "dead": 0
+        "age": 95,
+        "dead": 1
     },
     "Sean Connery": {
         "id": "Q4573",
@@ -191,7 +191,7 @@
     },
     "John Williams": {
         "id": "Q131285",
-        "age": 92,
+        "age": 93,
         "dead": 0
     }
 }
