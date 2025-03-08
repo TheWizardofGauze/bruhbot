@@ -28,6 +28,10 @@
         {
             "id": 1405979473,
             "target": "Harvesters"
+        },
+        {
+            "id": 2664856027,
+            "target": "Shredder Tanks"
         }
     ],
     "weapon_ids": [
