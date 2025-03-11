@@ -129,7 +129,7 @@ class HD2(commands.Cog):
                                 await owner.send("Error logged in HD2.")
                                 ErrorLogger.run(traceback.format_exc())
                                 break
-                        if derror is True and derror is not None:
+                        if derror is True and derror is not None and dresponse.status != 503:
                             owner = await self.bot.fetch_user(self.owner_id)
                             await owner.send(f"dresponse status code {dresponse.status}")
                     await asyncio.sleep(0)
@@ -354,7 +354,7 @@ class HD2(commands.Cog):
                                 await owner.send("Error logged in HD2.")
                                 ErrorLogger.run(traceback.format_exc())
                                 break
-                        if aerror is True and aerror is not None:
+                        if aerror is True and aerror is not None and aresponse.status != 503:
                             owner = await self.bot.fetch_user(self.owner_id)
                             await owner.send(f"aresponse status code {aresponse.status}")
                     await asyncio.sleep(0)
@@ -1097,7 +1097,7 @@ class HD2(commands.Cog):
                                                     pname = ""
                                                 goal = task["values"][2]
                                                 objectives.append(
-                                                    f"-Collect {samples}{pname} | {prog[index]:,}/{goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                    f"-Collect {samples}{pname} | {prog[index]:,} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                 )
                                             case 3:  # eradicate
                                                 if task["valueTypes"][3] == 4 and task["values"][3] != 0:
@@ -1139,7 +1139,7 @@ class HD2(commands.Cog):
                                                         target = f"{target} {t2}"
                                                 goal = task["values"][2]
                                                 objectives.append(
-                                                    f"-Eradicate {target} | {prog[index]:,}/{goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                    f"-Eradicate {target} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                 )
                                             case 11:  # liberate
                                                 pindex.append(task["values"][2])
@@ -1169,14 +1169,14 @@ class HD2(commands.Cog):
                                                             pname = pij["name"]
                                                         else:
                                                             objectives.append(
-                                                                f"-Defend Planet from {goal} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]}/{goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                                f"-Defend Planet from {goal} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                             )
                                                     objectives.append(
-                                                        f"-Defend {pname} from {goal} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]}/{goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                        f"-Defend {pname} from {goal} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                     )
                                                 else:
                                                     objectives.append(
-                                                        f"-Defend Planets{attack} | {prog[index]}/{goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                        f"-Defend Planets{attack} | {prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                     )
                                             case 13:  # control
                                                 pindex.append(task["values"][2])
