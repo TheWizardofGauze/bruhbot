@@ -215,6 +215,27 @@ class HD2(commands.Cog):
                                                             objectives.append(
                                                                 f"-Eradicate {target} | {task['values'][2]:,}"
                                                             )
+                                                        case 9:
+                                                            if task["values"][0] != 0:
+                                                                match task["values"][0]:
+                                                                    case 2:
+                                                                        faction = "Terminid"
+                                                                    case 3:
+                                                                        faction = "Automaton"
+                                                                    case 4:
+                                                                        faction = "Illuminate"
+                                                                    case _:
+                                                                        faction = "[Unknown]"
+                                                            if task["valueTypes"][3] == 9 and task["values"][3] != 0:
+                                                                for difficulty in data["difficulty"]:
+                                                                    if task["values"][3] == difficulty["level"]:
+                                                                        diff = f"on {difficulty['name']} or higher"
+                                                                        break
+                                                                    else:
+                                                                        diff = "on [UNKNOWN DIFFICULTY LEVEL] or higher"
+                                                            objectives.append(
+                                                                f"Complete Operations against {faction} {diff}. | {task['values'][1]}"
+                                                            )
                                                         case 11:
                                                             pindex.append(task["values"][2])
                                                             atype[acount] = 11
@@ -1140,6 +1161,30 @@ class HD2(commands.Cog):
                                                 goal = task["values"][2]
                                                 objectives.append(
                                                     f"-Eradicate {target} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                )
+                                            case 9:
+                                                goal = task["values"][1]
+                                                if task["values"][0] != 0:
+                                                    match task["values"][0]:
+                                                        case 2:
+                                                            faction = "Terminid"
+                                                        case 3:
+                                                            faction = "Automaton"
+                                                        case 4:
+                                                            faction = "Illuminate"
+                                                        case _:
+                                                            faction = "[Unknown]"
+                                                if task["valueTypes"][3] == 9 and task["values"][3] != 0:
+                                                    with open(self.file, "r", encoding="utf-8") as f:
+                                                        data = json.load(f)
+                                                        for difficulty in data["difficulty"]:
+                                                            if task["values"][3] == difficulty["level"]:
+                                                                diff = f"on {difficulty['name']} or higher"
+                                                                break
+                                                            else:
+                                                                diff = "on [UNKNOWN DIFFICULTY LEVEL] or higher"
+                                                objectives.append(
+                                                    f"Complete Operations against {faction} {diff}. | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                 )
                                             case 11:  # liberate
                                                 pindex.append(task["values"][2])

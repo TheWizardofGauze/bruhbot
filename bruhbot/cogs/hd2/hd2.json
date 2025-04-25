@@ -6,8 +6,8 @@
             "ccid": 215041807946481664
         }
     ],
-    "dispatch_id": 3120,
-    "assign_id": 2803883920,
+    "dispatch_id": 3171,
+    "assign_id": 1688967915,
     "target_ids": [
         {
             "id": 2514244534,
@@ -56,6 +56,48 @@
         {
             "id": 2985106497,
             "sample": "Rare Samples"
+        }
+    ],
+    "difficulty": [
+        {
+            "level": 1,
+            "name": "TRIVIAL"
+        },
+        {
+            "level": 2,
+            "name": "EASY"
+        },
+        {
+            "level": 3,
+            "name": "MEDIUM"
+        },
+        {
+            "level": 4,
+            "name": "CHALLENGING"
+        },
+        {
+            "level": 5,
+            "name": "HARD"
+        },
+        {
+            "level": 6,
+            "name": "EXTREME"
+        },
+        {
+            "level": 7,
+            "name": "SUICIDE MISSION"
+        },
+        {
+            "level": 8,
+            "name": "IMPOSSIBLE"
+        },
+        {
+            "level": 9,
+            "name": "HELLDIVE"
+        },
+        {
+            "level": 10,
+            "name": "SUPER HELLDIVE"
         }
     ]
 }
