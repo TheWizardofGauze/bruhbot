@@ -229,12 +229,16 @@ class HD2(commands.Cog):
                                                             if task["valueTypes"][3] == 9 and task["values"][3] != 0:
                                                                 for difficulty in data["difficulty"]:
                                                                     if task["values"][3] == difficulty["level"]:
-                                                                        diff = f"on {difficulty['name']} or higher"
+                                                                        diff = f" on {difficulty['name']} or higher"
                                                                         break
                                                                     else:
-                                                                        diff = "on [UNKNOWN DIFFICULTY LEVEL] or higher"
+                                                                        diff = (
+                                                                            " on [UNKNOWN DIFFICULTY LEVEL] or higher"
+                                                                        )
+                                                            else:
+                                                                diff = ""
                                                             objectives.append(
-                                                                f"Complete Operations against {faction} {diff}. | {task['values'][1]}"
+                                                                f"Complete Operations against {faction}{diff}. | {task['values'][1]}"
                                                             )
                                                         case 11:
                                                             pindex.append(task["values"][2])
@@ -1179,12 +1183,14 @@ class HD2(commands.Cog):
                                                         data = json.load(f)
                                                         for difficulty in data["difficulty"]:
                                                             if task["values"][3] == difficulty["level"]:
-                                                                diff = f"on {difficulty['name']} or higher"
+                                                                diff = f" on {difficulty['name']} or higher"
                                                                 break
                                                             else:
-                                                                diff = "on [UNKNOWN DIFFICULTY LEVEL] or higher"
+                                                                diff = " on [UNKNOWN DIFFICULTY LEVEL] or higher"
+                                                else:
+                                                    diff = ""
                                                 objectives.append(
-                                                    f"Complete Operations against {faction} {diff}. | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                    f"Complete Operations against {faction}{diff}. | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                 )
                                             case 11:  # liberate
                                                 pindex.append(task["values"][2])
