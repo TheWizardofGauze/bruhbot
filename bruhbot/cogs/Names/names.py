@@ -150,7 +150,7 @@ class Names(commands.Cog):
                 msg = await ctx.send(embed=emb, view=rview)
                 rview.msg = msg
                 rview.file = self.file
-                rview.wait()
+                await rview.wait()
             except Exception:
                 ErrorLogger.run(traceback.format_exc())
                 await ctx.send("Error logged in Names.")
