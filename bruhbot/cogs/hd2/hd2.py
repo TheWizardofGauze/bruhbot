@@ -953,7 +953,7 @@ class HD2(commands.Cog):
                                                     f"{self.here}\\images\\MajorOrder.png",
                                                     filename="mologo.png",
                                                 )
-                                                tfiles.add(morder)
+                                                ifiles.add(morder)
                                                 break
                                         await interaction.followup.send(files=ifiles, embeds=elist)
                             if not seplanetdata == {}:
