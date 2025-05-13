@@ -1007,7 +1007,7 @@ class HD2(commands.Cog):
                                                     f"{self.here}\\images\\MajorOrder.png",
                                                     filename="mologo.png",
                                                 )
-                                                tfiles.add(morder)
+                                                sefiles.add(morder)
                                                 break
                                         await interaction.followup.send(files=sefiles, embeds=elist)
 
