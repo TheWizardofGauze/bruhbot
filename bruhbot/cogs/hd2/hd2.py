@@ -33,7 +33,7 @@ class HD2(commands.Cog):
         load_dotenv(os.path.abspath(".\\bruhbot\\.env"))
         self.owner_id = int(os.getenv("OWNER_ID"))
         self.planet_tasks = [11, 12, 13]
-        self.colors = {"SE": 0xB5D9E9, "DP": 0x2E3C4B, "AT": 0xFF6161, "TR": 0xFFB800, "IL": 0x9729FF}
+        self.colors = {"SE": 0xB5D9E9, "DP": 0x2E3C4B, "AT": 0xFF6161, "TR": 0xFFB800, "IL": 0xCE8AEA}
 
         self.retry = 15
         self.update_cooldown = 1800
