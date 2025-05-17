@@ -436,8 +436,9 @@ class HD2(commands.Cog):
                 embed = discord.Embed(color=color)
                 embed.title = name
                 embed.description = f"{owner} control"
-                bar1 = "█" * int((math.floor(float(liberation)) / 10))
-                bar3 = "▁" * (10 - len(bar1) - 1)
+                if liberation:
+                    bar1 = "█" * int((math.floor(float(liberation)) / 10))
+                    bar3 = "▁" * (10 - len(bar1) - 1)
                 if owner == "Super Earth":
                     if event is not None:
                         embed.add_field(name="Attacker:", value=attacker)
