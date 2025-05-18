@@ -384,7 +384,7 @@ class HD2(commands.Cog):
                             await owner.send(f"aresponse status code {aresponse.status}")
                     await asyncio.sleep(0)
                 await asyncio.sleep(self.update_cooldown)
-            except ConnectionAbortedError:
+            except (ConnectionAbortedError, asyncio.TimeoutError):
                 ErrorLogger.run(traceback.format_exc())
                 await asyncio.sleep(self.update_cooldown)
                 continue
