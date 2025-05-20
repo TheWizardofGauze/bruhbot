@@ -440,7 +440,7 @@ class HD2(commands.Cog):
                     bar1 = "█" * int((math.floor(float(liberation)) / 10))
                     bar3 = "▁" * (10 - len(bar1) - 1)
                 if owner == "Super Earth":
-                    if event is not None:
+                    if event is not None and name != "SUPER EARTH":
                         embed.add_field(name="Attacker:", value=attacker)
                         embed.add_field(name="Attack Origin:", value=attorigin)
                         embed.add_field(name="Time Remaining:", value=time, inline=False)
@@ -673,7 +673,7 @@ class HD2(commands.Cog):
                                 players = planet["statistics"]["playerCount"]
                                 biome = planet["biome"]
                                 hazards = planet["hazards"]
-                                if owner == "Humans":
+                                if owner == "Humans" and index != 0:
                                     end = (
                                         datetime.strptime(
                                             planet["event"]["endTime"][:19].strip(),
@@ -737,6 +737,22 @@ class HD2(commands.Cog):
                                         / 2
                                     )
                                     match owner:
+                                        case "Humans":
+                                            seplanetdata.update(
+                                                {
+                                                    name: {
+                                                        "index": index,
+                                                        "lib": lib,
+                                                        "owner": owner,
+                                                        "end": None,
+                                                        "attacker": None,
+                                                        "attorigin": None,
+                                                        "players": players,
+                                                        "biome": biome,
+                                                        "hazards": hazards,
+                                                    }
+                                                }
+                                            )
                                         case "Automaton":
                                             aplanetdata.update(
                                                 {
@@ -965,9 +981,12 @@ class HD2(commands.Cog):
                                         major = True
                                     else:
                                         major = False
-                                    now = datetime.now(UTC)
-                                    rdelta = relativedelta(seplanetdata[planet]["end"], now)
-                                    time = f"{rdelta.days}D:{rdelta.hours}H:{rdelta.minutes}M:{rdelta.seconds}S"
+                                    if seplanetdata[planet]["end"] is not None:
+                                        now = datetime.now(UTC)
+                                        rdelta = relativedelta(seplanetdata[planet]["end"], now)
+                                        time = f"{rdelta.days}D:{rdelta.hours}H:{rdelta.minutes}M:{rdelta.seconds}S"
+                                    else:
+                                        time = None
                                     emb = await embed(
                                         planet,
                                         "Super Earth",
