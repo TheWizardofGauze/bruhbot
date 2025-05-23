@@ -215,6 +215,20 @@ class HD2(commands.Cog):
                                                             objectives.append(
                                                                 f"-Eradicate {target} | {task['values'][2]:,}"
                                                             )
+                                                        case 7:  # extract
+                                                            if task["values"][0] != 0:
+                                                                match task["values"][0]:
+                                                                    case 2:
+                                                                        faction = "Terminids"
+                                                                    case 3:
+                                                                        faction = "Automatons"
+                                                                    case 4:
+                                                                        faction = "Illuminate"
+                                                                    case _:
+                                                                        faction = "[Unknown]"
+                                                            objectives.append(
+                                                                f"-Extract from a successful mission against {faction} | {task['values'][2]:,}"
+                                                            )
                                                         case 9:
                                                             if task["values"][0] != 0:
                                                                 match task["values"][0]:
@@ -238,7 +252,7 @@ class HD2(commands.Cog):
                                                             else:
                                                                 diff = ""
                                                             objectives.append(
-                                                                f"Complete Operations against {faction}{diff}. | {task['values'][1]}"
+                                                                f"Complete Operations against {faction}{diff}. | {task['values'][1]:,}"
                                                             )
                                                         case 11:
                                                             pindex.append(task["values"][2])
@@ -270,10 +284,10 @@ class HD2(commands.Cog):
                                                                             f"-Defend Planet | {str(task['values'][0])}"
                                                                         )
                                                                 objectives.append(
-                                                                    f"-Defend {pname} from {task['values'][0]} {['attack', 'attacks'][await self.plural(task['values'][0])]}"
+                                                                    f"-Defend {pname} from {task['values'][0]:,} {['attack', 'attacks'][await self.plural(task['values'][0])]}"
                                                                 )
                                                             objectives.append(
-                                                                f"-Defend Planets{attack} | {str(task['values'][0])}"
+                                                                f"-Defend Planets{attack} | {str(task['values'][0]):,}"
                                                             )
                                                         case 13:
                                                             pindex.append(task["values"][2])
@@ -1142,7 +1156,7 @@ class HD2(commands.Cog):
                                                     pname = ""
                                                 goal = task["values"][2]
                                                 objectives.append(
-                                                    f"-Collect {samples}{pname} | {prog[index]:,} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                    f"-Collect {samples}{pname} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                 )
                                             case 3:  # eradicate
                                                 if task["valueTypes"][3] == 4 and task["values"][3] != 0:
@@ -1186,14 +1200,29 @@ class HD2(commands.Cog):
                                                 objectives.append(
                                                     f"-Eradicate {target} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                 )
+                                            case 7:  # extract
+                                                goal = task["values"][2]
+                                                if task["values"][0] != 0:
+                                                    match task["values"][0]:
+                                                        case 2:
+                                                            faction = "Terminids"
+                                                        case 3:
+                                                            faction = "Automatons"
+                                                        case 4:
+                                                            faction = "Illuminate"
+                                                        case _:
+                                                            faction = "[Unknown]"
+                                                objectives.append(
+                                                    f"-Extract from a successful mission against {faction} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                )
                                             case 9:
                                                 goal = task["values"][1]
                                                 if task["values"][0] != 0:
                                                     match task["values"][0]:
                                                         case 2:
-                                                            faction = "Terminid"
+                                                            faction = "Terminids"
                                                         case 3:
-                                                            faction = "Automaton"
+                                                            faction = "Automatons"
                                                         case 4:
                                                             faction = "Illuminate"
                                                         case _:
@@ -1210,7 +1239,7 @@ class HD2(commands.Cog):
                                                 else:
                                                     diff = ""
                                                 objectives.append(
-                                                    f"Complete Operations against {faction}{diff}. | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                    f"Complete Operations against {faction}{diff} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                 )
                                             case 11:  # liberate
                                                 pindex.append(task["values"][2])
@@ -1240,14 +1269,14 @@ class HD2(commands.Cog):
                                                             pname = pij["name"]
                                                         else:
                                                             objectives.append(
-                                                                f"-Defend Planet from {goal} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                                f"-Defend Planet from {goal:,} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                             )
                                                     objectives.append(
-                                                        f"-Defend {pname} from {goal} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                        f"-Defend {pname} from {goal:,} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                     )
                                                 else:
                                                     objectives.append(
-                                                        f"-Defend Planets{attack} | {prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                        f"-Defend Planets{attack} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                     )
                                             case 13:  # control
                                                 pindex.append(task["values"][2])
