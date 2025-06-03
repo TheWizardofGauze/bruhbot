@@ -624,7 +624,9 @@
         "Pinball",
         "Cockthulu",
         "Binklor",
-        "Crord"
+        "Crord",
+        "Crankenhog",
+        "Chondria"
     ],
     "prefix": [
         "Dr.",
@@ -638,7 +640,8 @@
         "The Right Honorable",
         "His Excellency",
         "Chancellor",
-        "Captain"
+        "Captain",
+        "\"Moist\""
     ],
     "suffix": [
         "Jr.",
@@ -648,6 +651,7 @@
         "V",
         "VI",
         "VII",
-        "the Jizz-wailer"
+        "the Jizz-wailer",
+        "The Powerhouse"
     ]
 }
