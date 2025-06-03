@@ -287,7 +287,7 @@ class HD2(commands.Cog):
                                                                     f"-Defend {pname} from {task['values'][0]:,} {['attack', 'attacks'][await self.plural(task['values'][0])]}"
                                                                 )
                                                             objectives.append(
-                                                                f"-Defend Planets{attack} | {str(task['values'][0]):,}"
+                                                                f"-Defend Planets{attack} | {str(task['values'][0])}"
                                                             )
                                                         case 13:
                                                             pindex.append(task["values"][2])
