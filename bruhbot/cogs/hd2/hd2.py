@@ -1403,7 +1403,7 @@ class HD2(commands.Cog):
                         ErrorLogger.run(traceback.format_exc())
                         break
                 if aerror is True and aerror is not None:
-                    await interaction.followup.send(f"aresponse status code {aresponse.status}")
+                    await interaction.followup.send(f"aresponse status code {aresponse.status}. Failed after 3 tries.")
             await asyncio.sleep(0)
         except ConnectionAbortedError:
             ErrorLogger.run(traceback.format_exc())
