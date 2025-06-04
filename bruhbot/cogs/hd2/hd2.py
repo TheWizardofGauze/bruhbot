@@ -1116,13 +1116,14 @@ class HD2(commands.Cog):
             await interaction.response.defer()
             async with ClientSession(headers=self.headers) as session:
                 tags = ["<i=1>", "<i=3>", "</i>"]
+                aerror = True
                 for i in range(3):
                     try:
                         async with session.get(f"{self.api}/assignments") as aresponse:
                             try:
-                                aj = await aresponse.json()
-                                objectives = []
                                 if aresponse.status == 200:
+                                    aj = await aresponse.json()
+                                    objectives = []
                                     aerror = False
                                     if aj == []:
                                         await interaction.followup.send("Major Order not found.")
