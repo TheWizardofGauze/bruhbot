@@ -129,7 +129,7 @@ class HD2(commands.Cog):
                                 await owner.send("Error logged in HD2.")
                                 ErrorLogger.run(traceback.format_exc())
                                 break
-                        if derror is True and derror is not None and dresponse.status != 503:
+                        if derror is True and derror is not None and dresponse.status not in [503, 408]:
                             owner = await self.bot.fetch_user(self.owner_id)
                             await owner.send(f"dresponse status code {dresponse.status}")
                     await asyncio.sleep(0)
@@ -393,7 +393,7 @@ class HD2(commands.Cog):
                                 await owner.send("Error logged in HD2.")
                                 ErrorLogger.run(traceback.format_exc())
                                 break
-                        if aerror is True and aerror is not None and aresponse.status != 503:
+                        if aerror is True and aerror is not None and aresponse.status not in [503, 408]:
                             owner = await self.bot.fetch_user(self.owner_id)
                             await owner.send(f"aresponse status code {aresponse.status}")
                     await asyncio.sleep(0)
