@@ -446,6 +446,7 @@ class HD2(commands.Cog):
                 hazards: dict,
                 event: bool,
                 regen: str,
+                regions: list,
             ):
                 embed = discord.Embed(color=color)
                 embed.title = name
@@ -480,6 +481,16 @@ class HD2(commands.Cog):
                     h1.append(hz)
                 h2 = "\n".join(h1)
                 embed.add_field(name="Hazards:", value=h2, inline=False)
+                if regions != []:
+                    r1 = []
+                    for region in regions:
+                        rlib = math.floor((region["maxHealth"] - region["health"]) / (region["maxHealth"]) * 100)
+                        rbar1 = "█" * int(rlib / 10)
+                        rbar3 = "▁" * (10 - len(rbar1) - 1)
+                        rg = f"{region['name']} │ {rbar1}▒{rbar3} │ {str(rlib)}%"
+                        r1.append(rg)
+                    r2 = "\n".join(r1)
+                    embed.add_field(name="Cities:", value=r2, inline=False)
                 embed.set_footer(text=f"{players} Helldivers", icon_url="attachment://hdlogo.png")
                 if major is True:
                     embed.set_author(name="MAJOR ORDER", icon_url="attachment://mologo.png")
@@ -555,6 +566,7 @@ class HD2(commands.Cog):
                                                 rdelta = relativedelta(end, now)
                                                 time = f"{rdelta.days}D:{rdelta.hours}H:{rdelta.minutes}M:{rdelta.seconds}S"
                                                 attacker = p["event"]["faction"].replace("Automaton", "Automatons")
+                                                regions = p["regions"]
                                                 if not p["attacking"]:
                                                     attorigin = "Unknown"
                                                 else:
@@ -581,6 +593,7 @@ class HD2(commands.Cog):
                                                 attacker = None
                                                 attorigin = None
                                                 time = None
+                                                regions = None
                                         else:
                                             match p["currentOwner"]:
                                                 case "Terminids":
@@ -622,6 +635,8 @@ class HD2(commands.Cog):
                                                 )
                                                 / 2
                                             )
+                                            regions = p["regions"]
+                                            print(regions)
                                             time = None
                                             attacker = None
                                             attorigin = None
@@ -645,6 +660,7 @@ class HD2(commands.Cog):
                                             p["hazards"],
                                             event,
                                             regen,
+                                            regions,
                                         )
                                         await interaction.followup.send(files=files, embed=emb)
                                         await asyncio.sleep(0)
@@ -687,6 +703,7 @@ class HD2(commands.Cog):
                                 players = planet["statistics"]["playerCount"]
                                 biome = planet["biome"]
                                 hazards = planet["hazards"]
+                                regions = planet["regions"]
                                 if owner == "Humans" and index != 0:
                                     end = (
                                         datetime.strptime(
@@ -728,6 +745,7 @@ class HD2(commands.Cog):
                                                 "players": players,
                                                 "biome": biome,
                                                 "hazards": hazards,
+                                                "regions": regions,
                                             }
                                         }
                                     )
@@ -764,6 +782,7 @@ class HD2(commands.Cog):
                                                         "players": players,
                                                         "biome": biome,
                                                         "hazards": hazards,
+                                                        "regions": regions,
                                                     }
                                                 }
                                             )
@@ -778,6 +797,7 @@ class HD2(commands.Cog):
                                                         "biome": biome,
                                                         "hazards": hazards,
                                                         "regen": regen,
+                                                        "regions": regions,
                                                     }
                                                 }
                                             )
@@ -792,6 +812,7 @@ class HD2(commands.Cog):
                                                         "biome": biome,
                                                         "hazards": hazards,
                                                         "regen": regen,
+                                                        "regions": regions,
                                                     }
                                                 }
                                             )
@@ -806,6 +827,7 @@ class HD2(commands.Cog):
                                                         "biome": biome,
                                                         "hazards": hazards,
                                                         "regen": regen,
+                                                        "regions": regions,
                                                     }
                                                 }
                                             )
@@ -856,6 +878,7 @@ class HD2(commands.Cog):
                                         aplanetdata[planet]["hazards"],
                                         None,
                                         aplanetdata[planet]["regen"],
+                                        aplanetdata[planet]["regions"],
                                     )
                                     if len(aembl) < 10:
                                         aembl.append(emb)
@@ -907,6 +930,7 @@ class HD2(commands.Cog):
                                         tplanetdata[planet]["hazards"],
                                         None,
                                         tplanetdata[planet]["regen"],
+                                        tplanetdata[planet]["regions"],
                                     )
                                     if len(tembl) < 10:
                                         tembl.append(emb)
@@ -958,6 +982,7 @@ class HD2(commands.Cog):
                                         iplanetdata[planet]["hazards"],
                                         None,
                                         iplanetdata[planet]["regen"],
+                                        iplanetdata[planet]["regions"],
                                     )
                                     if len(iembl) < 10:
                                         iembl.append(emb)
@@ -1015,6 +1040,7 @@ class HD2(commands.Cog):
                                         seplanetdata[planet]["hazards"],
                                         True,
                                         None,
+                                        seplanetdata[planet]["regions"],
                                     )
                                     if len(seembl) < 10:
                                         seembl.append(emb)
