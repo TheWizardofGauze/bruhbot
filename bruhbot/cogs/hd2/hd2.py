@@ -154,25 +154,29 @@ class HD2(commands.Cog):
                                                 for task in tasks:
                                                     match task["type"]:
                                                         case 2:
-                                                            if (
-                                                                task["valueTypes"][4] == 5
-                                                                and task["valueTypes"][4] != 0
-                                                            ):
+                                                            if task["valueTypes"][4] == 5 and task["values"][4] != 0:
                                                                 for sample in data["sample_ids"]:
                                                                     if task["values"][4] == sample["id"]:
                                                                         samples = sample["sample"]
                                                             else:
                                                                 sample = "Unknown Samples"
-                                                            if (
-                                                                task["valueTypes"][8] == 12
-                                                                and task["valueTypes"][8] != 0
-                                                            ):
+                                                            if task["valueTypes"][8] == 12 and task["values"][8] != 0:
                                                                 async with session.get(
                                                                     f"{self.api}/planets/{task['values'][8]}"
                                                                 ) as psresponse:
                                                                     psj = await psresponse.json()
                                                                     if psresponse.status == 200:
                                                                         pname = f" on {psj['name']}"
+                                                            elif task["values"][8] == 0 and task["values"][0] != 0:
+                                                                match task["values"][0]:
+                                                                    case 2:
+                                                                        pname = " on Terminid controlled planets"
+                                                                    case 3:
+                                                                        pname = " on Automaton controlled planets"
+                                                                    case 4:
+                                                                        pname = " on Illuminate controlled planets"
+                                                                    case _:
+                                                                        pname = ""
                                                             else:
                                                                 pname = ""
                                                             objectives.append(
@@ -1164,7 +1168,7 @@ class HD2(commands.Cog):
                                     for task in tasks:
                                         match task["type"]:
                                             case 2:  # collect
-                                                if task["valueTypes"][4] == 5 and task["valueTypes"][4] != 0:
+                                                if task["valueTypes"][4] == 5 and task["values"][4] != 0:
                                                     with open(self.file, "r", encoding="utf-8") as f:
                                                         data = json.load(f)
                                                         for sample in data["sample_ids"]:
@@ -1172,13 +1176,23 @@ class HD2(commands.Cog):
                                                                 samples = sample["sample"]
                                                 else:
                                                     sample = "Unknown Samples"
-                                                if task["valueTypes"][8] == 12 and task["valueTypes"][8] != 0:
+                                                if task["valueTypes"][8] == 12 and task["values"][8] != 0:
                                                     async with session.get(
                                                         f"{self.api}/planets/{task['values'][8]}"
                                                     ) as psresponse:
                                                         psj = await psresponse.json()
                                                         if psresponse.status == 200:
                                                             pname = f" on {psj['name']}"
+                                                elif task["values"][8] == 0 and task["values"][0] != 0:
+                                                    match task["values"][0]:
+                                                        case 2:
+                                                            pname = " on Terminid controlled planets"
+                                                        case 3:
+                                                            pname = " on Automaton controlled planets"
+                                                        case 4:
+                                                            pname = " on Illuminate controlled planets"
+                                                        case _:
+                                                            pname = ""
                                                 else:
                                                     pname = ""
                                                 goal = task["values"][2]
