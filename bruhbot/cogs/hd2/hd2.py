@@ -223,27 +223,31 @@ class HD2(commands.Cog):
                                                             if task["values"][0] != 0:
                                                                 match task["values"][0]:
                                                                     case 2:
-                                                                        faction = "Terminids"
+                                                                        faction = " against Terminids"
                                                                     case 3:
-                                                                        faction = "Automatons"
+                                                                        faction = " against Automatons"
                                                                     case 4:
-                                                                        faction = "Illuminate"
+                                                                        faction = " against Illuminate"
                                                                     case _:
-                                                                        faction = "[Unknown]"
+                                                                        faction = " against [Unknown]"
+                                                            else:
+                                                                faction = ""
                                                             objectives.append(
-                                                                f"-Extract from a successful mission against {faction} | {task['values'][2]:,}"
+                                                                f"-Extract from a successful mission{faction} | {task['values'][2]:,}"
                                                             )
                                                         case 9:
                                                             if task["values"][0] != 0:
                                                                 match task["values"][0]:
                                                                     case 2:
-                                                                        faction = "Terminid"
+                                                                        faction = " against Terminid"
                                                                     case 3:
-                                                                        faction = "Automaton"
+                                                                        faction = " against Automaton"
                                                                     case 4:
-                                                                        faction = "Illuminate"
+                                                                        faction = " against Illuminate"
                                                                     case _:
-                                                                        faction = "[Unknown]"
+                                                                        faction = " against [Unknown]"
+                                                            else:
+                                                                faction = ""
                                                             if task["valueTypes"][3] == 9 and task["values"][3] != 0:
                                                                 for difficulty in data["difficulty"]:
                                                                     if task["values"][3] == difficulty["level"]:
@@ -256,7 +260,7 @@ class HD2(commands.Cog):
                                                             else:
                                                                 diff = ""
                                                             objectives.append(
-                                                                f"Complete Operations against {faction}{diff}. | {task['values'][1]:,}"
+                                                                f"Complete Operations{faction}{diff}. | {task['values'][1]:,}"
                                                             )
                                                         case 11:
                                                             pindex.append(task["values"][2])
@@ -1246,28 +1250,32 @@ class HD2(commands.Cog):
                                                 if task["values"][0] != 0:
                                                     match task["values"][0]:
                                                         case 2:
-                                                            faction = "Terminids"
+                                                            faction = " against Terminids"
                                                         case 3:
-                                                            faction = "Automatons"
+                                                            faction = " against Automatons"
                                                         case 4:
-                                                            faction = "Illuminate"
+                                                            faction = " against Illuminate"
                                                         case _:
-                                                            faction = "[Unknown]"
+                                                            faction = " against [Unknown]"
+                                                else:
+                                                    faction = ""
                                                 objectives.append(
-                                                    f"-Extract from a successful mission against {faction} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                    f"-Extract from a successful mission{faction} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                 )
                                             case 9:
                                                 goal = task["values"][1]
                                                 if task["values"][0] != 0:
                                                     match task["values"][0]:
                                                         case 2:
-                                                            faction = "Terminids"
+                                                            faction = " against Terminids"
                                                         case 3:
-                                                            faction = "Automatons"
+                                                            faction = " against Automatons"
                                                         case 4:
-                                                            faction = "Illuminate"
+                                                            faction = " against Illuminate"
                                                         case _:
-                                                            faction = "[Unknown]"
+                                                            faction = " against [Unknown]"
+                                                else:
+                                                    faction = ""
                                                 if task["valueTypes"][3] == 9 and task["values"][3] != 0:
                                                     with open(self.file, "r", encoding="utf-8") as f:
                                                         data = json.load(f)
@@ -1280,7 +1288,7 @@ class HD2(commands.Cog):
                                                 else:
                                                     diff = ""
                                                 objectives.append(
-                                                    f"Complete Operations against {faction}{diff} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                    f"Complete Operations{faction}{diff} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                 )
                                             case 11:  # liberate
                                                 pindex.append(task["values"][2])
