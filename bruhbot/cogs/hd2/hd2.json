@@ -6,8 +6,8 @@
             "ccid": 215041807946481664
         }
     ],
-    "dispatch_id": 3284,
-    "assign_id": 2992807435,
+    "dispatch_id": 3289,
+    "assign_id": 4100894966,
     "target_ids": [
         {
             "id": 2514244534,
@@ -32,6 +32,26 @@
         {
             "id": 2664856027,
             "target": "Shredder Tanks"
+        },
+        {
+            "id": 793026793,
+            "target": "Shriekers"
+        },
+        {
+            "id": 1046000873,
+            "target": "Impalers"
+        },
+        {
+            "id": 1153658728,
+            "target": "Factory Striders"
+        },
+        {
+            "id": 2880434041,
+            "target": "Fleshmobs"
+        },
+        {
+            "id": 3097344451,
+            "target": "Leviathans"
         }
     ],
     "weapon_ids": [
