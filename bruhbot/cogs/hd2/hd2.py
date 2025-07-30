@@ -157,7 +157,7 @@ class HD2(commands.Cog):
                                                             if task["valueTypes"][4] == 5 and task["values"][4] != 0:
                                                                 for sample in data["sample_ids"]:
                                                                     if task["values"][4] == sample["id"]:
-                                                                        samples = sample["sample"]
+                                                                        samples = f"**{sample['sample']}**"
                                                             else:
                                                                 sample = "Unknown Samples"
                                                             if task["valueTypes"][8] == 12 and task["values"][8] != 0:
@@ -166,7 +166,7 @@ class HD2(commands.Cog):
                                                                 ) as psresponse:
                                                                     psj = await psresponse.json()
                                                                     if psresponse.status == 200:
-                                                                        pname = f" on {psj['name']}"
+                                                                        pname = f" on **{psj['name']}**"
                                                             elif task["values"][8] == 0 and task["values"][0] != 0:
                                                                 match task["values"][0]:
                                                                     case 2:
@@ -180,13 +180,13 @@ class HD2(commands.Cog):
                                                             else:
                                                                 pname = ""
                                                             objectives.append(
-                                                                f"-Collect {samples}{pname} | {task['values'][2]:,}"
+                                                                f"- Collect {samples}{pname} | {task['values'][2]:,}"
                                                             )
                                                         case 3:
                                                             if task["valueTypes"][3] == 4 and task["values"][3] != 0:
                                                                 for target in data["target_ids"]:
                                                                     if task["values"][3] == target["id"]:
-                                                                        target = target["target"]
+                                                                        target = f"**{target['target']}**"
                                                                         break
                                                                     else:
                                                                         match task["values"][0]:
@@ -201,49 +201,49 @@ class HD2(commands.Cog):
                                                             else:
                                                                 match task["values"][0]:
                                                                     case 2:
-                                                                        target = "Terminids"
+                                                                        target = "**Terminids**"
                                                                     case 3:
-                                                                        target = "Automatons"
+                                                                        target = "**Automatons**"
                                                                     case 4:
-                                                                        target = "Illuminate"
+                                                                        target = "**Illuminate**"
                                                                     case _:
                                                                         target = "Enemies"
                                                             if task["valueTypes"][5] == 5 and task["values"][5] != 0:
                                                                 for weapon in data["weapon_ids"]:
                                                                     if task["values"][5] == weapon["id"]:
-                                                                        t2 = f"with the {weapon['weapon']}"
+                                                                        t2 = f"with the **{weapon['weapon']}**"
                                                                         break
                                                                     else:
                                                                         t2 = "with a specific weapon"
                                                                 target = f"{target} {t2}"
                                                             objectives.append(
-                                                                f"-Eradicate {target} | {task['values'][2]:,}"
+                                                                f"- Eradicate {target} | {task['values'][2]:,}"
                                                             )
                                                         case 7:  # extract
                                                             if task["values"][0] != 0:
                                                                 match task["values"][0]:
                                                                     case 2:
-                                                                        faction = " against Terminids"
+                                                                        faction = " against **Terminids**"
                                                                     case 3:
-                                                                        faction = " against Automatons"
+                                                                        faction = " against **Automatons**"
                                                                     case 4:
-                                                                        faction = " against Illuminate"
+                                                                        faction = " against **Illuminate**"
                                                                     case _:
                                                                         faction = " against [Unknown]"
                                                             else:
                                                                 faction = ""
                                                             objectives.append(
-                                                                f"-Extract from a successful mission{faction} | {task['values'][2]:,}"
+                                                                f"- Extract from a successful mission{faction} | {task['values'][2]:,}"
                                                             )
                                                         case 9:
                                                             if task["values"][0] != 0:
                                                                 match task["values"][0]:
                                                                     case 2:
-                                                                        faction = " against Terminid"
+                                                                        faction = " against **Terminids**"
                                                                     case 3:
-                                                                        faction = " against Automaton"
+                                                                        faction = " against **Automatons**"
                                                                     case 4:
-                                                                        faction = " against Illuminate"
+                                                                        faction = " against **Illuminate**"
                                                                     case _:
                                                                         faction = " against [Unknown]"
                                                             else:
@@ -251,7 +251,7 @@ class HD2(commands.Cog):
                                                             if task["valueTypes"][3] == 9 and task["values"][3] != 0:
                                                                 for difficulty in data["difficulty"]:
                                                                     if task["values"][3] == difficulty["level"]:
-                                                                        diff = f" on {difficulty['name']} or higher"
+                                                                        diff = f" on **{difficulty['name']}** or higher"
                                                                         break
                                                                     else:
                                                                         diff = (
@@ -270,11 +270,11 @@ class HD2(commands.Cog):
                                                             if task["values"][1] != 0:
                                                                 match task["values"][1]:
                                                                     case 2:
-                                                                        faction = "Terminid"
+                                                                        faction = "**Terminid**"
                                                                     case 3:
-                                                                        faction = "Automaton"
+                                                                        faction = "**Automaton**"
                                                                     case 4:
-                                                                        faction = "Illuminate"
+                                                                        faction = "**Illuminate**"
                                                                     case _:
                                                                         faction = "[Unknown]"
                                                                 attack = f" from {faction} attack"
@@ -286,16 +286,16 @@ class HD2(commands.Cog):
                                                                 ) as piresponse:
                                                                     pij = await piresponse.json()
                                                                     if piresponse.status == 200:
-                                                                        pname = pij["name"]
+                                                                        pname = f"**{pij['name']}**"
                                                                     else:
                                                                         objectives.append(
-                                                                            f"-Defend Planet | {str(task['values'][0])}"
+                                                                            f"- Defend Planet | {str(task['values'][0])}"
                                                                         )
                                                                 objectives.append(
-                                                                    f"-Defend {pname} from {task['values'][0]:,} {['attack', 'attacks'][await self.plural(task['values'][0])]}"
+                                                                    f"- Defend {pname} from {task['values'][0]:,} {['attack', 'attacks'][await self.plural(task['values'][0])]}"
                                                                 )
                                                             objectives.append(
-                                                                f"-Defend Planets{attack} | {str(task['values'][0])}"
+                                                                f"- Defend Planets{attack} | {str(task['values'][0])}"
                                                             )
                                                         case 13:
                                                             pindex.append(task["values"][2])
@@ -321,12 +321,14 @@ class HD2(commands.Cog):
                                                                         match atype[i]:
                                                                             case 11:
                                                                                 objectives.append(
-                                                                                    f"-Liberate {p['name']}"
+                                                                                    f"- Liberate **{p['name']}**"
                                                                                 )
                                                                             case 13:
-                                                                                objectives.append(f"-Hold {p['name']}")
+                                                                                objectives.append(
+                                                                                    f"- Hold **{p['name']}**"
+                                                                                )
                                                                             case _:
-                                                                                objectives.append(f"-{p['name']}")
+                                                                                objectives.append(f"- **{p['name']}**")
                                                             break
                                                         else:
                                                             perror = True
@@ -1177,7 +1179,7 @@ class HD2(commands.Cog):
                                                         data = json.load(f)
                                                         for sample in data["sample_ids"]:
                                                             if task["values"][4] == sample["id"]:
-                                                                samples = sample["sample"]
+                                                                samples = f"**{sample['sample']}**"
                                                 else:
                                                     sample = "Unknown Samples"
                                                 if task["valueTypes"][8] == 12 and task["values"][8] != 0:
@@ -1186,7 +1188,7 @@ class HD2(commands.Cog):
                                                     ) as psresponse:
                                                         psj = await psresponse.json()
                                                         if psresponse.status == 200:
-                                                            pname = f" on {psj['name']}"
+                                                            pname = f" on **{psj['name']}**"
                                                 elif task["values"][8] == 0 and task["values"][0] != 0:
                                                     match task["values"][0]:
                                                         case 2:
@@ -1201,7 +1203,7 @@ class HD2(commands.Cog):
                                                     pname = ""
                                                 goal = task["values"][2]
                                                 objectives.append(
-                                                    f"-Collect {samples}{pname} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                    f"- Collect {samples}{pname} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                 )
                                             case 3:  # eradicate
                                                 if task["valueTypes"][3] == 4 and task["values"][3] != 0:
@@ -1209,7 +1211,7 @@ class HD2(commands.Cog):
                                                         data = json.load(f)
                                                         for target in data["target_ids"]:
                                                             if task["values"][3] == target["id"]:
-                                                                target = target["target"]
+                                                                target = f"**{target['target']}**"
                                                                 break
                                                             else:
                                                                 match task["values"][0]:
@@ -1224,11 +1226,11 @@ class HD2(commands.Cog):
                                                 else:
                                                     match task["values"][0]:
                                                         case 2:
-                                                            target = "Terminids"
+                                                            target = "**Terminids**"
                                                         case 3:
-                                                            target = "Automatons"
+                                                            target = "**Automatons**"
                                                         case 4:
-                                                            target = "Illuminate"
+                                                            target = "**Illuminate**"
                                                         case _:
                                                             target = "Enemies"
                                                 if task["valueTypes"][5] == 5 and task["values"][5] != 0:
@@ -1236,42 +1238,42 @@ class HD2(commands.Cog):
                                                         data = json.load(f)
                                                         for weapon in data["weapon_ids"]:
                                                             if task["values"][5] == weapon["id"]:
-                                                                t2 = f"with the {weapon['weapon']}"
+                                                                t2 = f"with the **{weapon['weapon']}**"
                                                                 break
                                                             else:
                                                                 t2 = "with a specific weapon"
                                                         target = f"{target} {t2}"
                                                 goal = task["values"][2]
                                                 objectives.append(
-                                                    f"-Eradicate {target} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                    f"- Eradicate {target} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                 )
                                             case 7:  # extract
                                                 goal = task["values"][2]
                                                 if task["values"][0] != 0:
                                                     match task["values"][0]:
                                                         case 2:
-                                                            faction = " against Terminids"
+                                                            faction = " against **Terminids**"
                                                         case 3:
-                                                            faction = " against Automatons"
+                                                            faction = " against **Automatons**"
                                                         case 4:
-                                                            faction = " against Illuminate"
+                                                            faction = " against **Illuminate**"
                                                         case _:
                                                             faction = " against [Unknown]"
                                                 else:
                                                     faction = ""
                                                 objectives.append(
-                                                    f"-Extract from a successful mission{faction} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                    f"- Extract from a successful mission{faction} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                 )
                                             case 9:
                                                 goal = task["values"][1]
                                                 if task["values"][0] != 0:
                                                     match task["values"][0]:
                                                         case 2:
-                                                            faction = " against Terminids"
+                                                            faction = " against **Terminids**"
                                                         case 3:
-                                                            faction = " against Automatons"
+                                                            faction = " against **Automatons**"
                                                         case 4:
-                                                            faction = " against Illuminate"
+                                                            faction = " against **Illuminate**"
                                                         case _:
                                                             faction = " against [Unknown]"
                                                 else:
@@ -1281,14 +1283,14 @@ class HD2(commands.Cog):
                                                         data = json.load(f)
                                                         for difficulty in data["difficulty"]:
                                                             if task["values"][3] == difficulty["level"]:
-                                                                diff = f" on {difficulty['name']} or higher"
+                                                                diff = f" on **{difficulty['name']}** or higher"
                                                                 break
                                                             else:
                                                                 diff = " on [UNKNOWN DIFFICULTY LEVEL] or higher"
                                                 else:
                                                     diff = ""
                                                 objectives.append(
-                                                    f"Complete Operations{faction}{diff} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                    f"- Complete Operations{faction}{diff} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                 )
                                             case 11:  # liberate
                                                 pindex.append(task["values"][2])
@@ -1299,11 +1301,11 @@ class HD2(commands.Cog):
                                                 if task["values"][1] != 0:
                                                     match task["values"][1]:
                                                         case 2:
-                                                            faction = "Terminid"
+                                                            faction = "**Terminid**"
                                                         case 3:
-                                                            faction = "Automaton"
+                                                            faction = "**Automaton**"
                                                         case 4:
-                                                            faction = "Illuminate"
+                                                            faction = "**Illuminate**"
                                                         case _:
                                                             faction = "[Unknown]"
                                                     attack = f" from {faction} attack"
@@ -1315,17 +1317,17 @@ class HD2(commands.Cog):
                                                     ) as piresponse:
                                                         pij = await piresponse.json()
                                                         if piresponse.status == 200:
-                                                            pname = pij["name"]
+                                                            pname = f"**{pij['name']}**"
                                                         else:
                                                             objectives.append(
-                                                                f"-Defend Planet from {goal:,} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                                f"- Defend Planet from {goal:,} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                             )
                                                     objectives.append(
-                                                        f"-Defend {pname} from {goal:,} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                        f"- Defend {pname} from {goal:,} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                     )
                                                 else:
                                                     objectives.append(
-                                                        f"-Defend Planets{attack} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                        f"- Defend Planets{attack} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                     )
                                             case 13:  # control
                                                 pindex.append(task["values"][2])
@@ -1343,7 +1345,7 @@ class HD2(commands.Cog):
                                                     else "▁" * 10
                                                 )
                                                 objectives.append(
-                                                    f"-Capture more planets than the enemy.\n\n{bar1}│{bar2}"
+                                                    f"- Capture more planets than the enemy.\n\n{bar1}│{bar2}"
                                                 )
                                             case _:
                                                 await interaction.followup.send(
@@ -1371,7 +1373,7 @@ class HD2(commands.Cog):
                                                                         5,
                                                                     )
                                                                 )
-                                                                name = f"{p['name']} | {lib}%"
+                                                                name = f"**{p['name']}** | {lib}%"
                                                             else:
                                                                 if p["event"] is not None:
                                                                     lib = str(
@@ -1387,14 +1389,14 @@ class HD2(commands.Cog):
                                                                             5,
                                                                         )
                                                                     )
-                                                                    name = f"{p['name']} | ⚠ {lib}%"
+                                                                    name = f"**{p['name']}** | ⚠ {lib}%"
                                                                 else:
-                                                                    name = f"{p['name']} | ✓"
+                                                                    name = f"**{p['name']}** | ✓"
                                                             match atype[i]:
                                                                 case 11:
-                                                                    objectives.append(f"-Liberate {name}")
+                                                                    objectives.append(f"- Liberate {name}")
                                                                 case 13:
-                                                                    objectives.append(f"-Hold {name}")
+                                                                    objectives.append(f"- Hold {name}")
                                                                 case _:
                                                                     objectives.append(name)
                                             else:
