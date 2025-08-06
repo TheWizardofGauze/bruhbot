@@ -6,8 +6,8 @@
             "ccid": 215041807946481664
         }
     ],
-    "dispatch_id": 3313,
-    "assign_id": 2368689649,
+    "dispatch_id": 3321,
+    "assign_id": 712986680,
     "target_ids": [
         {
             "id": 2514244534,
@@ -22,18 +22,6 @@
             "target": "Warriors"
         },
         {
-            "id": 4211847317,
-            "target": "Voteless"
-        },
-        {
-            "id": 1405979473,
-            "target": "Harvesters"
-        },
-        {
-            "id": 2664856027,
-            "target": "Shredder Tanks"
-        },
-        {
             "id": 793026793,
             "target": "Shriekers"
         },
@@ -42,8 +30,24 @@
             "target": "Impalers"
         },
         {
+            "id": 2664856027,
+            "target": "Shredder Tanks"
+        },
+        {
             "id": 1153658728,
             "target": "Factory Striders"
+        },
+        {
+            "id": 4039692928,
+            "target": "Troopers"
+        },
+        {
+            "id": 4211847317,
+            "target": "Voteless"
+        },
+        {
+            "id": 1405979473,
+            "target": "Harvesters"
         },
         {
             "id": 2880434041,
