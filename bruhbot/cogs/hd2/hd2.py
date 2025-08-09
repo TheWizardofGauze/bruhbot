@@ -744,22 +744,20 @@ class HD2(commands.Cog):
                                             5,
                                         )
                                     )
-                                    seplanetdata.update(
-                                        {
-                                            name: {
-                                                "index": index,
-                                                "lib": lib,
-                                                "owner": owner,
-                                                "end": end,
-                                                "attacker": attacker,
-                                                "attorigin": attorigin,
-                                                "players": players,
-                                                "biome": biome,
-                                                "hazards": hazards,
-                                                "regions": regions,
-                                            }
+                                    seplanetdata.update({
+                                        name: {
+                                            "index": index,
+                                            "lib": lib,
+                                            "owner": owner,
+                                            "end": end,
+                                            "attacker": attacker,
+                                            "attorigin": attorigin,
+                                            "players": players,
+                                            "biome": biome,
+                                            "hazards": hazards,
+                                            "regions": regions,
                                         }
-                                    )
+                                    })
                                 else:
                                     lib = str(
                                         round(
@@ -781,67 +779,59 @@ class HD2(commands.Cog):
                                     )
                                     match owner:
                                         case "Humans":
-                                            seplanetdata.update(
-                                                {
-                                                    name: {
-                                                        "index": index,
-                                                        "lib": lib,
-                                                        "owner": owner,
-                                                        "end": None,
-                                                        "attacker": None,
-                                                        "attorigin": None,
-                                                        "players": players,
-                                                        "biome": biome,
-                                                        "hazards": hazards,
-                                                        "regions": regions,
-                                                    }
+                                            seplanetdata.update({
+                                                name: {
+                                                    "index": index,
+                                                    "lib": lib,
+                                                    "owner": owner,
+                                                    "end": None,
+                                                    "attacker": None,
+                                                    "attorigin": None,
+                                                    "players": players,
+                                                    "biome": biome,
+                                                    "hazards": hazards,
+                                                    "regions": regions,
                                                 }
-                                            )
+                                            })
                                         case "Automaton":
-                                            aplanetdata.update(
-                                                {
-                                                    name: {
-                                                        "index": index,
-                                                        "lib": lib,
-                                                        "owner": owner,
-                                                        "players": players,
-                                                        "biome": biome,
-                                                        "hazards": hazards,
-                                                        "regen": regen,
-                                                        "regions": regions,
-                                                    }
+                                            aplanetdata.update({
+                                                name: {
+                                                    "index": index,
+                                                    "lib": lib,
+                                                    "owner": owner,
+                                                    "players": players,
+                                                    "biome": biome,
+                                                    "hazards": hazards,
+                                                    "regen": regen,
+                                                    "regions": regions,
                                                 }
-                                            )
+                                            })
                                         case "Terminids":
-                                            tplanetdata.update(
-                                                {
-                                                    name: {
-                                                        "index": index,
-                                                        "lib": lib,
-                                                        "owner": owner,
-                                                        "players": players,
-                                                        "biome": biome,
-                                                        "hazards": hazards,
-                                                        "regen": regen,
-                                                        "regions": regions,
-                                                    }
+                                            tplanetdata.update({
+                                                name: {
+                                                    "index": index,
+                                                    "lib": lib,
+                                                    "owner": owner,
+                                                    "players": players,
+                                                    "biome": biome,
+                                                    "hazards": hazards,
+                                                    "regen": regen,
+                                                    "regions": regions,
                                                 }
-                                            )
+                                            })
                                         case "Illuminate":
-                                            iplanetdata.update(
-                                                {
-                                                    name: {
-                                                        "index": index,
-                                                        "lib": lib,
-                                                        "owner": owner,
-                                                        "players": players,
-                                                        "biome": biome,
-                                                        "hazards": hazards,
-                                                        "regen": regen,
-                                                        "regions": regions,
-                                                    }
+                                            iplanetdata.update({
+                                                name: {
+                                                    "index": index,
+                                                    "lib": lib,
+                                                    "owner": owner,
+                                                    "players": players,
+                                                    "biome": biome,
+                                                    "hazards": hazards,
+                                                    "regen": regen,
+                                                    "regions": regions,
                                                 }
-                                            )
+                                            })
                             for i in range(3):  # a2response
                                 async with session.get(f"{self.api}/assignments") as a2response:
                                     if a2response.status == 200:
