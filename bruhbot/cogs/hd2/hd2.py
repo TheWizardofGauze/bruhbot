@@ -60,7 +60,6 @@ class HD2(commands.Cog):
             briefing: str,
             description: str,
             objectives: list,
-            # reward: str,
             expire: int,
         ):
             try:
@@ -71,10 +70,6 @@ class HD2(commands.Cog):
                 embed.add_field(name=description, value=objective)
                 embed.add_field(name="Expires:", value=f"<t:{expire}:R>", inline=False)
                 embed.set_thumbnail(url="attachment://mologo.png")
-                # embed.set_footer(
-                #     text=f"REWARD: {reward} MEDALS",
-                #     icon_url="attachment://medal.png",
-                # )
                 return embed
             except Exception:
                 owner = await self.bot.fetch_user(self.owner_id)
@@ -145,252 +140,258 @@ class HD2(commands.Cog):
                                             if aj == []:
                                                 ErrorLogger.run("aresponse returned empty.")
                                                 break
-                                            aj = aj[0]
-                                            tasks = aj["tasks"]
-                                            if aj["id"] != data["assign_id"]:
-                                                pindex = []
-                                                atype = {}
-                                                acount = 0
-                                                for task in tasks:
-                                                    match task["type"]:
-                                                        case 2:
-                                                            if task["valueTypes"][4] == 5 and task["values"][4] != 0:
-                                                                for sample in data["sample_ids"]:
-                                                                    if task["values"][4] == sample["id"]:
-                                                                        samples = f"**{sample['sample']}**"
-                                                            else:
-                                                                sample = "Unknown Samples"
-                                                            if task["valueTypes"][8] == 12 and task["values"][8] != 0:
-                                                                async with session.get(
-                                                                    f"{self.api}/planets/{task['values'][8]}"
-                                                                ) as psresponse:
-                                                                    psj = await psresponse.json()
-                                                                    if psresponse.status == 200:
-                                                                        pname = f" on **{psj['name']}**"
-                                                            elif task["values"][8] == 0 and task["values"][0] != 0:
-                                                                match task["values"][0]:
-                                                                    case 2:
-                                                                        pname = " on Terminid controlled planets"
-                                                                    case 3:
-                                                                        pname = " on Automaton controlled planets"
-                                                                    case 4:
-                                                                        pname = " on Illuminate controlled planets"
-                                                                    case _:
-                                                                        pname = ""
-                                                            else:
-                                                                pname = ""
-                                                            objectives.append(
-                                                                f"- Collect {samples}{pname} | {task['values'][2]:,}"
-                                                            )
-                                                        case 3:
-                                                            if task["valueTypes"][3] == 4 and task["values"][3] != 0:
-                                                                for target in data["target_ids"]:
-                                                                    if task["values"][3] == target["id"]:
-                                                                        target = f"**{target['target']}**"
-                                                                        break
-                                                                    else:
-                                                                        match task["values"][0]:
-                                                                            case 2:
-                                                                                target = "Unknown Terminids"
-                                                                            case 3:
-                                                                                target = "Unknown Automatons"
-                                                                            case 4:
-                                                                                target = "Unknown Illuminate"
-                                                                            case _:
-                                                                                target = "Enemies"
-                                                            else:
-                                                                match task["values"][0]:
-                                                                    case 2:
-                                                                        target = "**Terminids**"
-                                                                    case 3:
-                                                                        target = "**Automatons**"
-                                                                    case 4:
-                                                                        target = "**Illuminate**"
-                                                                    case _:
-                                                                        target = "Enemies"
-                                                            if task["valueTypes"][5] == 5 and task["values"][5] != 0:
-                                                                for weapon in data["weapon_ids"]:
-                                                                    if task["values"][5] == weapon["id"]:
-                                                                        t2 = f"with the **{weapon['weapon']}**"
-                                                                        break
-                                                                    else:
-                                                                        t2 = "with a specific weapon"
-                                                                target = f"{target} {t2}"
-                                                            objectives.append(
-                                                                f"- Eradicate {target} | {task['values'][2]:,}"
-                                                            )
-                                                        case 7:  # extract
-                                                            if task["values"][0] != 0:
-                                                                match task["values"][0]:
-                                                                    case 2:
-                                                                        faction = " against **Terminids**"
-                                                                    case 3:
-                                                                        faction = " against **Automatons**"
-                                                                    case 4:
-                                                                        faction = " against **Illuminate**"
-                                                                    case _:
-                                                                        faction = " against [Unknown]"
-                                                            else:
-                                                                faction = ""
-                                                            objectives.append(
-                                                                f"- Extract from a successful mission{faction} | {task['values'][2]:,}"
-                                                            )
-                                                        case 9:
-                                                            if task["values"][0] != 0:
-                                                                match task["values"][0]:
-                                                                    case 2:
-                                                                        faction = " against **Terminids**"
-                                                                    case 3:
-                                                                        faction = " against **Automatons**"
-                                                                    case 4:
-                                                                        faction = " against **Illuminate**"
-                                                                    case _:
-                                                                        faction = " against [Unknown]"
-                                                            else:
-                                                                faction = ""
-                                                            if task["valueTypes"][3] == 9 and task["values"][3] != 0:
-                                                                for difficulty in data["difficulty"]:
-                                                                    if task["values"][3] == difficulty["level"]:
-                                                                        diff = f" on **{difficulty['name']}** or higher"
-                                                                        break
-                                                                    else:
-                                                                        diff = (
-                                                                            " on [UNKNOWN DIFFICULTY LEVEL] or higher"
-                                                                        )
-                                                            else:
-                                                                diff = ""
-                                                            objectives.append(
-                                                                f"Complete Operations{faction}{diff}. | {task['values'][1]:,}"
-                                                            )
-                                                        case 11:
-                                                            pindex.append(task["values"][2])
-                                                            atype[acount] = 11
-                                                            acount += 1
-                                                        case 12:
-                                                            if task["values"][1] != 0:
-                                                                match task["values"][1]:
-                                                                    case 2:
-                                                                        faction = "**Terminid**"
-                                                                    case 3:
-                                                                        faction = "**Automaton**"
-                                                                    case 4:
-                                                                        faction = "**Illuminate**"
-                                                                    case _:
-                                                                        faction = "[Unknown]"
-                                                                attack = f" from {faction} attack"
-                                                            else:
-                                                                attack = ""
-                                                            if task["values"][3] != 0:
-                                                                async with session.get(
-                                                                    f"{self.api}/planets/{task['values'][3]}"
-                                                                ) as piresponse:
-                                                                    pij = await piresponse.json()
-                                                                    if piresponse.status == 200:
-                                                                        pname = f"**{pij['name']}**"
-                                                                    else:
-                                                                        objectives.append(
-                                                                            f"- Defend Planet | {str(task['values'][0])}"
-                                                                        )
+                                            molist = []
+                                            for mo in aj:
+                                                tasks = mo["tasks"]
+                                                molist.append(mo["id"])
+                                                if mo["id"] not in data["assign_ids"]:
+                                                    pindex = []
+                                                    atype = {}
+                                                    acount = 0
+                                                    for task in tasks:
+                                                        match task["type"]:
+                                                            case 2:
+                                                                if (
+                                                                    task["valueTypes"][4] == 5
+                                                                    and task["values"][4] != 0
+                                                                ):
+                                                                    for sample in data["sample_ids"]:
+                                                                        if task["values"][4] == sample["id"]:
+                                                                            samples = f"**{sample['sample']}**"
+                                                                else:
+                                                                    sample = "Unknown Samples"
+                                                                if (
+                                                                    task["valueTypes"][8] == 12
+                                                                    and task["values"][8] != 0
+                                                                ):
+                                                                    async with session.get(
+                                                                        f"{self.api}/planets/{task['values'][8]}"
+                                                                    ) as psresponse:
+                                                                        psj = await psresponse.json()
+                                                                        if psresponse.status == 200:
+                                                                            pname = f" on **{psj['name']}**"
+                                                                elif task["values"][8] == 0 and task["values"][0] != 0:
+                                                                    match task["values"][0]:
+                                                                        case 2:
+                                                                            pname = " on Terminid controlled planets"
+                                                                        case 3:
+                                                                            pname = " on Automaton controlled planets"
+                                                                        case 4:
+                                                                            pname = " on Illuminate controlled planets"
+                                                                        case _:
+                                                                            pname = ""
+                                                                else:
+                                                                    pname = ""
                                                                 objectives.append(
-                                                                    f"- Defend {pname} from {task['values'][0]:,} {['attack', 'attacks'][await self.plural(task['values'][0])]}"
+                                                                    f"- Collect {samples}{pname} | {task['values'][2]:,}"
                                                                 )
-                                                            objectives.append(
-                                                                f"- Defend Planets{attack} | {str(task['values'][0])}"
-                                                            )
-                                                        case 13:
-                                                            pindex.append(task["values"][2])
-                                                            atype[acount] = 13
-                                                            acount += 1
-                                                        case 15:
-                                                            objectives.append("-Capture more planets than the enemy.")
-                                                        case _:
-                                                            owner = await self.bot.fetch_user(self.owner_id)
-                                                            await owner.send(
-                                                                f"Unknown task type {str(task['type'])}. Aborting..."
-                                                            )
-                                                            ErrorLogger.run(str(aj))
-                                                            return
-                                                for i in range(3):
-                                                    async with session.get(f"{self.api}/planets") as presponse:
-                                                        if presponse.status == 200:
-                                                            perror = False
-                                                            pj = await presponse.json()
-                                                            for i, j in enumerate(pindex):
-                                                                for p in pj:
-                                                                    if p["index"] == j:
-                                                                        match atype[i]:
-                                                                            case 11:
-                                                                                objectives.append(
-                                                                                    f"- Liberate **{p['name']}**"
-                                                                                )
-                                                                            case 13:
-                                                                                objectives.append(
-                                                                                    f"- Hold **{p['name']}**"
-                                                                                )
-                                                                            case _:
-                                                                                objectives.append(f"- **{p['name']}**")
-                                                            break
-                                                        else:
-                                                            perror = True
-                                                            await asyncio.sleep(self.retry)
-                                                            continue
-                                                if perror is True and perror is not None:
-                                                    owner = await self.bot.fetch_user(self.owner_id)
-                                                    await owner.send(f"presponse status code {presponse.status}")
-                                                    return
-                                                title = aj["title"] if aj["title"] is not None else ""
-                                                briefing = aj["briefing"] if aj["briefing"] is not None else ""
-                                                desc = aj["description"] if aj["description"] is not None else ""
-                                                exp = round(
-                                                    datetime.strptime(
-                                                        aj["expiration"][:19].strip(),
-                                                        "%Y-%m-%dT%H:%M:%S",
+                                                            case 3:
+                                                                if (
+                                                                    task["valueTypes"][3] == 4
+                                                                    and task["values"][3] != 0
+                                                                ):
+                                                                    for target in data["target_ids"]:
+                                                                        if task["values"][3] == target["id"]:
+                                                                            target = f"**{target['target']}**"
+                                                                            break
+                                                                        else:
+                                                                            match task["values"][0]:
+                                                                                case 2:
+                                                                                    target = "Unknown Terminids"
+                                                                                case 3:
+                                                                                    target = "Unknown Automatons"
+                                                                                case 4:
+                                                                                    target = "Unknown Illuminate"
+                                                                                case _:
+                                                                                    target = "Enemies"
+                                                                else:
+                                                                    match task["values"][0]:
+                                                                        case 2:
+                                                                            target = "**Terminids**"
+                                                                        case 3:
+                                                                            target = "**Automatons**"
+                                                                        case 4:
+                                                                            target = "**Illuminate**"
+                                                                        case _:
+                                                                            target = "Enemies"
+                                                                if (
+                                                                    task["valueTypes"][5] == 5
+                                                                    and task["values"][5] != 0
+                                                                ):
+                                                                    for weapon in data["weapon_ids"]:
+                                                                        if task["values"][5] == weapon["id"]:
+                                                                            t2 = f"with the **{weapon['weapon']}**"
+                                                                            break
+                                                                        else:
+                                                                            t2 = "with a specific weapon"
+                                                                    target = f"{target} {t2}"
+                                                                objectives.append(
+                                                                    f"- Eradicate {target} | {task['values'][2]:,}"
+                                                                )
+                                                            case 7:  # extract
+                                                                if task["values"][0] != 0:
+                                                                    match task["values"][0]:
+                                                                        case 2:
+                                                                            faction = " against **Terminids**"
+                                                                        case 3:
+                                                                            faction = " against **Automatons**"
+                                                                        case 4:
+                                                                            faction = " against **Illuminate**"
+                                                                        case _:
+                                                                            faction = " against [Unknown]"
+                                                                else:
+                                                                    faction = ""
+                                                                objectives.append(
+                                                                    f"- Extract from a successful mission{faction} | {task['values'][2]:,}"
+                                                                )
+                                                            case 9:
+                                                                if task["values"][0] != 0:
+                                                                    match task["values"][0]:
+                                                                        case 2:
+                                                                            faction = " against **Terminids**"
+                                                                        case 3:
+                                                                            faction = " against **Automatons**"
+                                                                        case 4:
+                                                                            faction = " against **Illuminate**"
+                                                                        case _:
+                                                                            faction = " against [Unknown]"
+                                                                else:
+                                                                    faction = ""
+                                                                if (
+                                                                    task["valueTypes"][3] == 9
+                                                                    and task["values"][3] != 0
+                                                                ):
+                                                                    for difficulty in data["difficulty"]:
+                                                                        if task["values"][3] == difficulty["level"]:
+                                                                            diff = f" on **{difficulty['name']}** or higher"
+                                                                            break
+                                                                        else:
+                                                                            diff = " on [UNKNOWN DIFFICULTY LEVEL] or higher"
+                                                                else:
+                                                                    diff = ""
+                                                                objectives.append(
+                                                                    f"Complete Operations{faction}{diff}. | {task['values'][1]:,}"
+                                                                )
+                                                            case 11:
+                                                                pindex.append(task["values"][2])
+                                                                atype[acount] = 11
+                                                                acount += 1
+                                                            case 12:
+                                                                if task["values"][1] != 0:
+                                                                    match task["values"][1]:
+                                                                        case 2:
+                                                                            faction = "**Terminid**"
+                                                                        case 3:
+                                                                            faction = "**Automaton**"
+                                                                        case 4:
+                                                                            faction = "**Illuminate**"
+                                                                        case _:
+                                                                            faction = "[Unknown]"
+                                                                    attack = f" from {faction} attack"
+                                                                else:
+                                                                    attack = ""
+                                                                if task["values"][3] != 0:
+                                                                    async with session.get(
+                                                                        f"{self.api}/planets/{task['values'][3]}"
+                                                                    ) as piresponse:
+                                                                        pij = await piresponse.json()
+                                                                        if piresponse.status == 200:
+                                                                            pname = f"**{pij['name']}**"
+                                                                        else:
+                                                                            objectives.append(
+                                                                                f"- Defend Planet | {str(task['values'][0])}"
+                                                                            )
+                                                                    objectives.append(
+                                                                        f"- Defend {pname} from {task['values'][0]:,} {['attack', 'attacks'][await self.plural(task['values'][0])]}"
+                                                                    )
+                                                                objectives.append(
+                                                                    f"- Defend Planets{attack} | {str(task['values'][0])}"
+                                                                )
+                                                            case 13:
+                                                                pindex.append(task["values"][2])
+                                                                atype[acount] = 13
+                                                                acount += 1
+                                                            case 15:
+                                                                objectives.append(
+                                                                    "-Capture more planets than the enemy."
+                                                                )
+                                                            case _:
+                                                                owner = await self.bot.fetch_user(self.owner_id)
+                                                                await owner.send(
+                                                                    f"Unknown task type {str(task['type'])}. Aborting..."
+                                                                )
+                                                                ErrorLogger.run(str(mo))
+                                                                return
+                                                    for i in range(3):
+                                                        async with session.get(f"{self.api}/planets") as presponse:
+                                                            if presponse.status == 200:
+                                                                perror = False
+                                                                pj = await presponse.json()
+                                                                for i, j in enumerate(pindex):
+                                                                    for p in pj:
+                                                                        if p["index"] == j:
+                                                                            match atype[i]:
+                                                                                case 11:
+                                                                                    objectives.append(
+                                                                                        f"- Liberate **{p['name']}**"
+                                                                                    )
+                                                                                case 13:
+                                                                                    objectives.append(
+                                                                                        f"- Hold **{p['name']}**"
+                                                                                    )
+                                                                                case _:
+                                                                                    objectives.append(
+                                                                                        f"- **{p['name']}**"
+                                                                                    )
+                                                                break
+                                                            else:
+                                                                perror = True
+                                                                await asyncio.sleep(self.retry)
+                                                                continue
+                                                    if perror is True and perror is not None:
+                                                        owner = await self.bot.fetch_user(self.owner_id)
+                                                        await owner.send(f"presponse status code {presponse.status}")
+                                                        return
+                                                    title = mo["title"] if mo["title"] is not None else ""
+                                                    briefing = mo["briefing"] if mo["briefing"] is not None else ""
+                                                    desc = mo["description"] if mo["description"] is not None else ""
+                                                    exp = round(
+                                                        datetime.strptime(
+                                                            mo["expiration"][:19].strip(),
+                                                            "%Y-%m-%dT%H:%M:%S",
+                                                        )
+                                                        .replace(tzinfo=timezone.utc)
+                                                        .astimezone(tz=None)
+                                                        .timestamp()
                                                     )
-                                                    .replace(tzinfo=timezone.utc)
-                                                    .astimezone(tz=None)
-                                                    .timestamp()
-                                                )
-                                                if any(field is None for field in [title, briefing, desc, exp]):
-                                                    break
-                                                for tag in tags:
-                                                    title = title.replace(tag, "**")
-                                                    briefing = briefing.replace(tag, "**")
-                                                    desc = desc.replace(tag, "**")
-                                                # if aj["reward"]["type"] == 1:
-                                                #   reward = aj["reward"]["amount"]
-                                                # this is not how rewards work
-                                                # else:
-                                                #     owner = await self.bot.fetch_user(self.owner_id)
-                                                #     await owner.send(f"Unknown reward type {str(aj['reward']['type'])}")
-                                                #     return
-                                                morder = discord.File(
-                                                    f"{self.here}\\images\\MajorOrder.png",
-                                                    filename="mologo.png",
-                                                )
-                                                # micon = discord.File(
-                                                #     f"{self.here}\\images\\Medal.png",
-                                                #     filename="medal.png",
-                                                # )
-                                                emb = await aembed(
-                                                    title,
-                                                    briefing,
-                                                    desc,
-                                                    objectives,
-                                                    # reward,
-                                                    exp,
-                                                )
-                                                # msg = await channel.send(files=[morder, micon], embed=emb)
-                                                msg = await channel.send(files=[morder], embed=emb)
-                                                for pin in await channel.pins():
-                                                    await pin.unpin()
-                                                await msg.pin()
-                                                data["assign_id"] = aj["id"]
-                                                f.seek(0)
-                                                json.dump(data, f, indent=4)
-                                                f.truncate()
-                                                break
-                                            else:
-                                                break
+                                                    if any(field is None for field in [title, briefing, desc, exp]):
+                                                        break
+                                                    for tag in tags:
+                                                        title = title.replace(tag, "**")
+                                                        briefing = briefing.replace(tag, "**")
+                                                        desc = desc.replace(tag, "**")
+                                                    morder = discord.File(
+                                                        f"{self.here}\\images\\MajorOrder.png",
+                                                        filename="mologo.png",
+                                                    )
+                                                    emb = await aembed(
+                                                        title,
+                                                        briefing,
+                                                        desc,
+                                                        objectives,
+                                                        exp,
+                                                    )
+                                                    msg = await channel.send(files=[morder], embed=emb)
+                                                    data["assign_ids"].append(mo["id"])
+                                                else:
+                                                    continue
+                                            for id in data["assign_ids"]:
+                                                if id not in molist:
+                                                    data["assign_ids"].remove(id)
+                                            f.seek(0)
+                                            json.dump(data, f, indent=4)
+                                            f.truncate()
+                                            break
                                         else:
                                             aerror = True
                                             await asyncio.sleep(self.retry)
@@ -1164,282 +1165,271 @@ class HD2(commands.Cog):
                                     if aj == []:
                                         await interaction.followup.send("Major Order not found.")
                                         return
-                                    aj = aj[0]
-                                    prog = aj["progress"]
-                                    tasks = aj["tasks"]
-                                    pindex = []
-                                    atype = {}
-                                    acount = 0
-                                    index = 0
-                                    for task in tasks:
-                                        match task["type"]:
-                                            case 2:  # collect
-                                                if task["valueTypes"][4] == 5 and task["values"][4] != 0:
-                                                    with open(self.file, "r", encoding="utf-8") as f:
-                                                        data = json.load(f)
-                                                        for sample in data["sample_ids"]:
-                                                            if task["values"][4] == sample["id"]:
-                                                                samples = f"**{sample['sample']}**"
-                                                else:
-                                                    sample = "Unknown Samples"
-                                                if task["valueTypes"][8] == 12 and task["values"][8] != 0:
-                                                    async with session.get(
-                                                        f"{self.api}/planets/{task['values'][8]}"
-                                                    ) as psresponse:
-                                                        psj = await psresponse.json()
-                                                        if psresponse.status == 200:
-                                                            pname = f" on **{psj['name']}**"
-                                                elif task["values"][8] == 0 and task["values"][0] != 0:
-                                                    match task["values"][0]:
-                                                        case 2:
-                                                            pname = " on Terminid controlled planets"
-                                                        case 3:
-                                                            pname = " on Automaton controlled planets"
-                                                        case 4:
-                                                            pname = " on Illuminate controlled planets"
-                                                        case _:
-                                                            pname = ""
-                                                else:
-                                                    pname = ""
-                                                goal = task["values"][2]
-                                                objectives.append(
-                                                    f"- Collect {samples}{pname} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
-                                                )
-                                            case 3:  # eradicate
-                                                if task["valueTypes"][3] == 4 and task["values"][3] != 0:
-                                                    with open(self.file, "r", encoding="utf-8") as f:
-                                                        data = json.load(f)
-                                                        for target in data["target_ids"]:
-                                                            if task["values"][3] == target["id"]:
-                                                                target = f"**{target['target']}**"
-                                                                break
-                                                            else:
-                                                                match task["values"][0]:
-                                                                    case 2:
-                                                                        target = "Unknown Terminids"
-                                                                    case 3:
-                                                                        target = "Unknown Automatons"
-                                                                    case 4:
-                                                                        target = "Unknown Illuminate"
-                                                                    case _:
-                                                                        target = "Enemies"
-                                                else:
-                                                    match task["values"][0]:
-                                                        case 2:
-                                                            target = "**Terminids**"
-                                                        case 3:
-                                                            target = "**Automatons**"
-                                                        case 4:
-                                                            target = "**Illuminate**"
-                                                        case _:
-                                                            target = "Enemies"
-                                                if task["valueTypes"][5] == 5 and task["values"][5] != 0:
-                                                    with open(self.file, "r", encoding="utf-8") as f:
-                                                        data = json.load(f)
-                                                        for weapon in data["weapon_ids"]:
-                                                            if task["values"][5] == weapon["id"]:
-                                                                t2 = f"with the **{weapon['weapon']}**"
-                                                                break
-                                                            else:
-                                                                t2 = "with a specific weapon"
-                                                        target = f"{target} {t2}"
-                                                goal = task["values"][2]
-                                                objectives.append(
-                                                    f"- Eradicate {target} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
-                                                )
-                                            case 7:  # extract
-                                                goal = task["values"][2]
-                                                if task["values"][0] != 0:
-                                                    match task["values"][0]:
-                                                        case 2:
-                                                            faction = " against **Terminids**"
-                                                        case 3:
-                                                            faction = " against **Automatons**"
-                                                        case 4:
-                                                            faction = " against **Illuminate**"
-                                                        case _:
-                                                            faction = " against [Unknown]"
-                                                else:
-                                                    faction = ""
-                                                objectives.append(
-                                                    f"- Extract from a successful mission{faction} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
-                                                )
-                                            case 9:
-                                                goal = task["values"][1]
-                                                if task["values"][0] != 0:
-                                                    match task["values"][0]:
-                                                        case 2:
-                                                            faction = " against **Terminids**"
-                                                        case 3:
-                                                            faction = " against **Automatons**"
-                                                        case 4:
-                                                            faction = " against **Illuminate**"
-                                                        case _:
-                                                            faction = " against [Unknown]"
-                                                else:
-                                                    faction = ""
-                                                if task["valueTypes"][3] == 9 and task["values"][3] != 0:
-                                                    with open(self.file, "r", encoding="utf-8") as f:
-                                                        data = json.load(f)
-                                                        for difficulty in data["difficulty"]:
-                                                            if task["values"][3] == difficulty["level"]:
-                                                                diff = f" on **{difficulty['name']}** or higher"
-                                                                break
-                                                            else:
-                                                                diff = " on [UNKNOWN DIFFICULTY LEVEL] or higher"
-                                                else:
-                                                    diff = ""
-                                                objectives.append(
-                                                    f"- Complete Operations{faction}{diff} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
-                                                )
-                                            case 11:  # liberate
-                                                pindex.append(task["values"][2])
-                                                atype[acount] = 11
-                                                acount += 1
-                                            case 12:  # defend
-                                                goal = task["values"][0]
-                                                if task["values"][1] != 0:
-                                                    match task["values"][1]:
-                                                        case 2:
-                                                            faction = "**Terminid**"
-                                                        case 3:
-                                                            faction = "**Automaton**"
-                                                        case 4:
-                                                            faction = "**Illuminate**"
-                                                        case _:
-                                                            faction = "[Unknown]"
-                                                    attack = f" from {faction} attack"
-                                                else:
-                                                    attack = ""
-                                                if task["values"][3] != 0:
-                                                    async with session.get(
-                                                        f"{self.api}/planets/{task['values'][3]}"
-                                                    ) as piresponse:
-                                                        pij = await piresponse.json()
-                                                        if piresponse.status == 200:
-                                                            pname = f"**{pij['name']}**"
-                                                        else:
-                                                            objectives.append(
-                                                                f"- Defend Planet from {goal:,} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
-                                                            )
+                                    for mo in aj:
+                                        prog = mo["progress"]
+                                        tasks = mo["tasks"]
+                                        pindex = []
+                                        atype = {}
+                                        acount = 0
+                                        index = 0
+                                        for task in tasks:
+                                            match task["type"]:
+                                                case 2:  # collect
+                                                    if task["valueTypes"][4] == 5 and task["values"][4] != 0:
+                                                        with open(self.file, "r", encoding="utf-8") as f:
+                                                            data = json.load(f)
+                                                            for sample in data["sample_ids"]:
+                                                                if task["values"][4] == sample["id"]:
+                                                                    samples = f"**{sample['sample']}**"
+                                                    else:
+                                                        sample = "Unknown Samples"
+                                                    if task["valueTypes"][8] == 12 and task["values"][8] != 0:
+                                                        async with session.get(
+                                                            f"{self.api}/planets/{task['values'][8]}"
+                                                        ) as psresponse:
+                                                            psj = await psresponse.json()
+                                                            if psresponse.status == 200:
+                                                                pname = f" on **{psj['name']}**"
+                                                    elif task["values"][8] == 0 and task["values"][0] != 0:
+                                                        match task["values"][0]:
+                                                            case 2:
+                                                                pname = " on Terminid controlled planets"
+                                                            case 3:
+                                                                pname = " on Automaton controlled planets"
+                                                            case 4:
+                                                                pname = " on Illuminate controlled planets"
+                                                            case _:
+                                                                pname = ""
+                                                    else:
+                                                        pname = ""
+                                                    goal = task["values"][2]
                                                     objectives.append(
-                                                        f"- Defend {pname} from {goal:,} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                        f"- Collect {samples}{pname} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                     )
-                                                else:
+                                                case 3:  # eradicate
+                                                    if task["valueTypes"][3] == 4 and task["values"][3] != 0:
+                                                        with open(self.file, "r", encoding="utf-8") as f:
+                                                            data = json.load(f)
+                                                            for target in data["target_ids"]:
+                                                                if task["values"][3] == target["id"]:
+                                                                    target = f"**{target['target']}**"
+                                                                    break
+                                                                else:
+                                                                    match task["values"][0]:
+                                                                        case 2:
+                                                                            target = "Unknown Terminids"
+                                                                        case 3:
+                                                                            target = "Unknown Automatons"
+                                                                        case 4:
+                                                                            target = "Unknown Illuminate"
+                                                                        case _:
+                                                                            target = "Enemies"
+                                                    else:
+                                                        match task["values"][0]:
+                                                            case 2:
+                                                                target = "**Terminids**"
+                                                            case 3:
+                                                                target = "**Automatons**"
+                                                            case 4:
+                                                                target = "**Illuminate**"
+                                                            case _:
+                                                                target = "Enemies"
+                                                    if task["valueTypes"][5] == 5 and task["values"][5] != 0:
+                                                        with open(self.file, "r", encoding="utf-8") as f:
+                                                            data = json.load(f)
+                                                            for weapon in data["weapon_ids"]:
+                                                                if task["values"][5] == weapon["id"]:
+                                                                    t2 = f"with the **{weapon['weapon']}**"
+                                                                    break
+                                                                else:
+                                                                    t2 = "with a specific weapon"
+                                                            target = f"{target} {t2}"
+                                                    goal = task["values"][2]
                                                     objectives.append(
-                                                        f"- Defend Planets{attack} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                        f"- Eradicate {target} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                     )
-                                            case 13:  # control
-                                                pindex.append(task["values"][2])
-                                                atype[acount] = 13
-                                                acount += 1
-                                            case 15:
-                                                bar1 = (
-                                                    "▁" * (10 + prog[index]) + "█" * (prog[index] * -1)
-                                                    if prog[index] < 0
-                                                    else "▁" * 10
-                                                )
-                                                bar2 = (
-                                                    "█" * prog[index] + "▁" * (10 - prog[index])
-                                                    if prog[index] > 0
-                                                    else "▁" * 10
-                                                )
-                                                objectives.append(
-                                                    f"- Capture more planets than the enemy.\n\n{bar1}│{bar2}"
-                                                )
-                                            case _:
-                                                await interaction.followup.send(
-                                                    f"Unknown task type {str(task['type'])}. Aborting..."
-                                                )
-                                                ErrorLogger.run(str(aj))
-                                                return
-                                        index += 1
-                                    if pindex:
-                                        async with session.get(f"{self.api}/planets") as presponse:
-                                            if presponse.status == 200:
-                                                perror = False
-                                                pj = await presponse.json()
-                                                for i, j in enumerate(pindex):
-                                                    for p in pj:
-                                                        if p["index"] == j:
-                                                            if prog[i] == 0 and p["currentOwner"] != "Humans":
-                                                                lib = str(
-                                                                    round(
-                                                                        float(
-                                                                            (p["maxHealth"] - p["health"])
-                                                                            / (p["maxHealth"])
-                                                                            * 100
-                                                                        ),
-                                                                        5,
-                                                                    )
+                                                case 7:  # extract
+                                                    goal = task["values"][2]
+                                                    if task["values"][0] != 0:
+                                                        match task["values"][0]:
+                                                            case 2:
+                                                                faction = " against **Terminids**"
+                                                            case 3:
+                                                                faction = " against **Automatons**"
+                                                            case 4:
+                                                                faction = " against **Illuminate**"
+                                                            case _:
+                                                                faction = " against [Unknown]"
+                                                    else:
+                                                        faction = ""
+                                                    objectives.append(
+                                                        f"- Extract from a successful mission{faction} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                    )
+                                                case 9:
+                                                    goal = task["values"][1]
+                                                    if task["values"][0] != 0:
+                                                        match task["values"][0]:
+                                                            case 2:
+                                                                faction = " against **Terminids**"
+                                                            case 3:
+                                                                faction = " against **Automatons**"
+                                                            case 4:
+                                                                faction = " against **Illuminate**"
+                                                            case _:
+                                                                faction = " against [Unknown]"
+                                                    else:
+                                                        faction = ""
+                                                    if task["valueTypes"][3] == 9 and task["values"][3] != 0:
+                                                        with open(self.file, "r", encoding="utf-8") as f:
+                                                            data = json.load(f)
+                                                            for difficulty in data["difficulty"]:
+                                                                if task["values"][3] == difficulty["level"]:
+                                                                    diff = f" on **{difficulty['name']}** or higher"
+                                                                    break
+                                                                else:
+                                                                    diff = " on [UNKNOWN DIFFICULTY LEVEL] or higher"
+                                                    else:
+                                                        diff = ""
+                                                    objectives.append(
+                                                        f"- Complete Operations{faction}{diff} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                    )
+                                                case 11:  # liberate
+                                                    pindex.append(task["values"][2])
+                                                    atype[acount] = 11
+                                                    acount += 1
+                                                case 12:  # defend
+                                                    goal = task["values"][0]
+                                                    if task["values"][1] != 0:
+                                                        match task["values"][1]:
+                                                            case 2:
+                                                                faction = "**Terminid**"
+                                                            case 3:
+                                                                faction = "**Automaton**"
+                                                            case 4:
+                                                                faction = "**Illuminate**"
+                                                            case _:
+                                                                faction = "[Unknown]"
+                                                        attack = f" from {faction} attack"
+                                                    else:
+                                                        attack = ""
+                                                    if task["values"][3] != 0:
+                                                        async with session.get(
+                                                            f"{self.api}/planets/{task['values'][3]}"
+                                                        ) as piresponse:
+                                                            pij = await piresponse.json()
+                                                            if piresponse.status == 200:
+                                                                pname = f"**{pij['name']}**"
+                                                            else:
+                                                                objectives.append(
+                                                                    f"- Defend Planet from {goal:,} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                                 )
-                                                                name = f"**{p['name']}** | {lib}%"
-                                                            else:
-                                                                if p["event"] is not None:
+                                                        objectives.append(
+                                                            f"- Defend {pname} from {goal:,} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                        )
+                                                    else:
+                                                        objectives.append(
+                                                            f"- Defend Planets{attack} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                        )
+                                                case 13:  # control
+                                                    pindex.append(task["values"][2])
+                                                    atype[acount] = 13
+                                                    acount += 1
+                                                case 15:
+                                                    bar1 = (
+                                                        "▁" * (10 + prog[index]) + "█" * (prog[index] * -1)
+                                                        if prog[index] < 0
+                                                        else "▁" * 10
+                                                    )
+                                                    bar2 = (
+                                                        "█" * prog[index] + "▁" * (10 - prog[index])
+                                                        if prog[index] > 0
+                                                        else "▁" * 10
+                                                    )
+                                                    objectives.append(
+                                                        f"- Capture more planets than the enemy.\n\n{bar1}│{bar2}"
+                                                    )
+                                                case _:
+                                                    await interaction.followup.send(
+                                                        f"Unknown task type {str(task['type'])}. Aborting..."
+                                                    )
+                                                    ErrorLogger.run(str(mo))
+                                                    return
+                                            index += 1
+                                        if pindex:
+                                            async with session.get(f"{self.api}/planets") as presponse:
+                                                if presponse.status == 200:
+                                                    perror = False
+                                                    pj = await presponse.json()
+                                                    for i, j in enumerate(pindex):
+                                                        for p in pj:
+                                                            if p["index"] == j:
+                                                                if prog[i] == 0 and p["currentOwner"] != "Humans":
                                                                     lib = str(
                                                                         round(
                                                                             float(
-                                                                                (
-                                                                                    p["event"]["maxHealth"]
-                                                                                    - p["event"]["health"]
-                                                                                )
-                                                                                / (p["event"]["maxHealth"])
+                                                                                (p["maxHealth"] - p["health"])
+                                                                                / (p["maxHealth"])
                                                                                 * 100
                                                                             ),
                                                                             5,
                                                                         )
                                                                     )
-                                                                    name = f"**{p['name']}** | ⚠ {lib}%"
+                                                                    name = f"**{p['name']}** | {lib}%"
                                                                 else:
-                                                                    name = f"**{p['name']}** | ✓"
-                                                            match atype[i]:
-                                                                case 11:
-                                                                    objectives.append(f"- Liberate {name}")
-                                                                case 13:
-                                                                    objectives.append(f"- Hold {name}")
-                                                                case _:
-                                                                    objectives.append(name)
-                                            else:
-                                                perror = True
-                                                await asyncio.sleep(self.retry)
-                                                continue
-                                        if perror is True and perror is not None:
-                                            await interaction.followup.send(f"presponse status code {presponse.status}")
-                                    title = aj["title"] if aj["title"] is not None else ""
-                                    briefing = aj["briefing"] if aj["briefing"] is not None else ""
-                                    desc = aj["description"] if aj["description"] is not None else ""
-                                    exp = round(
-                                        datetime.strptime(
-                                            aj["expiration"][:19].strip(),
-                                            "%Y-%m-%dT%H:%M:%S",
+                                                                    if p["event"] is not None:
+                                                                        lib = str(
+                                                                            round(
+                                                                                float(
+                                                                                    (
+                                                                                        p["event"]["maxHealth"]
+                                                                                        - p["event"]["health"]
+                                                                                    )
+                                                                                    / (p["event"]["maxHealth"])
+                                                                                    * 100
+                                                                                ),
+                                                                                5,
+                                                                            )
+                                                                        )
+                                                                        name = f"**{p['name']}** | ⚠ {lib}%"
+                                                                    else:
+                                                                        name = f"**{p['name']}** | ✓"
+                                                                match atype[i]:
+                                                                    case 11:
+                                                                        objectives.append(f"- Liberate {name}")
+                                                                    case 13:
+                                                                        objectives.append(f"- Hold {name}")
+                                                                    case _:
+                                                                        objectives.append(name)
+                                                else:
+                                                    perror = True
+                                                    await asyncio.sleep(self.retry)
+                                                    continue
+                                            if perror is True and perror is not None:
+                                                await interaction.followup.send(
+                                                    f"presponse status code {presponse.status}"
+                                                )
+                                        title = mo["title"] if mo["title"] is not None else ""
+                                        briefing = mo["briefing"] if mo["briefing"] is not None else ""
+                                        desc = mo["description"] if mo["description"] is not None else ""
+                                        exp = round(
+                                            datetime.strptime(
+                                                mo["expiration"][:19].strip(),
+                                                "%Y-%m-%dT%H:%M:%S",
+                                            )
+                                            .replace(tzinfo=timezone.utc)
+                                            .astimezone(tz=None)
+                                            .timestamp()
                                         )
-                                        .replace(tzinfo=timezone.utc)
-                                        .astimezone(tz=None)
-                                        .timestamp()
-                                    )
-                                    for tag in tags:
-                                        title = title.replace(tag, "**")
-                                        briefing = briefing.replace(tag, "**")
-                                        desc = desc.replace(tag, "**")
-                                    # if aj["reward"]["type"] == 1:
-                                    #     reward = aj["reward"]["amount"]
-                                    # else:
-                                    #     await interaction.followup.send(
-                                    #         f"Unknown reward type {str(aj['reward']['type'])}"
-                                    #     )
-                                    #     return
-                                    morder = discord.File(
-                                        f"{self.here}\\images\\MajorOrder.png",
-                                        filename="mologo.png",
-                                    )
-                                    # micon = discord.File(
-                                    #     f"{self.here}\\images\\Medal.png",
-                                    #     filename="medal.png",
-                                    # )
-                                    # emb = await embed(title, briefing, desc, objectives, reward, exp)
-                                    emb = await embed(title, briefing, desc, objectives, exp)
-                                    # await interaction.followup.send(files=[morder, micon], embed=emb)
-                                    await interaction.followup.send(files=[morder], embed=emb)
+                                        for tag in tags:
+                                            title = title.replace(tag, "**")
+                                            briefing = briefing.replace(tag, "**")
+                                            desc = desc.replace(tag, "**")
+                                        morder = discord.File(
+                                            f"{self.here}\\images\\MajorOrder.png",
+                                            filename="mologo.png",
+                                        )
+                                        emb = await embed(title, briefing, desc, objectives, exp)
+                                        await interaction.followup.send(files=[morder], embed=emb)
                                     break
                                 else:
                                     aerror = True
