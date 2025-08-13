@@ -133,7 +133,6 @@ class HD2(commands.Cog):
                             try:
                                 async with session.get(f"{self.api}/assignments") as aresponse:
                                     try:
-                                        objectives = []
                                         if aresponse.status == 200:
                                             aerror = False
                                             aj = await aresponse.json()
@@ -142,6 +141,7 @@ class HD2(commands.Cog):
                                                 break
                                             molist = []
                                             for mo in aj:
+                                                objectives = []
                                                 tasks = mo["tasks"]
                                                 molist.append(mo["id"])
                                                 if mo["id"] not in data["assign_ids"]:
@@ -1150,12 +1150,12 @@ class HD2(commands.Cog):
                             try:
                                 if aresponse.status == 200:
                                     aj = await aresponse.json()
-                                    objectives = []
                                     aerror = False
                                     if aj == []:
                                         await interaction.followup.send("Major Order not found.")
                                         return
                                     for mo in aj:
+                                        objectives = []
                                         prog = mo["progress"]
                                         tasks = mo["tasks"]
                                         pindex = []
