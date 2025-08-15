@@ -225,8 +225,20 @@ class HD2(commands.Cog):
                                                                         else:
                                                                             t2 = "with a specific weapon"
                                                                     target = f"{target} {t2}"
+                                                                if (
+                                                                    task["valueTypes"][9] == 12
+                                                                    and task["values"][9] != 0
+                                                                ):
+                                                                    async with session.get(
+                                                                        f"{self.api}/planets/{task['values'][9]}"
+                                                                    ) as piresponse:
+                                                                        pij = await piresponse.json()
+                                                                        if piresponse.status == 200:
+                                                                            pname = f" on **{pij['name']}**"
+                                                                else:
+                                                                    pname = ""
                                                                 objectives.append(
-                                                                    f"- Eradicate {target} | {task['values'][2]:,}"
+                                                                    f"- Eradicate {target}{pname} | {task['values'][2]:,}"
                                                                 )
                                                             case 7:  # extract
                                                                 if task["values"][0] != 0:
@@ -1234,9 +1246,18 @@ class HD2(commands.Cog):
                                                                 else:
                                                                     t2 = "with a specific weapon"
                                                             target = f"{target} {t2}"
+                                                    if task["valueTypes"][9] == 12 and task["values"][9] != 0:
+                                                        async with session.get(
+                                                            f"{self.api}/planets/{task['values'][9]}"
+                                                        ) as piresponse:
+                                                            pij = await piresponse.json()
+                                                            if piresponse.status == 200:
+                                                                pname = f" on **{pij['name']}**"
+                                                    else:
+                                                        pname = ""
                                                     goal = task["values"][2]
                                                     objectives.append(
-                                                        f"- Eradicate {target} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                        f"- Eradicate {target}{pname} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                     )
                                                 case 7:  # extract
                                                     goal = task["values"][2]
