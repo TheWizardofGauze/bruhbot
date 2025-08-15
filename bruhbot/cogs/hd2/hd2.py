@@ -507,13 +507,16 @@ class HD2(commands.Cog):
                 if regions != []:
                     r1 = []
                     for region in regions:
+                        if region["name"] is None:
+                            continue
                         rlib = math.floor((region["maxHealth"] - region["health"]) / (region["maxHealth"]) * 100)
                         rbar1 = "█" * int(rlib / 10)
                         rbar3 = "▁" * (10 - len(rbar1) - 1)
                         rg = f"{region['name']} │ {rbar1}▒{rbar3} │ {str(rlib)}%"
                         r1.append(rg)
-                    r2 = "\n".join(r1)
-                    embed.add_field(name="Cities:", value=r2, inline=False)
+                    if not r1 == []:
+                        r2 = "\n".join(r1)
+                        embed.add_field(name="Cities:", value=r2, inline=False)
                 embed.set_footer(text=f"{players} Helldivers", icon_url="attachment://hdlogo.png")
                 if major is True:
                     embed.set_author(name="MAJOR ORDER", icon_url="attachment://mologo.png")
