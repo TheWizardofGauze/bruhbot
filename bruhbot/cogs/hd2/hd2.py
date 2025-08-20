@@ -119,6 +119,9 @@ class HD2(commands.Cog):
                                     else:
                                         derror = True
                                         continue
+                            except (ConnectionAbortedError, asyncio.TimeoutError):
+                                ErrorLogger.run(traceback.format_exc())
+                                continue
                             except Exception:
                                 owner = await self.bot.fetch_user(self.owner_id)
                                 await owner.send("Error logged in HD2.")
@@ -411,6 +414,9 @@ class HD2(commands.Cog):
                                     except json.JSONDecodeError:
                                         await asyncio.sleep(self.retry)
                                         continue
+                            except (ConnectionAbortedError, asyncio.TimeoutError):
+                                ErrorLogger.run(traceback.format_exc())
+                                continue
                             except Exception:
                                 owner = await self.bot.fetch_user(self.owner_id)
                                 await owner.send("Error logged in HD2.")
@@ -421,10 +427,6 @@ class HD2(commands.Cog):
                             await owner.send(f"aresponse status code {aresponse.status}")
                     await asyncio.sleep(0)
                 await asyncio.sleep(self.update_cooldown)
-            except (ConnectionAbortedError, asyncio.TimeoutError):
-                ErrorLogger.run(traceback.format_exc())
-                await asyncio.sleep(self.update_cooldown)
-                continue
             except Exception:
                 owner = await self.bot.fetch_user(self.owner_id)
                 await owner.send("Error logged in HD2.")
