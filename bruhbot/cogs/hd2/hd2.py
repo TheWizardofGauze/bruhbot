@@ -488,7 +488,15 @@ class HD2(commands.Cog):
                     embed.set_thumbnail(url="attachment://selogo.png")
                 else:
                     embed.add_field(name="Liberation:", value=f"{bar1}▒{bar3} │ {liberation}%")
-                    embed.add_field(name="Enemy Resistance:", value=f"{regen}%", inline=False)
+                    if float(regen) <= 1.5:
+                        resistance = "Low"
+                    elif float(regen) > 1.5 and float(regen) <= 2:
+                        resistance = "Average"
+                    elif float(regen) > 2:
+                        resistance = "High"
+                    else:
+                        resistance = f"ERROR {regen}"
+                    embed.add_field(name="Enemy Resistance:", value=f"{regen}% ({resistance})", inline=False)
                     if owner == "Automaton":
                         embed.set_thumbnail(url="attachment://alogo.png")
                     elif owner == "Terminid":
@@ -655,13 +663,9 @@ class HD2(commands.Cog):
                                                 )
                                             )
                                             regen = str(
-                                                round(
-                                                    round(
-                                                        float(((p["regenPerSecond"] * 3600) / p["maxHealth"]) * 100), 1
-                                                    )
-                                                    * 2
+                                                "{:.2f}".format(
+                                                    round(((p["regenPerSecond"] * 3600) / p["maxHealth"]) * 100, 2)
                                                 )
-                                                / 2
                                             )
                                             regions = p["regions"]
                                             print(regions)
@@ -785,14 +789,9 @@ class HD2(commands.Cog):
                                         )
                                     )
                                     regen = str(
-                                        round(
-                                            round(
-                                                float(((planet["regenPerSecond"] * 3600) / planet["maxHealth"]) * 100),
-                                                1,
-                                            )
-                                            * 2
+                                        "{:.2f}".format(
+                                            round(((planet["regenPerSecond"] * 3600) / planet["maxHealth"]) * 100, 2)
                                         )
-                                        / 2
                                     )
                                     match owner:
                                         case "Humans":
