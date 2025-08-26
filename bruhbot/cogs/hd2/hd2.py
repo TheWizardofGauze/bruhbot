@@ -514,15 +514,18 @@ class HD2(commands.Cog):
                     h1.append(hz)
                 h2 = "\n".join(h1)
                 embed.add_field(name="Hazards:", value=h2, inline=False)
-                if regions != []:
+                if regions != [] and regions is not None:
                     r1 = []
                     for region in regions:
                         if region["name"] is None:
                             continue
-                        rlib = math.floor((region["maxHealth"] - region["health"]) / (region["maxHealth"]) * 100)
-                        rbar1 = "█" * int(rlib / 10)
-                        rbar3 = "▁" * (10 - len(rbar1) - 1)
-                        rg = f"{region['name']} │ {rbar1}▒{rbar3} │ {str(rlib)}%"
+                        if (owner != "Super Earth") or (owner == "Super Earth" and event is not None):
+                            rlib = math.floor((region["maxHealth"] - region["health"]) / (region["maxHealth"]) * 100)
+                            rbar1 = "█" * int(rlib / 10)
+                            rbar3 = "▁" * (10 - len(rbar1) - 1)
+                            rg = f"{region['name']} │ {rbar1}▒{rbar3} │ {str(rlib)}%"
+                        else:
+                            rg = region["name"]
                         r1.append(rg)
                     if not r1 == []:
                         r2 = "\n".join(r1)
@@ -588,6 +591,7 @@ class HD2(commands.Cog):
                                             files.add(selogo)
                                             color = self.colors["SE"]
                                             regen = None
+                                            regions = p["regions"]
                                             if p["event"] is not None:
                                                 event = True
                                                 end = (
@@ -602,7 +606,6 @@ class HD2(commands.Cog):
                                                 rdelta = relativedelta(end, now)
                                                 time = f"{rdelta.days}D:{rdelta.hours}H:{rdelta.minutes}M:{rdelta.seconds}S"
                                                 attacker = p["event"]["faction"].replace("Automaton", "Automatons")
-                                                regions = p["regions"]
                                                 if not p["attacking"]:
                                                     attorigin = "Unknown"
                                                 else:
@@ -629,7 +632,6 @@ class HD2(commands.Cog):
                                                 attacker = None
                                                 attorigin = None
                                                 time = None
-                                                regions = None
                                         else:
                                             match p["currentOwner"]:
                                                 case "Terminids":
