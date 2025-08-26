@@ -34,7 +34,14 @@ class HD2(commands.Cog):
         self.owner_id = int(os.getenv("OWNER_ID"))
         self.planet_tasks = [11, 12, 13]
         self.colors = {"SE": 0xB5D9E9, "DP": 0x2E3C4B, "AT": 0xFF6161, "TR": 0xFFB800, "IL": 0xCE8AEA}
-
+        self.images = {
+            "MO": f"{self.here}\\images\\MajorOrder.png",
+            "HD": f"{self.here}\\images\\Helldivers.png",
+            "SE": f"{self.here}\\images\\SuperEarth.png",
+            "TR": f"{self.here}\\images\\Terminid.png",
+            "AT": f"{self.here}\\images\\Automaton.png",
+            "IL": f"{self.here}\\images\\Illuminate.png",
+        }
         self.retry = 15
         self.update_cooldown = 1800
 
@@ -386,7 +393,7 @@ class HD2(commands.Cog):
                                                         briefing = briefing.replace(tag, "**")
                                                         desc = desc.replace(tag, "**")
                                                     morder = discord.File(
-                                                        f"{self.here}\\images\\MajorOrder.png",
+                                                        self.images["MO"],
                                                         filename="mologo.png",
                                                     )
                                                     emb = await aembed(
@@ -576,16 +583,14 @@ class HD2(commands.Cog):
                                         files = set()
                                         if p["index"] in mo:
                                             major = True
-                                            morder = discord.File(
-                                                f"{self.here}\\images\\MajorOrder.png", filename="mologo.png"
-                                            )
+                                            morder = discord.File(self.images["MO"], filename="mologo.png")
                                             files.add(morder)
                                         else:
                                             major = False
                                         if p["currentOwner"] == "Humans":
                                             owner = "Super Earth"
                                             selogo = discord.File(
-                                                f"{self.here}\\images\\SuperEarth.png",
+                                                self.images["SE"],
                                                 filename="selogo.png",
                                             )
                                             files.add(selogo)
@@ -637,7 +642,7 @@ class HD2(commands.Cog):
                                                 case "Terminids":
                                                     owner = "Terminid"
                                                     tlogo = discord.File(
-                                                        f"{self.here}\\images\\Terminid.png",
+                                                        self.images["TR"],
                                                         filename="tlogo.png",
                                                     )
                                                     files.add(tlogo)
@@ -645,7 +650,7 @@ class HD2(commands.Cog):
                                                 case "Automaton":
                                                     owner = p["currentOwner"]
                                                     alogo = discord.File(
-                                                        f"{self.here}\\images\\Automaton.png",
+                                                        self.images["AT"],
                                                         filename="alogo.png",
                                                     )
                                                     files.add(alogo)
@@ -653,7 +658,7 @@ class HD2(commands.Cog):
                                                 case "Illuminate":
                                                     owner = p["currentOwner"]
                                                     ilogo = discord.File(
-                                                        f"{self.here}\\images\\Illuminate.png",
+                                                        self.images["IL"],
                                                         filename="ilogo.png",
                                                     )
                                                     files.add(ilogo)
@@ -676,7 +681,7 @@ class HD2(commands.Cog):
                                             attorigin = None
                                             event = None
                                         hdlogo = discord.File(
-                                            f"{self.here}\\images\\Helldivers.png",
+                                            self.images["HD"],
                                             filename="hdlogo.png",
                                         )
                                         files.add(hdlogo)
@@ -909,19 +914,19 @@ class HD2(commands.Cog):
                                         morder = None
                                         afiles = set()
                                         hdlogo = discord.File(
-                                            f"{self.here}\\images\\Helldivers.png",
+                                            self.images["HD"],
                                             filename="hdlogo.png",
                                         )
                                         afiles.add(hdlogo)
                                         alogo = discord.File(
-                                            f"{self.here}\\images\\Automaton.png",
+                                            self.images["AT"],
                                             filename="alogo.png",
                                         )
                                         afiles.add(alogo)
                                         for e in elist:
                                             if e.author and morder is None:
                                                 morder = discord.File(
-                                                    f"{self.here}\\images\\MajorOrder.png",
+                                                    self.images["MO"],
                                                     filename="mologo.png",
                                                 )
                                                 afiles.add(morder)
@@ -961,19 +966,19 @@ class HD2(commands.Cog):
                                         morder = None
                                         tfiles = set()
                                         hdlogo = discord.File(
-                                            f"{self.here}\\images\\Helldivers.png",
+                                            self.images["HD"],
                                             filename="hdlogo.png",
                                         )
                                         tfiles.add(hdlogo)
                                         tlogo = discord.File(
-                                            f"{self.here}\\images\\Terminid.png",
+                                            self.images["TR"],
                                             filename="tlogo.png",
                                         )
                                         tfiles.add(tlogo)
                                         for e in elist:
                                             if e.author and morder is None:
                                                 morder = discord.File(
-                                                    f"{self.here}\\images\\MajorOrder.png",
+                                                    self.images["MO"],
                                                     filename="mologo.png",
                                                 )
                                                 tfiles.add(morder)
@@ -1013,19 +1018,19 @@ class HD2(commands.Cog):
                                         morder = None
                                         ifiles = set()
                                         hdlogo = discord.File(
-                                            f"{self.here}\\images\\Helldivers.png",
+                                            self.images["HD"],
                                             filename="hdlogo.png",
                                         )
                                         ifiles.add(hdlogo)
                                         ilogo = discord.File(
-                                            f"{self.here}\\images\\Illuminate.png",
+                                            self.images["IL"],
                                             filename="ilogo.png",
                                         )
                                         ifiles.add(ilogo)
                                         for e in elist:
                                             if e.author and morder is None:
                                                 morder = discord.File(
-                                                    f"{self.here}\\images\\MajorOrder.png",
+                                                    self.images["MO"],
                                                     filename="mologo.png",
                                                 )
                                                 ifiles.add(morder)
@@ -1071,19 +1076,19 @@ class HD2(commands.Cog):
                                         morder = None
                                         sefiles = set()
                                         hdlogo = discord.File(
-                                            f"{self.here}\\images\\Helldivers.png",
+                                            self.images["HD"],
                                             filename="hdlogo.png",
                                         )
                                         sefiles.add(hdlogo)
                                         selogo = discord.File(
-                                            f"{self.here}\\images\\SuperEarth.png",
+                                            self.images["SE"],
                                             filename="selogo.png",
                                         )
                                         sefiles.add(selogo)
                                         for e in elist:
                                             if e.author and morder is None:
                                                 morder = discord.File(
-                                                    f"{self.here}\\images\\MajorOrder.png",
+                                                    self.images["MO"],
                                                     filename="mologo.png",
                                                 )
                                                 sefiles.add(morder)
@@ -1442,7 +1447,7 @@ class HD2(commands.Cog):
                                             briefing = briefing.replace(tag, "**")
                                             desc = desc.replace(tag, "**")
                                         morder = discord.File(
-                                            f"{self.here}\\images\\MajorOrder.png",
+                                            self.images["MO"],
                                             filename="mologo.png",
                                         )
                                         emb = await embed(title, briefing, desc, objectives, exp)
