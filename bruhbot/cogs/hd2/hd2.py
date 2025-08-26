@@ -492,7 +492,7 @@ class HD2(commands.Cog):
                         embed.add_field(name="Attack Origin:", value=attorigin)
                         embed.add_field(name="Time Remaining:", value=time, inline=False)
                         embed.add_field(name="Defense:", value=f"{bar1}▒{bar3} │ {liberation}%")
-                    embed.set_thumbnail(url="attachment://selogo.png")
+                    embed.set_thumbnail(url="attachment://faction.png")
                 else:
                     embed.add_field(name="Liberation:", value=f"{bar1}▒{bar3} │ {liberation}%")
                     if float(regen) <= 1.5:
@@ -504,12 +504,7 @@ class HD2(commands.Cog):
                     else:
                         resistance = f"ERROR {regen}"
                     embed.add_field(name="Enemy Resistance:", value=f"{regen}% ({resistance})", inline=False)
-                    if owner == "Automaton":
-                        embed.set_thumbnail(url="attachment://alogo.png")
-                    elif owner == "Terminid":
-                        embed.set_thumbnail(url="attachment://tlogo.png")
-                    elif owner == "Illuminate":
-                        embed.set_thumbnail(url="attachment://ilogo.png")
+                    embed.set_thumbnail(url="attachment://faction.png")
                 embed.add_field(
                     name="Biome:",
                     value=f"__{biome['name']}__\n{biome['description']}",
@@ -541,6 +536,53 @@ class HD2(commands.Cog):
                 if major is True:
                     embed.set_author(name="MAJOR ORDER", icon_url="attachment://mologo.png")
                 return embed
+
+            async def build(planetdata: dict, mo: list):
+                embl = []
+                embl2 = []
+                logo = None
+                for planet in planetdata:
+                    if planetdata[planet]["index"] in mo:
+                        major = True
+                    else:
+                        major = False
+                    if logo is None:
+                        logo = planetdata[planet]["logo"]
+                    emb = await embed(
+                        planet,
+                        planetdata[planet]["owner"],
+                        planetdata[planet]["lib"],
+                        planetdata[planet]["players"],
+                        major,
+                        planetdata[planet]["time"],
+                        planetdata[planet]["attacker"],
+                        planetdata[planet]["attorigin"],
+                        planetdata[planet]["color"],
+                        planetdata[planet]["biome"],
+                        planetdata[planet]["hazards"],
+                        planetdata[planet]["event"],
+                        planetdata[planet]["regen"],
+                        planetdata[planet]["regions"],
+                    )
+                    if len(embl) < 10:
+                        embl.append(emb)
+                    else:
+                        embl2.append(emb)
+                    embll = [embl, embl2]
+                for elist in embll:
+                    if elist:
+                        morder = None
+                        files = set()
+                        hdlogo = discord.File(self.images["HD"], filename="hdlogo.png")
+                        files.add(hdlogo)
+                        flogo = discord.File(logo, filename="faction.png")
+                        files.add(flogo)
+                        for e in elist:
+                            if e.author and morder is None:
+                                morder = discord.File(self.images["MO"], filename="mologo.png")
+                                files.add(morder)
+                                break
+                        await interaction.followup.send(files=files, embeds=elist)
 
             await interaction.response.defer()
             if planet is not None:  # single planet
@@ -580,23 +622,19 @@ class HD2(commands.Cog):
                                                 f"a1response status code {a1response.status}. Failed after 3 tries."
                                             )
                                             return
-                                        files = set()
-                                        if p["index"] in mo:
-                                            major = True
-                                            morder = discord.File(self.images["MO"], filename="mologo.png")
-                                            files.add(morder)
-                                        else:
-                                            major = False
-                                        if p["currentOwner"] == "Humans":
+                                        planetdata = {}
+                                        index = p["index"]
+                                        name = p["name"]
+                                        owner = p["currentOwner"]
+                                        players = p["statistics"]["playerCount"]
+                                        biome = p["biome"]
+                                        hazards = p["hazards"]
+                                        regions = p["regions"]
+                                        if owner == "Humans":
                                             owner = "Super Earth"
-                                            selogo = discord.File(
-                                                self.images["SE"],
-                                                filename="selogo.png",
-                                            )
-                                            files.add(selogo)
-                                            color = self.colors["SE"]
                                             regen = None
-                                            regions = p["regions"]
+                                            color = self.colors["SE"]
+                                            logo = self.images["SE"]
                                             if p["event"] is not None:
                                                 event = True
                                                 end = (
@@ -632,37 +670,11 @@ class HD2(commands.Cog):
                                                 )
                                             else:
                                                 event = None
-                                                end = None
                                                 lib = None
                                                 attacker = None
                                                 attorigin = None
                                                 time = None
                                         else:
-                                            match p["currentOwner"]:
-                                                case "Terminids":
-                                                    owner = "Terminid"
-                                                    tlogo = discord.File(
-                                                        self.images["TR"],
-                                                        filename="tlogo.png",
-                                                    )
-                                                    files.add(tlogo)
-                                                    color = self.colors["TR"]
-                                                case "Automaton":
-                                                    owner = p["currentOwner"]
-                                                    alogo = discord.File(
-                                                        self.images["AT"],
-                                                        filename="alogo.png",
-                                                    )
-                                                    files.add(alogo)
-                                                    color = self.colors["AT"]
-                                                case "Illuminate":
-                                                    owner = p["currentOwner"]
-                                                    ilogo = discord.File(
-                                                        self.images["IL"],
-                                                        filename="ilogo.png",
-                                                    )
-                                                    files.add(ilogo)
-                                                    color = self.colors["IL"]
                                             lib = str(
                                                 round(
                                                     float((p["maxHealth"] - p["health"]) / (p["maxHealth"]) * 100),
@@ -674,34 +686,40 @@ class HD2(commands.Cog):
                                                     round(((p["regenPerSecond"] * 3600) / p["maxHealth"]) * 100, 2)
                                                 )
                                             )
-                                            regions = p["regions"]
-                                            print(regions)
+                                            match owner:
+                                                case "Terminids":
+                                                    owner = "Terminid"
+                                                    color = self.colors["TR"]
+                                                    logo = self.images["TR"]
+                                                case "Automaton":
+                                                    color = self.colors["AT"]
+                                                    logo = self.images["AT"]
+                                                case "Illuminate":
+                                                    color = self.colors["IL"]
+                                                    logo = self.images["IL"]
                                             time = None
                                             attacker = None
                                             attorigin = None
                                             event = None
-                                        hdlogo = discord.File(
-                                            self.images["HD"],
-                                            filename="hdlogo.png",
-                                        )
-                                        files.add(hdlogo)
-                                        emb = await embed(
-                                            p["name"],
-                                            owner,
-                                            lib,
-                                            p["statistics"]["playerCount"],
-                                            major,
-                                            time,
-                                            attacker,
-                                            attorigin,
-                                            color,
-                                            p["biome"],
-                                            p["hazards"],
-                                            event,
-                                            regen,
-                                            regions,
-                                        )
-                                        await interaction.followup.send(files=files, embed=emb)
+                                        planetdata.update({
+                                            name: {
+                                                "index": index,
+                                                "lib": lib,
+                                                "owner": owner,
+                                                "time": time,
+                                                "attacker": attacker,
+                                                "attorigin": attorigin,
+                                                "color": color,
+                                                "players": players,
+                                                "biome": biome,
+                                                "hazards": hazards,
+                                                "event": event,
+                                                "regen": regen,
+                                                "regions": regions,
+                                                "logo": logo,
+                                            }
+                                        })
+                                        await build(planetdata, mo)
                                         await asyncio.sleep(0)
                                         return
                                     else:
@@ -752,6 +770,9 @@ class HD2(commands.Cog):
                                         .replace(tzinfo=timezone.utc)
                                         .astimezone(tz=None)
                                     )
+                                    now = datetime.now(UTC)
+                                    rdelta = relativedelta(end, now)
+                                    time = f"{rdelta.days}D:{rdelta.hours}H:{rdelta.minutes}M:{rdelta.seconds}S"
                                     attacker = planet["event"]["faction"].replace("Automaton", "Automatons")
                                     if not planet["attacking"]:
                                         attorigin = "Unknown"
@@ -776,14 +797,18 @@ class HD2(commands.Cog):
                                         name: {
                                             "index": index,
                                             "lib": lib,
-                                            "owner": owner,
-                                            "end": end,
+                                            "owner": "Super Earth",
+                                            "time": time,
                                             "attacker": attacker,
                                             "attorigin": attorigin,
+                                            "color": self.colors["SE"],
                                             "players": players,
                                             "biome": biome,
                                             "hazards": hazards,
+                                            "event": True,
+                                            "regen": None,
                                             "regions": regions,
+                                            "logo": self.images["SE"],
                                         }
                                     })
                                 else:
@@ -805,54 +830,76 @@ class HD2(commands.Cog):
                                             seplanetdata.update({
                                                 name: {
                                                     "index": index,
+                                                    "owner": "Super Earth",
                                                     "lib": lib,
-                                                    "owner": owner,
-                                                    "end": None,
+                                                    "players": players,
+                                                    "time": None,
                                                     "attacker": None,
                                                     "attorigin": None,
-                                                    "players": players,
+                                                    "color": self.colors["SE"],
                                                     "biome": biome,
                                                     "hazards": hazards,
+                                                    "event": None,
+                                                    "regen": None,
                                                     "regions": regions,
+                                                    "logo": self.images["SE"],
                                                 }
                                             })
                                         case "Automaton":
                                             aplanetdata.update({
                                                 name: {
                                                     "index": index,
-                                                    "lib": lib,
                                                     "owner": owner,
+                                                    "lib": lib,
                                                     "players": players,
+                                                    "time": None,
+                                                    "attacker": None,
+                                                    "attorigin": None,
+                                                    "color": self.colors["AT"],
                                                     "biome": biome,
                                                     "hazards": hazards,
+                                                    "event": None,
                                                     "regen": regen,
                                                     "regions": regions,
+                                                    "logo": self.images["AT"],
                                                 }
                                             })
                                         case "Terminids":
                                             tplanetdata.update({
                                                 name: {
                                                     "index": index,
+                                                    "owner": "Terminid",
                                                     "lib": lib,
-                                                    "owner": owner,
                                                     "players": players,
+                                                    "time": None,
+                                                    "attacker": None,
+                                                    "attorigin": None,
+                                                    "color": self.colors["TR"],
                                                     "biome": biome,
                                                     "hazards": hazards,
+                                                    "event": None,
                                                     "regen": regen,
                                                     "regions": regions,
+                                                    "logo": self.images["TR"],
                                                 }
                                             })
                                         case "Illuminate":
                                             iplanetdata.update({
                                                 name: {
                                                     "index": index,
-                                                    "lib": lib,
                                                     "owner": owner,
+                                                    "lib": lib,
                                                     "players": players,
+                                                    "time": None,
+                                                    "attacker": None,
+                                                    "attorigin": None,
+                                                    "color": self.colors["IL"],
                                                     "biome": biome,
                                                     "hazards": hazards,
+                                                    "event": None,
                                                     "regen": regen,
                                                     "regions": regions,
+                                                    "logo": self.images["IL"],
                                                 }
                                             })
                             for i in range(3):  # a2response
@@ -879,222 +926,8 @@ class HD2(commands.Cog):
                                     f"a2response status code {a2response.status}. Failed after 3 tries."
                                 )
                                 return
-
-                            if not aplanetdata == {}:
-                                aembl = []
-                                aembl2 = []
-                                for planet in aplanetdata:
-                                    if aplanetdata[planet]["index"] in mo:
-                                        major = True
-                                    else:
-                                        major = False
-                                    emb = await embed(
-                                        planet,
-                                        "Automaton",
-                                        aplanetdata[planet]["lib"],
-                                        aplanetdata[planet]["players"],
-                                        major,
-                                        None,
-                                        None,
-                                        None,
-                                        self.colors["AT"],
-                                        aplanetdata[planet]["biome"],
-                                        aplanetdata[planet]["hazards"],
-                                        None,
-                                        aplanetdata[planet]["regen"],
-                                        aplanetdata[planet]["regions"],
-                                    )
-                                    if len(aembl) < 10:
-                                        aembl.append(emb)
-                                    else:
-                                        aembl2.append(emb)
-                                    aembll = [aembl, aembl2]
-                                for elist in aembll:
-                                    if elist:
-                                        morder = None
-                                        afiles = set()
-                                        hdlogo = discord.File(
-                                            self.images["HD"],
-                                            filename="hdlogo.png",
-                                        )
-                                        afiles.add(hdlogo)
-                                        alogo = discord.File(
-                                            self.images["AT"],
-                                            filename="alogo.png",
-                                        )
-                                        afiles.add(alogo)
-                                        for e in elist:
-                                            if e.author and morder is None:
-                                                morder = discord.File(
-                                                    self.images["MO"],
-                                                    filename="mologo.png",
-                                                )
-                                                afiles.add(morder)
-                                                break
-                                        await interaction.followup.send(files=afiles, embeds=elist)
-                            if not tplanetdata == {}:
-                                tembl = []
-                                tembl2 = []
-                                for planet in tplanetdata:
-                                    if tplanetdata[planet]["index"] in mo:
-                                        major = True
-                                    else:
-                                        major = False
-                                    emb = await embed(
-                                        planet,
-                                        "Terminid",
-                                        tplanetdata[planet]["lib"],
-                                        tplanetdata[planet]["players"],
-                                        major,
-                                        None,
-                                        None,
-                                        None,
-                                        self.colors["TR"],
-                                        tplanetdata[planet]["biome"],
-                                        tplanetdata[planet]["hazards"],
-                                        None,
-                                        tplanetdata[planet]["regen"],
-                                        tplanetdata[planet]["regions"],
-                                    )
-                                    if len(tembl) < 10:
-                                        tembl.append(emb)
-                                    else:
-                                        tembl2.append(emb)
-                                    tembll = [tembl, tembl2]
-                                for elist in tembll:
-                                    if elist:
-                                        morder = None
-                                        tfiles = set()
-                                        hdlogo = discord.File(
-                                            self.images["HD"],
-                                            filename="hdlogo.png",
-                                        )
-                                        tfiles.add(hdlogo)
-                                        tlogo = discord.File(
-                                            self.images["TR"],
-                                            filename="tlogo.png",
-                                        )
-                                        tfiles.add(tlogo)
-                                        for e in elist:
-                                            if e.author and morder is None:
-                                                morder = discord.File(
-                                                    self.images["MO"],
-                                                    filename="mologo.png",
-                                                )
-                                                tfiles.add(morder)
-                                                break
-                                        await interaction.followup.send(files=tfiles, embeds=elist)
-                            if not iplanetdata == {}:
-                                iembl = []
-                                iembl2 = []
-                                for planet in iplanetdata:
-                                    if iplanetdata[planet]["index"] in mo:
-                                        major = True
-                                    else:
-                                        major = False
-                                    emb = await embed(
-                                        planet,
-                                        "Illuminate",
-                                        iplanetdata[planet]["lib"],
-                                        iplanetdata[planet]["players"],
-                                        major,
-                                        None,
-                                        None,
-                                        None,
-                                        self.colors["IL"],
-                                        iplanetdata[planet]["biome"],
-                                        iplanetdata[planet]["hazards"],
-                                        None,
-                                        iplanetdata[planet]["regen"],
-                                        iplanetdata[planet]["regions"],
-                                    )
-                                    if len(iembl) < 10:
-                                        iembl.append(emb)
-                                    else:
-                                        iembl2.append(emb)
-                                    iembll = [iembl, iembl2]
-                                for elist in iembll:
-                                    if elist:
-                                        morder = None
-                                        ifiles = set()
-                                        hdlogo = discord.File(
-                                            self.images["HD"],
-                                            filename="hdlogo.png",
-                                        )
-                                        ifiles.add(hdlogo)
-                                        ilogo = discord.File(
-                                            self.images["IL"],
-                                            filename="ilogo.png",
-                                        )
-                                        ifiles.add(ilogo)
-                                        for e in elist:
-                                            if e.author and morder is None:
-                                                morder = discord.File(
-                                                    self.images["MO"],
-                                                    filename="mologo.png",
-                                                )
-                                                ifiles.add(morder)
-                                                break
-                                        await interaction.followup.send(files=ifiles, embeds=elist)
-                            if not seplanetdata == {}:
-                                seembl = []
-                                seembl2 = []
-                                for planet in seplanetdata:
-                                    if seplanetdata[planet]["index"] in mo:
-                                        major = True
-                                    else:
-                                        major = False
-                                    if seplanetdata[planet]["end"] is not None:
-                                        now = datetime.now(UTC)
-                                        rdelta = relativedelta(seplanetdata[planet]["end"], now)
-                                        time = f"{rdelta.days}D:{rdelta.hours}H:{rdelta.minutes}M:{rdelta.seconds}S"
-                                    else:
-                                        time = None
-                                    emb = await embed(
-                                        planet,
-                                        "Super Earth",
-                                        seplanetdata[planet]["lib"],
-                                        seplanetdata[planet]["players"],
-                                        major,
-                                        time,
-                                        seplanetdata[planet]["attacker"],
-                                        seplanetdata[planet]["attorigin"],
-                                        self.colors["SE"],
-                                        seplanetdata[planet]["biome"],
-                                        seplanetdata[planet]["hazards"],
-                                        True,
-                                        None,
-                                        seplanetdata[planet]["regions"],
-                                    )
-                                    if len(seembl) < 10:
-                                        seembl.append(emb)
-                                    else:
-                                        seembl2.append(emb)
-                                    seembll = [seembl, seembl2]
-                                for elist in seembll:
-                                    if elist:
-                                        morder = None
-                                        sefiles = set()
-                                        hdlogo = discord.File(
-                                            self.images["HD"],
-                                            filename="hdlogo.png",
-                                        )
-                                        sefiles.add(hdlogo)
-                                        selogo = discord.File(
-                                            self.images["SE"],
-                                            filename="selogo.png",
-                                        )
-                                        sefiles.add(selogo)
-                                        for e in elist:
-                                            if e.author and morder is None:
-                                                morder = discord.File(
-                                                    self.images["MO"],
-                                                    filename="mologo.png",
-                                                )
-                                                sefiles.add(morder)
-                                                break
-                                        await interaction.followup.send(files=sefiles, embeds=elist)
-
+                            for pdata in [seplanetdata, aplanetdata, tplanetdata, iplanetdata]:
+                                await build(pdata, mo)
                         else:
                             cerror = True
                             await asyncio.sleep(self.retry)
