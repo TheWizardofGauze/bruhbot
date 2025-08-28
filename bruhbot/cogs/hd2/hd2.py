@@ -926,7 +926,7 @@ class HD2(commands.Cog):
                                     f"a2response status code {a2response.status}. Failed after 3 tries."
                                 )
                                 return
-                            for pdata in [seplanetdata, aplanetdata, tplanetdata, iplanetdata]:
+                            for pdata in [aplanetdata, tplanetdata, iplanetdata, seplanetdata]:
                                 await build(pdata, mo)
                         else:
                             cerror = True
