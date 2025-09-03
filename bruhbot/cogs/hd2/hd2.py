@@ -32,6 +32,8 @@ class HD2(commands.Cog):
         self.file = f"{self.here}\\hd2.json"
         load_dotenv(os.path.abspath(".\\bruhbot\\.env"))
         self.owner_id = int(os.getenv("OWNER_ID"))
+        self.channel_id = int(os.getenv("HD2_CID"))
+        self.testing_id = int(os.getenv("HD2_TID"))
         self.planet_tasks = [11, 12, 13]
         self.colors = {"SE": 0xB5D9E9, "DP": 0x2E3C4B, "AT": 0xFF6161, "TR": 0xFFB800, "IL": 0xCE8AEA}
         self.images = {
@@ -88,7 +90,7 @@ class HD2(commands.Cog):
             try:
                 with open(self.file, "r+", encoding="utf-8") as f:
                     data = json.load(f)
-                    channel = self.bot.get_channel(data["servers"][0]["cid"])
+                    channel = self.bot.get_channel(self.channel_id)
                     async with ClientSession(headers=self.headers) as session:
                         for i in range(3):  # dresponse
                             try:
@@ -499,8 +501,10 @@ class HD2(commands.Cog):
                         resistance = "Low"
                     elif float(regen) > 1.5 and float(regen) <= 2:
                         resistance = "Average"
-                    elif float(regen) > 2:
+                    elif float(regen) > 2 and float(regen) <= 4:
                         resistance = "High"
+                    elif float(range) > 4:
+                        resistance = "Very High"
                     else:
                         resistance = f"ERROR {regen}"
                     embed.add_field(name="Enemy Resistance:", value=f"{regen}% ({resistance})", inline=False)
