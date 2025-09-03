@@ -82,7 +82,7 @@ async def send_image(ctx, response: str, suppress: bool):
         await ctx.reply(file=discord.File(f"{here}\\images\\{image}"), mention_author=False)
     except Exception:  # missing image
         if suppress is False:
-            await ctx.reply("Error logged in send_image.")
+            await ctx.reply(f"Error logged in send_image. ({str(image)})")
             ErrorLogger.run(traceback.format_exc())
             return
         else:
