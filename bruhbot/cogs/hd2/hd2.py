@@ -931,7 +931,8 @@ class HD2(commands.Cog):
                                 )
                                 return
                             for pdata in [aplanetdata, tplanetdata, iplanetdata, seplanetdata]:
-                                await build(pdata, mo)
+                                if pdata != {}:
+                                    await build(pdata, mo)
                         else:
                             cerror = True
                             await asyncio.sleep(self.retry)
