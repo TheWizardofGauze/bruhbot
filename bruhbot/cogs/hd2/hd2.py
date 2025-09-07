@@ -503,7 +503,7 @@ class HD2(commands.Cog):
                         resistance = "Average"
                     elif float(regen) > 2 and float(regen) <= 4:
                         resistance = "High"
-                    elif float(range) > 4:
+                    elif float(regen) > 4:
                         resistance = "Very High"
                     else:
                         resistance = f"ERROR {regen}"
