@@ -69,6 +69,7 @@ class OPBR(commands.Cog):
                 today = datetime.today()
                 cont = Cont()
                 client = Client()
+                client.opener.addheaders = [("User-Agent", "Bruhbot")]
                 with open(self.file, "r+") as f:
                     data = json.load(f)
                     for name in names:
