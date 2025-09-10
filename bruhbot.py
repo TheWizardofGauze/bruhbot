@@ -208,17 +208,9 @@ async def addr(ctx, *, arg: str = None):
                         return
                     else:
                         invalid_counter += 1
-            if (
-                len(attachments) - invalid_counter == 1
-                or len(attachments) - dupe_counter == 1
-                or len(attachments) - size_counter == 1
-            ):
+            if len(attachments) - invalid_counter - dupe_counter - size_counter == 1:
                 added = "Image was added."
-            elif (
-                len(attachments) - invalid_counter == 0
-                or len(attachments) - dupe_counter == 0
-                or len(attachments) - size_counter == 0
-            ):
+            elif len(attachments) - invalid_counter - dupe_counter - size_counter == 0:
                 added = "No images were added."
             else:
                 added = "Images were added."
