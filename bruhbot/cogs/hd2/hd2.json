@@ -1,7 +1,7 @@
 {
-    "dispatch_id": 3409,
+    "dispatch_id": 3461,
     "assign_ids": [
-        392882474
+        1248051645
     ],
     "target_ids": [
         {
@@ -73,6 +73,10 @@
         {
             "id": 2197477188,
             "weapon": "Orbital Railcannon Strike"
+        },
+        {
+            "id": 4161086429,
+            "weapon": "R-2124 Constitution"
         }
     ],
     "sample_ids": [
