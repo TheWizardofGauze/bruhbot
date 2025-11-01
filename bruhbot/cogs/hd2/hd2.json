@@ -1,7 +1,8 @@
 {
-    "dispatch_id": 3461,
+    "dispatch_id": 3470,
     "assign_ids": [
-        1248051645
+        2125763288,
+        2773431239
     ],
     "target_ids": [
         {
@@ -27,6 +28,10 @@
         {
             "id": 1299714559,
             "target": "Chargers"
+        },
+        {
+            "id": 3929716830,
+            "target": "Hive Lords"
         },
         {
             "id": 2664856027,
