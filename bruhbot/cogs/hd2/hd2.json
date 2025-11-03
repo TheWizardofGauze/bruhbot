@@ -1,8 +1,7 @@
 {
-    "dispatch_id": 3470,
+    "dispatch_id": 3481,
     "assign_ids": [
-        2125763288,
-        2773431239
+        2125763288
     ],
     "target_ids": [
         {
@@ -64,6 +63,170 @@
     ],
     "weapon_ids": [
         {
+            "id": 2852344585,
+            "weapon": "AR-23 Liberator"
+        },
+        {
+            "id": 1676113140,
+            "weapon": "AR-23P Liberator Penetrator"
+        },
+        {
+            "id": 376039023,
+            "weapon": "AR-23C Liberator Concussive"
+        },
+        {
+            "id": 2088854385,
+            "weapon": "SG-8 Punisher"
+        },
+        {
+            "id": 3955657629,
+            "weapon": "SG-8P Punisher Plasma"
+        },
+        {
+            "id": 2246547985,
+            "weapon": "SG-8S Slugger"
+        },
+        {
+            "id": 1182300424,
+            "weapon": "SG-225 Breaker"
+        },
+        {
+            "id": 3068666625,
+            "weapon": "SG-225IE Breaker Incendiary"
+        },
+        {
+            "id": 3814689025,
+            "weapon": "SG-225SP Breaker Spray&Pray"
+        },
+        {
+            "id": 999487482,
+            "weapon": "ARC-12 Blitzer"
+        },
+        {
+            "id": 2,
+            "weapon": "MP-98 Knight"
+        },
+        {
+            "id": 2821209932,
+            "weapon": "SMG-37 Defender"
+        },
+        {
+            "id": 2307301438,
+            "weapon": "R-63 Diligence"
+        },
+        {
+            "id": 924530093,
+            "weapon": "R-63CS Diligence Counter Sniper"
+        },
+        {
+            "id": 3866352840,
+            "weapon": "LAS-5 Scythe"
+        },
+        {
+            "id": 1794436168,
+            "weapon": "LAS-16 Sickle"
+        },
+        {
+            "id": 925809350,
+            "weapon": "PLAS-1 Scorcher"
+        },
+        {
+            "id": 2121387072,
+            "weapon": "JAR-5 Dominator"
+        },
+        {
+            "id": 2640366401,
+            "weapon": "BR-14 Adjudicator"
+        },
+        {
+            "id": 339272294,
+            "weapon": "R-36 Eruptor"
+        },
+        {
+            "id": 1942567317,
+            "weapon": "CB-9 Exploding Crossbow"
+        },
+        {
+            "id": 1920374015,
+            "weapon": "AR-61 Tenderizer"
+        },
+        {
+            "id": 942049262,
+            "weapon": "SMG-72 Pummeler"
+        },
+        {
+            "id": 2887941494,
+            "weapon": "PLAS-101 Purifier"
+        },
+        {
+            "id": 1160920394,
+            "weapon": "AR-23A Liberator Carbine"
+        },
+        {
+            "id": 1321109120,
+            "weapon": "SG-451 Cookout"
+        },
+        {
+            "id": 4108040377,
+            "weapon": "FLAM-66 Torcher"
+        },
+        {
+            "id": 122941246,
+            "weapon": "SG-20 Halt"
+        },
+        {
+            "id": 725205791,
+            "weapon": "SMG-32 Reprimand"
+        },
+        {
+            "id": 4161086429,
+            "weapon": "R-2124 Constitution"
+        },
+        {
+            "id": 2811723672,
+            "weapon": "P-2 Peacemaker"
+        },
+        {
+            "id": 3981773112,
+            "weapon": "P-19 Redeemer"
+        },
+        {
+            "id": 1374036584,
+            "weapon": "P-4 Senator"
+        },
+        {
+            "id": 2501707184,
+            "weapon": "LAS-7 Dagger"
+        },
+        {
+            "id": 2797735596,
+            "weapon": "GP-31 Grenade Pistol"
+        },
+        {
+            "id": 1938200223,
+            "weapon": "P-113 Verdict"
+        },
+        {
+            "id": 2264358800,
+            "weapon": "SG-22 Bushwhacker"
+        },
+        {
+            "id": 2340232366,
+            "weapon": "P-72 Crisper"
+        },
+        {
+            "id": 1084288106,
+            "weapon": "P-11 Stim Pistol"
+        },
+        {
+            "id": 1902682578,
+            "weapon": "PLAS-15 Loyalist"
+        },
+        {
+            "id": 6,
+            "weapon": "CQC-19 Stun Lance"
+        },
+        {
             "id": 1978117092,
             "weapon": "M-105 Stalwart"
         },
@@ -78,10 +241,6 @@
         {
             "id": 2197477188,
             "weapon": "Orbital Railcannon Strike"
-        },
-        {
-            "id": 4161086429,
-            "weapon": "R-2124 Constitution"
         }
     ],
     "sample_ids": [
