@@ -608,7 +608,6 @@ class HD2(commands.Cog):
                                                     a1j = await a1response.json()
                                                     mo = []
                                                     if a1j == []:
-                                                        await interaction.followup.send("a1response returned empty")
                                                         break
                                                     else:
                                                         for t in a1j[0]["tasks"]:
