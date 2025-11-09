@@ -7,7 +7,7 @@ import os
 import traceback
 import typing
 
-from aiohttp import ClientSession
+from aiohttp import ClientSession, client_exceptions
 from dateutil.relativedelta import relativedelta
 import discord
 from dotenv import load_dotenv
@@ -95,38 +95,42 @@ class HD2(commands.Cog):
                         for i in range(3):  # dresponse
                             try:
                                 async with session.get(f"{self.api}/dispatches") as dresponse:
-                                    if dresponse.status == 200:
-                                        derror = False
-                                        dj = await dresponse.json()
-                                        if dj == []:
-                                            ErrorLogger.run("dresponse returned empty.")
-                                            break
-                                        for i, d in enumerate(reversed(dj)):
-                                            if d["id"] > data["dispatch_id"]:
-                                                with suppress(AttributeError):
-                                                    msg = d["message"]
-                                                    for tag in tags:
-                                                        msg = msg.replace(tag, "**")
-                                                    ts = (
-                                                        datetime.strptime(
-                                                            d["published"][:19].strip(), "%Y-%m-%dT%H:%M:%S"
+                                    try:
+                                        if dresponse.status == 200:
+                                            derror = False
+                                            dj = await dresponse.json()
+                                            if dj == []:
+                                                ErrorLogger.run("dresponse returned empty.")
+                                                break
+                                            for i, d in enumerate(reversed(dj)):
+                                                if d["id"] > data["dispatch_id"]:
+                                                    with suppress(AttributeError):
+                                                        msg = d["message"]
+                                                        for tag in tags:
+                                                            msg = msg.replace(tag, "**")
+                                                        ts = (
+                                                            datetime.strptime(
+                                                                d["published"][:19].strip(), "%Y-%m-%dT%H:%M:%S"
+                                                            )
+                                                            .replace(tzinfo=timezone.utc)
+                                                            .astimezone(tz=None)
                                                         )
-                                                        .replace(tzinfo=timezone.utc)
-                                                        .astimezone(tz=None)
-                                                    )
-                                                    emb = await dembed(message=msg, timestamp=ts)
-                                                    await channel.send(embed=emb)
-                                                    if not d["id"] == data["dispatch_id"]:
-                                                        data["dispatch_id"] = d["id"]
-                                                        f.seek(0)
-                                                        json.dump(data, f, indent=4)
-                                                        f.truncate()
+                                                        emb = await dembed(message=msg, timestamp=ts)
+                                                        await channel.send(embed=emb)
+                                                        if not d["id"] == data["dispatch_id"]:
+                                                            data["dispatch_id"] = d["id"]
+                                                            f.seek(0)
+                                                            json.dump(data, f, indent=4)
+                                                            f.truncate()
 
-                                            else:
-                                                continue
-                                        break
-                                    else:
-                                        derror = True
+                                                else:
+                                                    continue
+                                            break
+                                        else:
+                                            derror = True
+                                            continue
+                                    except (json.JSONDecodeError, client_exceptions.ClientPayloadError):
+                                        await asyncio.sleep(self.retry)
                                         continue
                             except (ConnectionAbortedError, asyncio.TimeoutError):
                                 ErrorLogger.run(traceback.format_exc())
@@ -420,7 +424,7 @@ class HD2(commands.Cog):
                                             aerror = True
                                             await asyncio.sleep(self.retry)
                                             continue
-                                    except json.JSONDecodeError:
+                                    except (json.JSONDecodeError, client_exceptions.ClientPayloadError):
                                         await asyncio.sleep(self.retry)
                                         continue
                             except (ConnectionAbortedError, asyncio.TimeoutError):
