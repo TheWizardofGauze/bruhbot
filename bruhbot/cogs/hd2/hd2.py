@@ -166,7 +166,7 @@ class HD2(commands.Cog):
                                                     acount = 0
                                                     for task in tasks:
                                                         match task["type"]:
-                                                            case 2:  # colect
+                                                            case 2:  # collect
                                                                 if (
                                                                     task["valueTypes"][4] == 5
                                                                     and task["values"][4] != 0
