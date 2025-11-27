@@ -166,7 +166,7 @@ class HD2(commands.Cog):
                                                     acount = 0
                                                     for task in tasks:
                                                         match task["type"]:
-                                                            case 2:
+                                                            case 2:  # colect
                                                                 if (
                                                                     task["valueTypes"][4] == 5
                                                                     and task["values"][4] != 0
@@ -201,7 +201,7 @@ class HD2(commands.Cog):
                                                                 objectives.append(
                                                                     f"- Collect {samples}{pname} | {task['values'][2]:,}"
                                                                 )
-                                                            case 3:
+                                                            case 3:  # eradicate
                                                                 if (
                                                                     task["valueTypes"][3] == 4
                                                                     and task["values"][3] != 0
@@ -272,7 +272,7 @@ class HD2(commands.Cog):
                                                                 objectives.append(
                                                                     f"- Extract from a successful mission{faction} | {task['values'][2]:,}"
                                                                 )
-                                                            case 9:
+                                                            case 9:  # operations
                                                                 if task["values"][0] != 0:
                                                                     match task["values"][0]:
                                                                         case 2:
@@ -298,13 +298,13 @@ class HD2(commands.Cog):
                                                                 else:
                                                                     diff = ""
                                                                 objectives.append(
-                                                                    f"Complete Operations{faction}{diff}. | {task['values'][1]:,}"
+                                                                    f"- Complete Operations{faction}{diff}. | {task['values'][1]:,}"
                                                                 )
-                                                            case 11:
+                                                            case 11:  # liberate
                                                                 pindex.append(task["values"][2])
                                                                 atype[acount] = 11
                                                                 acount += 1
-                                                            case 12:
+                                                            case 12:  # defend
                                                                 if task["values"][1] != 0:
                                                                     match task["values"][1]:
                                                                         case 2:
@@ -335,13 +335,13 @@ class HD2(commands.Cog):
                                                                 objectives.append(
                                                                     f"- Defend Planets{attack} | {str(task['values'][0])}"
                                                                 )
-                                                            case 13:
+                                                            case 13:  # control
                                                                 pindex.append(task["values"][2])
                                                                 atype[acount] = 13
                                                                 acount += 1
-                                                            case 15:
+                                                            case 15:  # expand
                                                                 objectives.append(
-                                                                    "-Capture more planets than the enemy."
+                                                                    "- Capture more planets than the enemy."
                                                                 )
                                                             case _:
                                                                 owner = await self.bot.fetch_user(self.owner_id)
@@ -1128,7 +1128,7 @@ class HD2(commands.Cog):
                                                     objectives.append(
                                                         f"- Extract from a successful mission{faction} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                     )
-                                                case 9:
+                                                case 9:  # operations
                                                     goal = task["values"][1]
                                                     if task["values"][0] != 0:
                                                         match task["values"][0]:
@@ -1197,7 +1197,7 @@ class HD2(commands.Cog):
                                                     pindex.append(task["values"][2])
                                                     atype[acount] = 13
                                                     acount += 1
-                                                case 15:
+                                                case 15:  # expand
                                                     bar1 = (
                                                         "▁" * (10 + prog[index]) + "█" * (prog[index] * -1)
                                                         if prog[index] < 0
