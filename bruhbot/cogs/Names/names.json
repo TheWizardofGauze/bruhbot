@@ -364,7 +364,27 @@
         "Splork",
         "Klelvin",
         "Crandon",
-        "Flimber"
+        "Flimber",
+        "Porely",
+        "Harnold",
+        "Beardicus",
+        "Phil",
+        "Dabbledob",
+        "Delebean",
+        "Fibblestib",
+        "Namfoodle",
+        "Horcusporcus",
+        "Saunterblugget",
+        "Jacques",
+        "Al",
+        "Seymour",
+        "Homer",
+        "Maya",
+        "Richard",
+        "Bill",
+        "Asheliigynme",
+        "Hokem",
+        "Furtis"
     ],
     "lastnames": [
         "McDichael",
@@ -656,7 +676,18 @@
         "Rundlewick",
         "Four",
         "Gorgsom",
-        "Jurbles"
+        "Jurbles",
+        "Mahooters",
+        "Wiggens",
+        "Wobbles",
+        "Tippletoe",
+        "Hampterfuppinshire",
+        "Strappe",
+        "Coholic",
+        "Butz",
+        "Sexual",
+        "Buttreeks",
+        "Wrangler"
     ],
     "prefix": [
         "Dr.",
@@ -671,17 +702,21 @@
         "His Excellency",
         "Chancellor",
         "Captain",
-        "\"Moist\""
+        "\"Moist\"",
+        "Admiral",
+        "Brotherman"
     ],
     "suffix": [
         "Jr.",
         "Sr.",
+        "II",
         "III",
         "IV",
         "V",
         "VI",
         "VII",
         "the Jizz-wailer",
-        "The Powerhouse"
+        "The Powerhouse",
+        "The Great"
     ]
 }
