@@ -21,3 +21,4 @@ bruhbot/responses.txt
 bruhbot/.megaignore
 bruhbot/desktop.ini
 cogs/Audio/localtracks/suno/online.txt
+bruhbot/cogs/hd2/addplanet.py
