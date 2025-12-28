@@ -533,7 +533,7 @@ class HD2(commands.Cog):
                             rlib = math.floor((region["maxHealth"] - region["health"]) / (region["maxHealth"]) * 100)
                             rbar1 = "█" * int(rlib / 10)
                             rbar3 = "▁" * (10 - len(rbar1) - 1)
-                            rg = f"{region['name']} │ {rbar1}▒{rbar3} │ {str(rlib)}%"
+                            rg = f"{region['name']}\n{rbar1}▒{rbar3} │ {str(rlib)}%"
                         else:
                             rg = region["name"]
                         r1.append(rg)
@@ -1058,7 +1058,7 @@ class HD2(commands.Cog):
                                                         pname = ""
                                                     goal = task["values"][2]
                                                     objectives.append(
-                                                        f"- Collect {samples}{pname} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                        f"- Collect {samples}{pname}\n{prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                     )
                                                 case 3:  # eradicate
                                                     if task["valueTypes"][3] == 4 and task["values"][3] != 0:
@@ -1109,7 +1109,7 @@ class HD2(commands.Cog):
                                                         pname = ""
                                                     goal = task["values"][2]
                                                     objectives.append(
-                                                        f"- Eradicate {target}{pname} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                        f"- Eradicate {target}{pname}\n{prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                     )
                                                 case 7:  # extract
                                                     goal = task["values"][2]
@@ -1126,7 +1126,7 @@ class HD2(commands.Cog):
                                                     else:
                                                         faction = ""
                                                     objectives.append(
-                                                        f"- Extract from a successful mission{faction} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                        f"- Extract from a successful mission{faction}\n{prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                     )
                                                 case 9:  # operations
                                                     goal = task["values"][1]
@@ -1154,7 +1154,7 @@ class HD2(commands.Cog):
                                                     else:
                                                         diff = ""
                                                     objectives.append(
-                                                        f"- Complete Operations{faction}{diff} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                        f"- Complete Operations{faction}{diff}\n{prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                     )
                                                 case 11:  # liberate
                                                     pindex.append(task["values"][2])
@@ -1184,14 +1184,14 @@ class HD2(commands.Cog):
                                                                 pname = f"**{pij['name']}**"
                                                             else:
                                                                 objectives.append(
-                                                                    f"- Defend Planet from {goal:,} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                                    f"- Defend Planet from {goal:,} {['attack', 'attacks'][await self.plural(goal)]}\n{prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                                 )
                                                         objectives.append(
-                                                            f"- Defend {pname} from {goal:,} {['attack', 'attacks'][await self.plural(goal)]} | {prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                            f"- Defend {pname} from {goal:,} {['attack', 'attacks'][await self.plural(goal)]}\n{prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                         )
                                                     else:
                                                         objectives.append(
-                                                            f"- Defend Planets{attack} | {prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                            f"- Defend Planets{attack}\n{prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
                                                         )
                                                 case 13:  # control
                                                     pindex.append(task["values"][2])
@@ -1209,7 +1209,7 @@ class HD2(commands.Cog):
                                                         else "▁" * 10
                                                     )
                                                     objectives.append(
-                                                        f"- Capture more planets than the enemy.\n\n{bar1}│{bar2}"
+                                                        f"- Capture more planets than the enemy.\n{bar1}│{bar2}"
                                                     )
                                                 case _:
                                                     await interaction.followup.send(
