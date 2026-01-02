@@ -548,6 +548,7 @@ class HD2(commands.Cog):
             async def build(planetdata: dict, mo: list):
                 embl = []
                 embl2 = []
+                embl3 = []  # this sucks but I'm lazy
                 logo = None
                 for planet in planetdata:
                     if planetdata[planet]["index"] in mo:
@@ -574,9 +575,11 @@ class HD2(commands.Cog):
                     )
                     if len(embl) < 10:
                         embl.append(emb)
-                    else:
+                    elif len(embl2) < 10:
                         embl2.append(emb)
-                    embll = [embl, embl2]
+                    else:
+                        embl3.append(emb)
+                    embll = [embl, embl2, embl3]
                 for elist in embll:
                     if elist:
                         morder = None
