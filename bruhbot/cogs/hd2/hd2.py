@@ -46,6 +46,7 @@ class HD2(commands.Cog):
         }
         self.retry = 15
         self.update_cooldown = 1800
+        self.status_codes = [400, 401, 403, 404, 429]
 
     hd2 = app_commands.Group(name="hd2", description="...")
 
@@ -109,9 +110,8 @@ class HD2(commands.Cog):
                                                         for tag in tags:
                                                             msg = msg.replace(tag, "**")
                                                         ts = (
-                                                            datetime.strptime(
-                                                                d["published"][:19].strip(), "%Y-%m-%dT%H:%M:%S"
-                                                            )
+                                                            datetime
+                                                            .strptime(d["published"][:19].strip(), "%Y-%m-%dT%H:%M:%S")
                                                             .replace(tzinfo=timezone.utc)
                                                             .astimezone(tz=None)
                                                         )
@@ -140,7 +140,7 @@ class HD2(commands.Cog):
                                 await owner.send("Error logged in HD2.")
                                 ErrorLogger.run(traceback.format_exc())
                                 break
-                        if derror is True and derror is not None and dresponse.status not in [503, 408]:
+                        if derror is True and derror is not None and dresponse.status in self.status_codes:
                             owner = await self.bot.fetch_user(self.owner_id)
                             await owner.send(f"dresponse status code {dresponse.status}")
                     await asyncio.sleep(0)
@@ -384,7 +384,8 @@ class HD2(commands.Cog):
                                                     briefing = mo["briefing"] if mo["briefing"] is not None else ""
                                                     desc = mo["description"] if mo["description"] is not None else ""
                                                     exp = round(
-                                                        datetime.strptime(
+                                                        datetime
+                                                        .strptime(
                                                             mo["expiration"][:19].strip(),
                                                             "%Y-%m-%dT%H:%M:%S",
                                                         )
@@ -435,7 +436,7 @@ class HD2(commands.Cog):
                                 await owner.send("Error logged in HD2.")
                                 ErrorLogger.run(traceback.format_exc())
                                 break
-                        if aerror is True and aerror is not None and aresponse.status not in [503, 408]:
+                        if aerror is True and aerror is not None and aresponse.status in self.status_codes:
                             owner = await self.bot.fetch_user(self.owner_id)
                             await owner.send(f"aresponse status code {aresponse.status}")
                     await asyncio.sleep(0)
@@ -466,7 +467,7 @@ class HD2(commands.Cog):
         name="warstatus",
         description="Get current Galactic War status for Helldivers 2.",
     )
-    @app_commands.checks.cooldown(1, 30, key=lambda i: (i.guild_id))
+    @app_commands.checks.cooldown(1, 30, key=lambda i: i.guild_id)
     async def warstatus(self, interaction: discord.Interaction, planet: str | None):
         try:
 
@@ -648,7 +649,8 @@ class HD2(commands.Cog):
                                             if p["event"] is not None:
                                                 event = True
                                                 end = (
-                                                    datetime.strptime(
+                                                    datetime
+                                                    .strptime(
                                                         p["event"]["endTime"][:19].strip(),
                                                         "%Y-%m-%dT%H:%M:%S",
                                                     )
@@ -773,7 +775,8 @@ class HD2(commands.Cog):
                                 regions = planet["regions"]
                                 if owner == "Humans" and index != 0:
                                     end = (
-                                        datetime.strptime(
+                                        datetime
+                                        .strptime(
                                             planet["event"]["endTime"][:19].strip(),
                                             "%Y-%m-%dT%H:%M:%S",
                                         )
@@ -978,7 +981,7 @@ class HD2(commands.Cog):
             )
 
     @hd2.command(name="mostatus", description="Get current Major Order status for Helldivers 2.")
-    @app_commands.checks.cooldown(1, 30, key=lambda i: (i.guild_id))
+    @app_commands.checks.cooldown(1, 30, key=lambda i: i.guild_id)
     async def mostatus(self, interaction: discord.Interaction):
         try:
 
@@ -1278,7 +1281,8 @@ class HD2(commands.Cog):
                                         briefing = mo["briefing"] if mo["briefing"] is not None else ""
                                         desc = mo["description"] if mo["description"] is not None else ""
                                         exp = round(
-                                            datetime.strptime(
+                                            datetime
+                                            .strptime(
                                                 mo["expiration"][:19].strip(),
                                                 "%Y-%m-%dT%H:%M:%S",
                                             )
