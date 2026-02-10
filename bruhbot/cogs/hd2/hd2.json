@@ -249,6 +249,10 @@
         {
             "id": 1520012896,
             "weapon": "Orbital Laser"
+        },
+        {
+            "id": 1764323819,
+            "target": "One True Flag"
         }
     ],
     "sample_ids": [
