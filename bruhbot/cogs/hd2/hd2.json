@@ -1,7 +1,8 @@
 {
-    "dispatch_id": 3611,
+    "dispatch_id": 3627,
     "assign_ids": [
-        211984487
+        1604225357,
+        1013696053
     ],
     "target_ids": [
         {
@@ -25,7 +26,7 @@
             "target": "Impalers"
         },
         {
-            "id": 1299714559,
+            "id": 2651633799,
             "target": "Chargers"
         },
         {
