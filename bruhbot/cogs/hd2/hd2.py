@@ -86,7 +86,7 @@ class HD2(commands.Cog):
                 await owner.send("Error logged in HD2.")
                 ErrorLogger.run(traceback.format_exc())
 
-        tags = ["<i=1>", "<i=3>", "</i>"]
+        tags = ["<i=1>", "<i=3>", "</i>", "</>"]
         while True:
             try:
                 with open(self.file, "r+", encoding="utf-8") as f:
