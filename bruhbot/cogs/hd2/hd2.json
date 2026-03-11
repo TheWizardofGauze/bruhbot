@@ -1,7 +1,7 @@
 {
-    "dispatch_id": 3677,
+    "dispatch_id": 3692,
     "assign_ids": [
-        1071750134
+        1700812643
     ],
     "target_ids": [
         {
@@ -43,6 +43,14 @@
         {
             "id": 4039692928,
             "target": "Troopers"
+        },
+        {
+            "id": 1371180916,
+            "target": "Agitators"
+        },
+        {
+            "id": 23741406,
+            "target": "Radicals"
         },
         {
             "id": 4211847317,
