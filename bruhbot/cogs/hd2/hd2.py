@@ -1,17 +1,17 @@
 import asyncio
-from contextlib import suppress
-from datetime import datetime, UTC, timezone
 import json
 import math
 import os
 import traceback
 import typing
+from contextlib import suppress
+from datetime import UTC, datetime, timezone
 
+import discord
 from aiohttp import ClientSession, client_exceptions
 from dateutil.relativedelta import relativedelta
-import discord
 from dotenv import load_dotenv
-from redbot.core import commands, app_commands
+from redbot.core import app_commands, commands
 
 from bruhbot import ErrorLogger
 
@@ -117,7 +117,7 @@ class HD2(commands.Cog):
                                                         )
                                                         emb = await dembed(message=msg, timestamp=ts)
                                                         await channel.send(embed=emb)
-                                                        if not d["id"] == data["dispatch_id"]:
+                                                        if d["id"] != data["dispatch_id"]:
                                                             data["dispatch_id"] = d["id"]
                                                             f.seek(0)
                                                             json.dump(data, f, indent=4)
@@ -327,13 +327,13 @@ class HD2(commands.Cog):
                                                                             pname = f"**{pij['name']}**"
                                                                         else:
                                                                             objectives.append(
-                                                                                f"- Defend Planet | {str(task['values'][0])}"
+                                                                                f"- Defend Planet | {task['values'][0]!s}"
                                                                             )
                                                                     objectives.append(
                                                                         f"- Defend {pname} from {task['values'][0]:,} {['attack', 'attacks'][await self.plural(task['values'][0])]}"
                                                                     )
                                                                 objectives.append(
-                                                                    f"- Defend Planets{attack} | {str(task['values'][0])}"
+                                                                    f"- Defend Planets{attack} | {task['values'][0]!s}"
                                                                 )
                                                             case 13:  # control
                                                                 pindex.append(task["values"][2])
@@ -346,7 +346,7 @@ class HD2(commands.Cog):
                                                             case _:
                                                                 owner = await self.bot.fetch_user(self.owner_id)
                                                                 await owner.send(
-                                                                    f"Unknown task type {str(task['type'])}. Aborting..."
+                                                                    f"Unknown task type {task['type']!s}. Aborting..."
                                                                 )
                                                                 ErrorLogger.run(str(mo))
                                                                 return
@@ -491,7 +491,7 @@ class HD2(commands.Cog):
                 embed.title = name
                 embed.description = f"{owner} control"
                 if liberation:
-                    bar1 = "█" * int((math.floor(float(liberation)) / 10))
+                    bar1 = "█" * int(math.floor(float(liberation)) / 10)
                     bar3 = "▁" * (10 - len(bar1) - 1)
                 if owner == "Super Earth":
                     if event is not None and name != "SUPER EARTH":
@@ -534,11 +534,11 @@ class HD2(commands.Cog):
                             rlib = math.floor((region["maxHealth"] - region["health"]) / (region["maxHealth"]) * 100)
                             rbar1 = "█" * int(rlib / 10)
                             rbar3 = "▁" * (10 - len(rbar1) - 1)
-                            rg = f"{region['name']}\n{rbar1}▒{rbar3} │ {str(rlib)}%"
+                            rg = f"{region['name']}\n{rbar1}▒{rbar3} │ {rlib!s}%"
                         else:
                             rg = region["name"]
                         r1.append(rg)
-                    if not r1 == []:
+                    if r1 != []:
                         r2 = "\n".join(r1)
                         embed.add_field(name="Cities:", value=r2, inline=False)
                 embed.set_footer(text=f"{players} Helldivers", icon_url="attachment://hdlogo.png")
@@ -1064,7 +1064,7 @@ class HD2(commands.Cog):
                                                         pname = ""
                                                     goal = task["values"][2]
                                                     objectives.append(
-                                                        f"- Collect {samples}{pname}\n{prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                        f"- Collect {samples}{pname}\n{prog[index]:,} / {goal:,} - {round(float((prog[index] / goal) * 100), 1)!s}%"
                                                     )
                                                 case 3:  # eradicate
                                                     if task["valueTypes"][3] == 4 and task["values"][3] != 0:
@@ -1115,7 +1115,7 @@ class HD2(commands.Cog):
                                                         pname = ""
                                                     goal = task["values"][2]
                                                     objectives.append(
-                                                        f"- Eradicate {target}{pname}\n{prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                        f"- Eradicate {target}{pname}\n{prog[index]:,} / {goal:,} - {round(float((prog[index] / goal) * 100), 1)!s}%"
                                                     )
                                                 case 7:  # extract
                                                     goal = task["values"][2]
@@ -1132,7 +1132,7 @@ class HD2(commands.Cog):
                                                     else:
                                                         faction = ""
                                                     objectives.append(
-                                                        f"- Extract from a successful mission{faction}\n{prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                        f"- Extract from a successful mission{faction}\n{prog[index]:,} / {goal:,} - {round(float((prog[index] / goal) * 100), 1)!s}%"
                                                     )
                                                 case 9:  # operations
                                                     goal = task["values"][1]
@@ -1160,7 +1160,7 @@ class HD2(commands.Cog):
                                                     else:
                                                         diff = ""
                                                     objectives.append(
-                                                        f"- Complete Operations{faction}{diff}\n{prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                        f"- Complete Operations{faction}{diff}\n{prog[index]:,} / {goal:,} - {round(float((prog[index] / goal) * 100), 1)!s}%"
                                                     )
                                                 case 11:  # liberate
                                                     pindex.append(task["values"][2])
@@ -1190,14 +1190,14 @@ class HD2(commands.Cog):
                                                                 pname = f"**{pij['name']}**"
                                                             else:
                                                                 objectives.append(
-                                                                    f"- Defend Planet from {goal:,} {['attack', 'attacks'][await self.plural(goal)]}\n{prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                                    f"- Defend Planet from {goal:,} {['attack', 'attacks'][await self.plural(goal)]}\n{prog[index]} / {goal} - {round(float((prog[index] / goal) * 100), 1)!s}%"
                                                                 )
                                                         objectives.append(
-                                                            f"- Defend {pname} from {goal:,} {['attack', 'attacks'][await self.plural(goal)]}\n{prog[index]} / {goal} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                            f"- Defend {pname} from {goal:,} {['attack', 'attacks'][await self.plural(goal)]}\n{prog[index]} / {goal} - {round(float((prog[index] / goal) * 100), 1)!s}%"
                                                         )
                                                     else:
                                                         objectives.append(
-                                                            f"- Defend Planets{attack}\n{prog[index]:,} / {goal:,} - {str(round(float((prog[index] / goal) * 100), 1))}%"
+                                                            f"- Defend Planets{attack}\n{prog[index]:,} / {goal:,} - {round(float((prog[index] / goal) * 100), 1)!s}%"
                                                         )
                                                 case 13:  # control
                                                     pindex.append(task["values"][2])
@@ -1219,7 +1219,7 @@ class HD2(commands.Cog):
                                                     )
                                                 case _:
                                                     await interaction.followup.send(
-                                                        f"Unknown task type {str(task['type'])}. Aborting..."
+                                                        f"Unknown task type {task['type']!s}. Aborting..."
                                                     )
                                                     ErrorLogger.run(str(mo))
                                                     return

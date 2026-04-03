@@ -1,11 +1,11 @@
 import json
 import os
-from random import choice, random
 import re
 import traceback
+from random import choice, random
 
 import discord
-from redbot.core import commands, app_commands
+from redbot.core import app_commands, commands
 
 from bruhbot import ErrorLogger
 
@@ -82,13 +82,13 @@ class Names(commands.Cog):
                             raise Exception
                         with open(self.file, "r+", encoding="utf-8") as f:
                             data = json.load(f)
-                            if not str(self.prefix) == "" and str(self.prefix) not in data["prefix"]:
+                            if str(self.prefix) != "" and str(self.prefix) not in data["prefix"]:
                                 data["prefix"].append(str(self.prefix))
-                            if not str(self.name1) == "" and str(self.name1) not in data["firstnames"]:
+                            if str(self.name1) != "" and str(self.name1) not in data["firstnames"]:
                                 data["firstnames"].append(str(self.name1))
-                            if not str(self.name2) == "" and str(self.name2) not in data["lastnames"]:
+                            if str(self.name2) != "" and str(self.name2) not in data["lastnames"]:
                                 data["lastnames"].append(str(self.name2))
-                            if not str(self.suffix) == "" and str(self.suffix) not in data["suffix"]:
+                            if str(self.suffix) != "" and str(self.suffix) not in data["suffix"]:
                                 data["suffix"].append(str(self.suffix))
                             f.seek(0)
                             json.dump(data, f, indent=4)
@@ -196,13 +196,13 @@ class Names(commands.Cog):
                         raise Exception
                     with open(self.file, "r+", encoding="utf-8") as f:
                         data = json.load(f)
-                        if not str(self.prefix) == "" and str(self.prefix) not in data["prefix"]:
+                        if str(self.prefix) != "" and str(self.prefix) not in data["prefix"]:
                             data["prefix"].append(str(self.prefix))
-                        if not str(self.name1) == "" and str(self.name1) not in data["firstnames"]:
+                        if str(self.name1) != "" and str(self.name1) not in data["firstnames"]:
                             data["firstnames"].append(str(self.name1))
-                        if not str(self.name2) == "" and str(self.name2) not in data["lastnames"]:
+                        if str(self.name2) != "" and str(self.name2) not in data["lastnames"]:
                             data["lastnames"].append(str(self.name2))
-                        if not str(self.suffix) == "" and str(self.suffix) not in data["suffix"]:
+                        if str(self.suffix) != "" and str(self.suffix) not in data["suffix"]:
                             data["suffix"].append(str(self.suffix))
                         f.seek(0)
                         json.dump(data, f, indent=4)

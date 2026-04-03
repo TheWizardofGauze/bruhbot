@@ -1,22 +1,21 @@
 import asyncio
-from contextlib import suppress
-from datetime import date, datetime
-from io import BytesIO
 import json
 import os
-from random import choice, random
 import re
 import string
 import traceback
+from contextlib import suppress
+from datetime import date, datetime
+from io import BytesIO
+from random import choice, random
 
-from dateutil.relativedelta import relativedelta
 import discord
+from dateutil.relativedelta import relativedelta
 from discord.ext import commands
 from discord.utils import escape_markdown
 from dotenv import load_dotenv
 
-from bruhbot import ResponseBackup, ErrorLogger, ForzaSeason
-
+from bruhbot import ErrorLogger, ForzaSeason, ResponseBackup
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -82,7 +81,7 @@ async def send_image(ctx, response: str, suppress: bool):
         await ctx.reply(file=discord.File(f"{here}\\images\\{image}"), mention_author=False)
     except Exception:  # missing image
         if suppress is False:
-            await ctx.reply(f"Error logged in send_image. ({str(image)})")
+            await ctx.reply(f"Error logged in send_image. ({image!s})")
             ErrorLogger.run(traceback.format_exc())
             return
         else:
@@ -92,7 +91,7 @@ async def send_image(ctx, response: str, suppress: bool):
 @bot.event
 async def on_ready():
     servers = list(bot.guilds)
-    print(f"{bot.user.name}(ID:{bot.user.id}) connected to {str(len(servers))} servers")
+    print(f"{bot.user.name}(ID:{bot.user.id}) connected to {len(servers)!s} servers")
     await auto_backup()
     await check_age()
 
@@ -146,7 +145,7 @@ async def on_message(msg):
 
 
 @bot.command()
-async def addr(ctx, *, arg: str = None):
+async def addr(ctx, *, arg: str | None):
     try:
         if len(ctx.message.clean_content) > 2000:
             await ctx.reply("Error: Response must be 2000 characters or less.", mention_author=False)
@@ -214,14 +213,14 @@ async def addr(ctx, *, arg: str = None):
                 added = "No images were added."
             else:
                 added = "Images were added."
-            if not invalid_counter == len(attachments):
+            if invalid_counter != len(attachments):
                 await ctx.reply(f"{added} :thumbsup:", mention_author=False)
             if dupe_counter > 0:
-                await ctx.send(f"Blocked {str(dupe_counter)} duplicate files.")
+                await ctx.send(f"Blocked {dupe_counter!s} duplicate files.")
             if invalid_counter > 0:
-                await ctx.send(f"Blocked {str(invalid_counter)} invalid files.")
+                await ctx.send(f"Blocked {invalid_counter!s} invalid files.")
             if size_counter > 0:
-                await ctx.send(f"Blocked {str(size_counter)} large files. (Max 25MB)")
+                await ctx.send(f"Blocked {size_counter!s} large files. (Max 25MB)")
             return
         if not arg and not ctx.message.reference:
             await help(ctx, "addr")

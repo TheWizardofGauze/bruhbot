@@ -1,11 +1,11 @@
-from contextlib import suppress
-from datetime import datetime
 import json
 import os
 import traceback
+from contextlib import suppress
+from datetime import datetime
 
-from dateutil.relativedelta import relativedelta
 import discord
+from dateutil.relativedelta import relativedelta
 from redbot.core import commands
 from wikidata.client import Client
 
@@ -105,7 +105,7 @@ class OPBR(commands.Cog):
                                     f.truncate()
                                     raise cont
                             age = relativedelta(today, birth_date).years
-                            if not int(data[name]["age"]) == age:
+                            if int(data[name]["age"]) != age:
                                 new = True
                                 msg = discord.Embed(
                                     title=self.title,
