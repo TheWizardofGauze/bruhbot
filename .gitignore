@@ -22,3 +22,4 @@ bruhbot/.megaignore
 bruhbot/desktop.ini
 cogs/Audio/localtracks/suno/online.txt
 bruhbot/cogs/hd2/addplanet.py
+bruhbot/cogs/names/Character Names.py
