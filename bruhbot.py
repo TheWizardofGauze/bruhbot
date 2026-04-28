@@ -663,7 +663,7 @@ async def rlist(ctx):
                     return True
                 else:
                     if self.counter < 5:
-                        await interaction.followup.send("That's not you button.", ephemeral=True)
+                        await interaction.followup.send("That's not your button.", ephemeral=True)
                         self.counter += 1
                     elif self.counter >= 5 and self.counter < 8:
                         await interaction.followup.send("Dude stop.", ephemeral=True)
