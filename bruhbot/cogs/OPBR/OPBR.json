@@ -1,5 +1,5 @@
 {
-    "updated": "12/22/2025 04:02 PM",
+    "updated": "04/03/2026 01:11 AM",
     "names": [
         "Tony Bennett",
         "Betty White",
@@ -136,7 +136,7 @@
     },
     "William Shatner": {
         "id": "Q16297",
-        "age": 94,
+        "age": 95,
         "dead": 0
     },
     "Mikhail Gorbachev": {
@@ -156,7 +156,7 @@
     },
     "Buzz Aldrin": {
         "id": "Q2252",
-        "age": 95,
+        "age": 96,
         "dead": 0
     },
     "Michael Collins (astronaut)": {
@@ -171,7 +171,7 @@
     },
     "William Daniels": {
         "id": "Q370181",
-        "age": 98,
+        "age": 99,
         "dead": 0
     },
     "Gene Hackman": {
@@ -191,7 +191,7 @@
     },
     "John Williams": {
         "id": "Q131285",
-        "age": 93,
+        "age": 94,
         "dead": 0
     }
 }

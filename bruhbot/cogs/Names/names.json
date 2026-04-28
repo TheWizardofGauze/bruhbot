@@ -468,7 +468,9 @@
         "Sarah",
         "Susannah",
         "Theophila",
-        "Tryphona"
+        "Tryphona",
+        "Del",
+        "Glancy"
     ],
     "lastnames": [
         "McDichael",
@@ -861,7 +863,8 @@
         "Owen",
         "Sparkling",
         "Townsend",
-        "Wassey"
+        "Wassey",
+        "Wambo"
     ],
     "prefix": [
         "Dr.",
@@ -878,7 +881,9 @@
         "Captain",
         "\"Moist\"",
         "Admiral",
-        "Brotherman"
+        "Brotherman",
+        "The Amazing",
+        "Wide"
     ],
     "suffix": [
         "Jr.",
@@ -890,7 +895,7 @@
         "VI",
         "VII",
         "the Jizz-wailer",
-        "The Powerhouse",
-        "The Great"
+        "the Powerhouse",
+        "the Great"
     ]
 }
