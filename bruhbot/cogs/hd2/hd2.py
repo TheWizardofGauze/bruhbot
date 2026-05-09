@@ -91,7 +91,7 @@ class HD2(commands.Cog):
             try:
                 with open(self.file, "r+", encoding="utf-8") as f:
                     data = json.load(f)
-                    channel = self.bot.get_channel(self.testing_id)
+                    channel = self.bot.get_channel(self.channel_id)
                     async with ClientSession(headers=self.headers) as session:
                         for i in range(3):  # dresponse
                             try:
