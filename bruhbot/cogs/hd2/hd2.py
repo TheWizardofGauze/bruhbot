@@ -91,7 +91,7 @@ class HD2(commands.Cog):
             try:
                 with open(self.file, "r+", encoding="utf-8") as f:
                     data = json.load(f)
-                    channel = self.bot.get_channel(self.channel_id)
+                    channel = self.bot.get_channel(self.testing_id)
                     async with ClientSession(headers=self.headers) as session:
                         for i in range(3):  # dresponse
                             try:
@@ -315,26 +315,25 @@ class HD2(commands.Cog):
                                                                             faction = "**Illuminate**"
                                                                         case _:
                                                                             faction = "[Unknown]"
-                                                                    attack = f" from {faction} attack"
+                                                                    attack = f" from {faction} attacks"
                                                                 else:
                                                                     attack = ""
                                                                 if task["values"][3] != 0:
                                                                     async with session.get(
                                                                         f"{self.api}/planets/{task['values'][3]}"
                                                                     ) as piresponse:
-                                                                        pij = await piresponse.json()
                                                                         if piresponse.status == 200:
+                                                                            pij = await piresponse.json()
                                                                             pname = f"**{pij['name']}**"
                                                                         else:
-                                                                            objectives.append(
-                                                                                f"- Defend Planet | {task['values'][0]!s}"
-                                                                            )
+                                                                            pname = "Unknown Planet"
                                                                     objectives.append(
-                                                                        f"- Defend {pname} from {task['values'][0]:,} {['attack', 'attacks'][await self.plural(task['values'][0])]}"
+                                                                        f"- Defend {pname}{attack} | {task['values'][0]:,}"
                                                                     )
-                                                                objectives.append(
-                                                                    f"- Defend Planets{attack} | {task['values'][0]!s}"
-                                                                )
+                                                                else:
+                                                                    objectives.append(
+                                                                        f"- Defend Planets{attack} | {task['values'][0]!s}"
+                                                                    )
                                                             case 13:  # control
                                                                 pindex.append(task["values"][2])
                                                                 atype[acount] = 13
@@ -1185,15 +1184,13 @@ class HD2(commands.Cog):
                                                         async with session.get(
                                                             f"{self.api}/planets/{task['values'][3]}"
                                                         ) as piresponse:
-                                                            pij = await piresponse.json()
                                                             if piresponse.status == 200:
+                                                                pij = await piresponse.json()
                                                                 pname = f"**{pij['name']}**"
                                                             else:
-                                                                objectives.append(
-                                                                    f"- Defend Planet from {goal:,} {['attack', 'attacks'][await self.plural(goal)]}\n{prog[index]} / {goal} - {round(float((prog[index] / goal) * 100), 1)!s}%"
-                                                                )
+                                                                pname = "Unknown Planet"
                                                         objectives.append(
-                                                            f"- Defend {pname} from {goal:,} {['attack', 'attacks'][await self.plural(goal)]}\n{prog[index]} / {goal} - {round(float((prog[index] / goal) * 100), 1)!s}%"
+                                                            f"- Defend {pname}{attack} {goal:,} {['attack', 'attacks'][await self.plural(goal)]}\n{prog[index]} / {goal} - {round(float((prog[index] / goal) * 100), 1)!s}%"
                                                         )
                                                     else:
                                                         objectives.append(
