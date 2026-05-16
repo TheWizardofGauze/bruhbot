@@ -1,6 +1,8 @@
 {
-    "dispatch_id": 3734,
+    "dispatch_id": 3738,
     "assign_ids": [
+        1933262442,
+        601181116
     ],
     "target_ids": [
         {
@@ -258,8 +260,8 @@
             "weapon": "Orbital Laser"
         },
         {
-            "id": 1764323819,
-            "target": "One True Flag"
+            "id": 2265180087,
+            "target": "CQC-1 One True Flag"
         }
     ],
     "sample_ids": [
