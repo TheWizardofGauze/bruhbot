@@ -886,8 +886,12 @@ async def age(ctx):
 async def forza(ctx):
     if ctx.invoked_subcommand is None:
         season = ForzaSeason.season()
+        color = await get_color(ctx)
+        emb = discord.Embed(color=color)
+        emb.add_field(name="Horizon 4", value=season[0].capitalize(), inline=False)
+        emb.add_field(name="Horizon 5\nHorizon 6", value=season[1].capitalize(), inline=False)
         await ctx.reply(
-            f"Horizon 4: {season[0].capitalize()}\nHorizon 5: {season[1].capitalize()}",
+            embed=emb,
             mention_author=False,
         )
 
