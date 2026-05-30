@@ -1,6 +1,5 @@
-from datetime import datetime
 import os
-
+from datetime import datetime
 
 logdir = os.path.dirname(__file__) + "\\logs\\"
 
@@ -11,10 +10,10 @@ def run(exception: str):
     filename = f"ErrorLog {today.strftime('%Y-%m-%d')}.txt"  # YYYY-MM-DD
     if not os.path.isfile(logdir + filename):
         with open(logdir + filename, "w") as f:
-            f.write(f"{today.strftime('%I:%M %p')} {str(exception)}\n")  # HH/MM (12 hour time)
+            f.write(f"{today.strftime('%I:%M %p')} {exception!s}\n")  # HH/MM (12 hour time)
             return
     with open(logdir + filename, "a") as f:
-        f.write(f"\n{today.strftime('%I:%M %p')} {str(exception)}\n")
+        f.write(f"\n{today.strftime('%I:%M %p')} {exception!s}\n")
 
 
 def clear():
@@ -27,7 +26,7 @@ def last():
     files = os.listdir(logdir)
     if files == []:
         return "No logs found."
-    newest = max(files, key=lambda f: os.path.getmtime("{}/{}".format(logdir, f)))
+    newest = max(files, key=lambda f: os.path.getmtime(f"{logdir}/{f}"))
     log = newest.replace(".txt", "")
     with open(logdir + newest) as f:
         for line in f:

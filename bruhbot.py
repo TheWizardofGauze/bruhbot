@@ -936,7 +936,7 @@ async def logs(ctx):
             @discord.ui.button(style=discord.ButtonStyle.secondary, label="Clear Logs")
             async def buttonClear(self, interaction: discord.Interaction, button: discord.ui.Button):
                 await interaction.response.defer()
-                if interaction.user.id == 108105758578577408:
+                if interaction.user.id == owner_id:
                     self.buttonClear.disabled = True
                     await self.msg.edit(view=self)
                     await clear(ctx)

@@ -1,6 +1,6 @@
-from datetime import datetime
 import os
 import shutil
+from datetime import datetime
 
 
 def run():
@@ -15,15 +15,15 @@ def run():
         shutil.copyfile(src, dst)
         filelist = os.listdir(bd)
         if len(filelist) > 25:  # max 5 of each
-            oldest = min(filelist, key=lambda f: os.path.getmtime("{}/{}".format(bd, f)))
+            oldest = min(filelist, key=lambda f: os.path.getmtime(f"{bd}/{f}"))
             os.remove(bd + oldest)
     for file in cogfiles:
-        src = f"{cwd}cogs\\{file.replace('.json','')}\\{file}"
+        src = f"{cwd}cogs\\{file.replace('.json', '')}\\{file}"
         dst = f"{bd}{file}.backup[{today.strftime('%Y-%m-%d_%I-%M-%p')}]"  # YYYY-MM-DD + HH/MM (12 hour time)
         shutil.copyfile(src, dst)
         filelist = os.listdir(bd)
         if len(filelist) > 25:  # max 5 of each
-            oldest = min(filelist, key=lambda f: os.path.getmtime("{}/{}".format(bd, f)))
+            oldest = min(filelist, key=lambda f: os.path.getmtime(f"{bd}/{f}"))
             os.remove(bd + oldest)
 
 
