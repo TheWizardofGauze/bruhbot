@@ -1,7 +1,9 @@
 {
-    "dispatch_id": 3764,
+    "dispatch_id": 3776,
     "assign_ids": [
-        2903195108
+        2616794736,
+        3257352995,
+        2503321752
     ],
     "target_ids": [
         {
@@ -31,6 +33,10 @@
         {
             "id": 3929716830,
             "target": "Hive Lords"
+        },
+        {
+            "id": 1378841226,
+            "target": "Dragon Roaches"
         },
         {
             "id": 2664856027,
