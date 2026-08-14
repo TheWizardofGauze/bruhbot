@@ -248,9 +248,11 @@ class HD2(commands.Cog):
                                                                     async with session.get(
                                                                         f"{self.api}/planets/{task['values'][9]}"
                                                                     ) as piresponse:
-                                                                        pij = await piresponse.json()
                                                                         if piresponse.status == 200:
+                                                                            pij = await piresponse.json()
                                                                             pname = f" on **{pij['name']}**"
+                                                                        else:
+                                                                            pname = " on Unknown Planet"
                                                                 else:
                                                                     pname = ""
                                                                 objectives.append(
@@ -1107,9 +1109,11 @@ class HD2(commands.Cog):
                                                         async with session.get(
                                                             f"{self.api}/planets/{task['values'][9]}"
                                                         ) as piresponse:
-                                                            pij = await piresponse.json()
                                                             if piresponse.status == 200:
+                                                                pij = await piresponse.json()
                                                                 pname = f" on **{pij['name']}**"
+                                                            else:
+                                                                pname = " on Unknown Planet"
                                                     else:
                                                         pname = ""
                                                     goal = task["values"][2]
