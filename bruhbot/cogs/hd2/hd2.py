@@ -183,9 +183,11 @@ class HD2(commands.Cog):
                                                                     async with session.get(
                                                                         f"{self.api}/planets/{task['values'][8]}"
                                                                     ) as psresponse:
-                                                                        psj = await psresponse.json()
                                                                         if psresponse.status == 200:
+                                                                            psj = await psresponse.json()
                                                                             pname = f" on **{psj['name']}**"
+                                                                        else:
+                                                                            pname = " on Unknown Planet"
                                                                 elif task["values"][8] == 0 and task["values"][0] != 0:
                                                                     match task["values"][0]:
                                                                         case 2:
@@ -1048,9 +1050,11 @@ class HD2(commands.Cog):
                                                         async with session.get(
                                                             f"{self.api}/planets/{task['values'][8]}"
                                                         ) as psresponse:
-                                                            psj = await psresponse.json()
                                                             if psresponse.status == 200:
+                                                                psj = await psresponse.json()
                                                                 pname = f" on **{psj['name']}**"
+                                                            else:
+                                                                pname = " on Unknown Planet"
                                                     elif task["values"][8] == 0 and task["values"][0] != 0:
                                                         match task["values"][0]:
                                                             case 2:
