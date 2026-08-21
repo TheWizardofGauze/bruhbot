@@ -198,6 +198,7 @@
         "Nabatea Secundus",
         "Navi VII",
         "New Haven",
+        "New Insight",
         "New Kiruna",
         "New Stockholm",
         "Nivel 43",
@@ -281,7 +282,11 @@
     "U": [
         "Ubanea",
         "Ursica XI",
-        "Ustotu"
+        "Ustotu",
+        "UVP Alpha",
+        "UVP Beta",
+        "UVP Delta",
+        "UVP Gamma"
     ],
     "V": [
         "Valgaard",
@@ -299,6 +304,7 @@
     ],
     "W": [
         "Wasat",
+        "Wayward",
         "Wezen",
         "Widow's Harbor",
         "Wilford Station",
