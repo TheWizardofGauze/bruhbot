@@ -1,7 +1,8 @@
 {
-    "dispatch_id": 3861,
+    "dispatch_id": 3888,
     "assign_ids": [
-        3802761778
+        434236,
+        1945609698
     ],
     "target_ids": [
         {
@@ -71,6 +72,14 @@
         {
             "id": 3097344451,
             "target": "Leviathans"
+        },
+        {
+            "id": 2118086817,
+            "target": "Wretches"
+        },
+        {
+            "id": 3922421925,
+            "target": "Crushers"
         },
         {
             "id": 1764323819,
