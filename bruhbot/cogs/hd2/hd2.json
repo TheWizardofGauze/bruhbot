@@ -1,8 +1,7 @@
 {
-    "dispatch_id": 3893,
+    "dispatch_id": 3922,
     "assign_ids": [
-        3628181921,
-        3038612729
+        3354462162
     ],
     "target_ids": [
         {
@@ -47,6 +46,10 @@
         },
         {
             "id": 4039692928,
+            "target": "Troopers"
+        },
+        {
+            "id": 878778730,
             "target": "Troopers"
         },
         {
