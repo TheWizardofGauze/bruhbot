@@ -9,6 +9,7 @@ from datetime import date, datetime
 from io import BytesIO
 from random import choice, random
 
+import aiofiles
 import discord
 from dateutil.relativedelta import relativedelta
 from discord.ext import commands
@@ -179,7 +180,7 @@ async def addr(ctx, *, arg: str | None):
                                 or attachment.filename == f"image{ext}"
                             ):
                                 new = "".join(choice(string.ascii_letters + string.digits) for i in range(6))
-                                while os.path.exists(f".\\images\\{new}"):
+                                while aiofiles.os.path.exists(f".\\images\\{new}"):
                                     new = new + "".join(choice(string.digits))
                                 pre = new + ext
                             else:
