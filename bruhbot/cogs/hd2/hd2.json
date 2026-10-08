@@ -1,7 +1,7 @@
 {
-    "dispatch_id": 3933,
+    "dispatch_id": 3950,
     "assign_ids": [
-        806233317
+        4152388944
     ],
     "target_ids": [
         {
@@ -31,6 +31,14 @@
         {
             "id": 3929716830,
             "target": "Hive Lords"
+        },
+        {
+            "id": 717622970,
+            "target": "Bile Spewers"
+        },
+        {
+            "id": 444529084,
+            "target": "Bile Spitters"
         },
         {
             "id": 1378841226,
